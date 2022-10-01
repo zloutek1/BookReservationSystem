@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystemDAL", "BookReservationSystemDAL\BookReservationSystemDAL.csproj", "{63D14F6A-0AA8-4D14-9F4A-48E76D7C3091}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystemFE", "BookReservationSystemFE\BookReservationSystemFE.csproj", "{F54B2948-A051-4CFE-8926-AEEAA6FAA423}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63D14F6A-0AA8-4D14-9F4A-48E76D7C3091}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63D14F6A-0AA8-4D14-9F4A-48E76D7C3091}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63D14F6A-0AA8-4D14-9F4A-48E76D7C3091}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63D14F6A-0AA8-4D14-9F4A-48E76D7C3091}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F54B2948-A051-4CFE-8926-AEEAA6FAA423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F54B2948-A051-4CFE-8926-AEEAA6FAA423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F54B2948-A051-4CFE-8926-AEEAA6FAA423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F54B2948-A051-4CFE-8926-AEEAA6FAA423}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
