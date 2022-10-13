@@ -38,6 +38,10 @@ TestResults/
 # Visual Studio #
 #################
 .vs/
+#########
+# Rider #
+#########
+.idea/
 ############
 # Packages #
 ############
