@@ -7,21 +7,7 @@ namespace BookReservationSystemDAL.Data
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {
-            var hape = new Author 
-            {
-                Id = Guid.NewGuid(),
-                Name = "Kerkeling Hape" 
-            };
-            modelBuilder.Entity<Author>().HasData(hape);
-
-            var euromedia = new Publisher
-            {
-                Id = Guid.NewGuid(),
-                Name = "EUROMEDIA GROUP, a.s." 
-            };
-            modelBuilder.Entity<Publisher>().HasData(euromedia);
-
-            var satire = new Genre 
+            var satire = new Genre
             {
                 Id = Guid.NewGuid(),
                 Name = "Satire"
@@ -34,11 +20,50 @@ namespace BookReservationSystemDAL.Data
                 Name = "Moje kočky, cizí kočky a já",
                 Abstract = "Co kočky cítí? Znají humor? Na co myslí? Jak mám svou kočku rozmazlovat a komunikovat s ní? A jsou naši pokojoví tygři jasnovidci? Těmto a mnoha dalším zajímavým otázkám se obšírně věnuje laskavá, vtipná i poučná kniha od milovníka koček, který se svými kočičími mazlíčky prožil třináct let a za tu dobu se jim naučil hodně rozumět. Nabízí čtenářům pár užitečných výchovných rad, ale jak sám poznamenává, nakonec budou stejně k ničemu, protože kočky si vždycky změní páníčka k obrazu svému, nikoli naopak.",
                 CoverArtUrl = "https://www.knihydobrovsky.cz/thumbs/book-detail-fancy-box/mod_eshop/produkty/m/moje-kocky-cizi-kocky-a-ja-9788024282442.jpg",
-                ISBN = 9788024282442,
-                AuthorId = hape.Id,
-                PublisherId = euromedia.Id
+                ISBN = 9788024282442
             };
-            modelBuilder.Entity<Book>().HasData(book);
+            modelBuilder.Entity<Book>(b =>
+            {
+                b.HasData(book);
+                b.HasMany(p => p.Genres).WithMany(p => p.Books)
+                    .UsingEntity(j => j.HasData(new
+                    {
+                        BooksId = book.Id, 
+                        GenresId = satire.Id
+                    }));
+            });
+
+            var hape = new Author 
+            {
+                Id = Guid.NewGuid(),
+                Name = "Kerkeling Hape" 
+            };
+            modelBuilder.Entity<Author>(b =>
+            {
+                b.HasData(hape);
+                b.HasMany(p => p.Books).WithMany(p => p.Authors)
+                    .UsingEntity(j => j.HasData(new
+                    {
+                        AuthorsId = hape.Id,
+                        BooksId = book.Id
+                    }));
+            });
+
+            var euromedia = new Publisher
+            {
+                Id = Guid.NewGuid(),
+                Name = "EUROMEDIA GROUP, a.s." 
+            };
+            modelBuilder.Entity<Publisher>(b =>
+            {
+                b.HasData(euromedia);
+                b.HasMany(p => p.Books).WithMany(p => p.Publishers)
+                    .UsingEntity(j => j.HasData(new
+                    {
+                        PublishersId = euromedia.Id,
+                        BooksId = book.Id
+                    }));
+            });
 
             var jostova = new Address
             {
@@ -58,6 +83,14 @@ namespace BookReservationSystemDAL.Data
             };
             modelBuilder.Entity<Library>().HasData(dobrovsky);
 
+            var bookInLibrary = new BooksInLibrary
+            {
+                BookId = book.Id,
+                LibraryId = dobrovsky.Id,
+                Count = 1
+            };
+            modelBuilder.Entity<BooksInLibrary>().HasData(bookInLibrary);
+
             var admin = new Role 
             {
                 Id = Guid.NewGuid(),
@@ -71,7 +104,8 @@ namespace BookReservationSystemDAL.Data
                 FirstName = "Westbrook",
                 LastName = "Monkman",
                 Email = "wmonkman0@zdnet.com",
-                Password = "RLreUYnARxnE"
+                Password = "RLreUYnARxnE",
+                PasswordSalt = ""
             };
             modelBuilder.Entity<User>().HasData(monkman);
 
@@ -82,6 +116,7 @@ namespace BookReservationSystemDAL.Data
                 LastName = "Maxworthy",
                 Email = "mmaxworthy1@ning.com",
                 Password = "bo09BbrTa",
+                PasswordSalt = ""
             };
             modelBuilder.Entity<User>().HasData(maxworthy);
 
