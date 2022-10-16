@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BookReservationSystemDAL.Models;
 using System.Collections.Generic;
 
-namespace BookReservationSystemDAL.Repository
+namespace BookReservationSystemInfrastructure.Repository
 {
-    public interface IGenericRepository<TEntity> : IDisposable 
+    public interface IGenericRepository<TEntity>
         where TEntity : class
     {
         IEnumerable<TEntity> GetAll();

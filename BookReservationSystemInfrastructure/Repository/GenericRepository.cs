@@ -1,14 +1,14 @@
-﻿using BookReservationSystemDAL.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using BookReservationSystemDAL.Data;
 
-namespace BookReservationSystemDAL.Repository
+namespace BookReservationSystemInfrastructure.Repository
 {
-    public class GenericRepository<TEntity> : IDisposable, 
+    public class GenericRepository<TEntity> : 
         IGenericRepository<TEntity> where TEntity : class
     {
         private BookReservationSystemDBContext _context = null;
