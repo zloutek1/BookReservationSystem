@@ -79,6 +79,7 @@ public static class DataInitializer
         var dobrovsky = new Library
         {
             Id = Guid.NewGuid(),
+            Name = "Knihy Dobrovský",
             AddressId = jostova.Id,
         };
         modelBuilder.Entity<Library>().HasData(dobrovsky);
