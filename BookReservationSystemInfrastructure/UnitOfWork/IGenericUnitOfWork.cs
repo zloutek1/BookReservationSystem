@@ -23,6 +23,6 @@ namespace BookReservationSystemInfrastructure.UnitOfWork
         IGenericRepository<Review> ReviewRepository { get; }
         IGenericRepository<Role> RoleRepository { get; }
         IGenericRepository<User> UserRepository { get; }
-        public Task<bool> Complete();
+        public Task SaveCommit();
     }
 }

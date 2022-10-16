@@ -56,7 +56,10 @@ namespace BookReservationSystemInfrastructure.UnitOfWork
 
         #endregion
 
-        public async Task<bool> Complete() => await _context.SaveChangesAsync() > 0;
+        public async Task SaveCommit()
+        {
+            await _context.SaveChangesAsync();
+        }
 
         public void Dispose()
         {
