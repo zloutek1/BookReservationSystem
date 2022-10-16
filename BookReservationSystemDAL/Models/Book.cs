@@ -23,10 +23,9 @@ namespace BookReservationSystemDAL.Models
 
         public virtual List<Genre> Genres { get; set; }
 
-        public Guid AuthorId { get; set; }
-
-        [ForeignKey(nameof(AuthorId))]
-        public virtual Author Author { get; set; }
+        //each book can have many authors, then the foreign key will be in AuthorRelation entity to the book id
+        //not sure if similar list should be in Author as well? alebo ci to dat ako AuthorBookRelation a dat to do oboch? idk
+        public virtual List<AuthorRelation> Authors { get; set; }
 
         public Guid PublisherId { get; set; }
 

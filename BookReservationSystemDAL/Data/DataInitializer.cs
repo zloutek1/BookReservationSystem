@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BookReservationSystemDAL.Models;
+using System.Net;
 
 namespace BookReservationSystemDAL.Data
 {
@@ -28,6 +29,13 @@ namespace BookReservationSystemDAL.Data
             };
             modelBuilder.Entity<Genre>().HasData(satire);
 
+            var authorRelation = new AuthorRelation
+            {
+                Id = Guid.NewGuid(),
+                AuthorId = hape.Id,
+            };
+            modelBuilder.Entity<AuthorRelation>().HasData(authorRelation);
+
             var book = new Book
             {
                 Id = Guid.NewGuid(),
@@ -35,10 +43,12 @@ namespace BookReservationSystemDAL.Data
                 Abstract = "Co kočky cítí? Znají humor? Na co myslí? Jak mám svou kočku rozmazlovat a komunikovat s ní? A jsou naši pokojoví tygři jasnovidci? Těmto a mnoha dalším zajímavým otázkám se obšírně věnuje laskavá, vtipná i poučná kniha od milovníka koček, který se svými kočičími mazlíčky prožil třináct let a za tu dobu se jim naučil hodně rozumět. Nabízí čtenářům pár užitečných výchovných rad, ale jak sám poznamenává, nakonec budou stejně k ničemu, protože kočky si vždycky změní páníčka k obrazu svému, nikoli naopak.",
                 CoverArtUrl = "https://www.knihydobrovsky.cz/thumbs/book-detail-fancy-box/mod_eshop/produkty/m/moje-kocky-cizi-kocky-a-ja-9788024282442.jpg",
                 ISBN = 9788024282442,
-                AuthorId = hape.Id,
+                Authors = new List<AuthorRelation> { authorRelation },
                 PublisherId = euromedia.Id
             };
             modelBuilder.Entity<Book>().HasData(book);
+
+            authorRelation.BookId = book.Id;
 
             var jostova = new Address
             {
@@ -54,9 +64,19 @@ namespace BookReservationSystemDAL.Data
             var dobrovsky = new Library
             {
                 Id = Guid.NewGuid(),
+                Name = "Knihy Dobrovsky",
                 AddressId = jostova.Id,
             };
             modelBuilder.Entity<Library>().HasData(dobrovsky);
+        
+            var bookQuantity = new BookQuantityRelation
+            {
+                Id = Guid.NewGuid(),
+                LibraryId = dobrovsky.Id,
+                BookId = book.Id,
+                Quantity = 1
+            };
+            modelBuilder.Entity<BookQuantityRelation>().HasData(bookQuantity);
 
             var admin = new Role 
             {

@@ -9,6 +9,8 @@ namespace BookReservationSystemDAL.Models
 {
     public class Library : BaseEntity
     {
+        public string Name { get; set;}
+
         public Guid AddressId { get; set; }
 
         [ForeignKey(nameof(AddressId))]
