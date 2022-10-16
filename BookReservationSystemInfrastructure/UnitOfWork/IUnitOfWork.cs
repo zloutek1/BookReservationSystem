@@ -12,10 +12,8 @@ public interface IUnitOfWork : IDisposable
 {
     IRepository<Address> AddressRepository { get; }
     IRepository<Author> AuthorRepository { get; }
-    IRepository<AuthorRelation> AuthorRelationRepository { get; }
     IRepository<BaseEntity> BaseEntityRepository { get; }
     IRepository<Book> BookRepository { get; }
-    IRepository<BookQuantityRelation> BookQuantityRelationRepository { get; }
     IRepository<Genre> GenreRepository { get; }
     IRepository<Library> LibraryRepository { get; }
     IRepository<Publisher> PublisherRepository { get; }

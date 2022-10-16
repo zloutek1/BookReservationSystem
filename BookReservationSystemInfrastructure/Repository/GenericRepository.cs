@@ -5,16 +5,16 @@ namespace BookReservationSystemInfrastructure.Repository;
 
 public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : class
 {
-    private readonly BookReservationSystemDBContext _context;
+    private readonly BookReservationSystemDbContext _context;
     private readonly DbSet<TEntity> _table;
 
     public GenericRepository()
     {
-        _context = new BookReservationSystemDBContext();
+        _context = new BookReservationSystemDbContext();
         _table = _context.Set<TEntity>();
     }
 
-    public GenericRepository(BookReservationSystemDBContext context)
+    public GenericRepository(BookReservationSystemDbContext context)
     {
         _context = context;
         _table = _context.Set<TEntity>();
@@ -22,7 +22,7 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
 
     public GenericRepository(DbSet<TEntity> table)
     {
-        _context = new BookReservationSystemDBContext();
+        _context = new BookReservationSystemDbContext();
         _table = table;
     }
 

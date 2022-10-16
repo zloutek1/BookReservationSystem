@@ -6,13 +6,13 @@ namespace BookReservationSystemInfrastructure.UnitOfWork;
 
 public class UnitOfWork : IUnitOfWork 
 {
-    private readonly BookReservationSystemDBContext _context;
+    private readonly BookReservationSystemDbContext _context;
     public UnitOfWork()
     {
-        _context = new BookReservationSystemDBContext();
+        _context = new BookReservationSystemDbContext();
     }
 
-    public UnitOfWork(BookReservationSystemDBContext context)
+    public UnitOfWork(BookReservationSystemDbContext context)
     {
         _context = context;
     }
@@ -21,10 +21,8 @@ public class UnitOfWork : IUnitOfWork
 
     private IRepository<Address>? _addressRepository;
     private IRepository<Author>? _authorRepository;
-    private IRepository<AuthorRelation>? _authorRelationRepository;
     private IRepository<BaseEntity>? _baseEntityRepository;
     private IRepository<Book>? _bookRepository;
-    private IRepository<BookQuantityRelation>? _bookQuantityRelationRepository;
     private IRepository<Genre>? _genreRepository;
     private IRepository<Library>? _libraryRepository;
     private IRepository<Publisher>? _publisherRepository;
@@ -37,13 +35,9 @@ public class UnitOfWork : IUnitOfWork
 
     public IRepository<Author> AuthorRepository => _authorRepository ??= new GenericRepository<Author>(_context);
 
-    public IRepository<AuthorRelation> AuthorRelationRepository => _authorRelationRepository ??= new GenericRepository<AuthorRelation>(_context);
-
     public IRepository<BaseEntity> BaseEntityRepository => _baseEntityRepository ??= new GenericRepository<BaseEntity>(_context);
 
     public IRepository<Book> BookRepository => _bookRepository ??= new GenericRepository<Book>(_context);
-
-    public IRepository<BookQuantityRelation> BookQuantityRelationRepository => _bookQuantityRelationRepository ??= new GenericRepository<BookQuantityRelation>(_context);
 
     public IRepository<Genre> GenreRepository => _genreRepository ??= new GenericRepository<Genre>(_context);
 
