@@ -58,7 +58,7 @@ namespace BookReservationSystemInfrastructure.Repository
             TEntity existing = table.Find(id);
             table.Remove(existing);
         }
-        public async Task SaveCommit()
+        public async Task Commit()
         {
             await _context.SaveChangesAsync();
         }

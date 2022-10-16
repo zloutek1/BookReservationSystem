@@ -187,7 +187,7 @@ namespace BookReservationSystemInfrastructure.UnitOfWork
 
         #endregion
 
-        public async Task SaveCommit()
+        public async Task Commit()
         {
             await _context.SaveChangesAsync();
         }
