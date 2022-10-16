@@ -1,18 +1,20 @@
 using BookReservationSystemInfrastructure.Repository;
 using BookReservationSystemDAL.Data;
 using BookReservationSystemDAL.Models;
+using BookReservationSystemInfrastructure.EFCore.Repository;
+using BookReservationSystemInfrastructure.UnitOfWork;
 
-namespace BookReservationSystemInfrastructure.UnitOfWork;
+namespace BookReservationSystemInfrastructure.EFCore.UnitOfWork;
 
-public class UnitOfWork : IUnitOfWork 
+public class EFUnitOfWork : IUnitOfWork 
 {
     private readonly BookReservationSystemDbContext _context;
-    public UnitOfWork()
+    public EFUnitOfWork()
     {
         _context = new BookReservationSystemDbContext();
     }
 
-    public UnitOfWork(BookReservationSystemDbContext context)
+    public EFUnitOfWork(BookReservationSystemDbContext context)
     {
         _context = context;
     }

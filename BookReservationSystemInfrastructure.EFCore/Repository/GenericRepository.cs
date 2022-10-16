@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BookReservationSystemDAL.Data;
+using BookReservationSystemInfrastructure.Repository;
 
-namespace BookReservationSystemInfrastructure.Repository;
+namespace BookReservationSystemInfrastructure.EFCore.Repository;
 
 public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : class
 {
