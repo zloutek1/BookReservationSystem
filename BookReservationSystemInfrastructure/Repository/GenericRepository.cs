@@ -1,66 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using BookReservationSystemDAL.Data;
 
-namespace BookReservationSystemInfrastructure.Repository
+namespace BookReservationSystemInfrastructure.Repository;
+
+public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : class
 {
-    public class GenericRepository<TEntity> : 
-        IGenericRepository<TEntity> where TEntity : class
+    private readonly BookReservationSystemDBContext _context;
+    private readonly DbSet<TEntity> _table;
+
+    public GenericRepository()
     {
-        private BookReservationSystemDBContext _context = null;
-        private DbSet<TEntity> table = null;
+        _context = new BookReservationSystemDBContext();
+        _table = _context.Set<TEntity>();
+    }
 
-        public GenericRepository()
-        {
-            _context = new BookReservationSystemDBContext();
-            table = _context.Set<TEntity>();
-        }
+    public GenericRepository(BookReservationSystemDBContext context)
+    {
+        _context = context;
+        _table = _context.Set<TEntity>();
+    }
 
-        public GenericRepository(BookReservationSystemDBContext _context)
-        {
-            this._context = _context;
-            table = _context.Set<TEntity>();
-        }
+    public GenericRepository(DbSet<TEntity> table)
+    {
+        _context = new BookReservationSystemDBContext();
+        _table = table;
+    }
 
-        public GenericRepository(DbSet<TEntity> table)
-        {
-            _context = new BookReservationSystemDBContext();
-            this.table = table;
-        }
+    public IEnumerable<TEntity> GetAll()
+    {
+        return _table.ToList();
+    }
 
-        public IEnumerable<TEntity> GetAll()
-        {
-            return table.ToList();
-        }
+    public TEntity? GetById(object id)
+    {
+        return _table.Find(id);
+    }
 
-        public TEntity GetById(object id)
-        {
-            return table.Find(id);
-        }
+    public void Insert(TEntity obj)
+    {
+        _table.Add(obj);
+    }
 
-        public void Insert(TEntity obj)
-        {
-            table.Add(obj);
-        }
+    public void Update(TEntity obj)
+    {
+        _table.Attach(obj);
+        _context.Entry(obj).State = EntityState.Modified;
+    }
 
-        public void Update(TEntity obj)
+    public void Delete(object id)
+    {
+        var existing = _table.Find(id);
+        if (existing != null)
         {
-            table.Attach(obj);
-            _context.Entry(obj).State = EntityState.Modified;
+            _table.Remove(existing);
         }
+    }
 
-        public void Delete(object id)
-        {
-            TEntity existing = table.Find(id);
-            table.Remove(existing);
-        }
-        public async Task Commit()
-        {
-            await _context.SaveChangesAsync();
-        }
+    public async Task Commit()
+    {
+        await _context.SaveChangesAsync();
     }
 }
