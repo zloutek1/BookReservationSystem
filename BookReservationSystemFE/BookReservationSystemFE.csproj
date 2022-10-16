@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BookReservationSystemDAL\BookReservationSystemDAL.csproj" />
+    <Folder Include="Pages\Forms\" />
+    <Folder Include="Pages\Lists\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Forms\" />
-    <Folder Include="Pages\Lists\" />
+    <ProjectReference Include="..\BookReservationSystemInfrastructure\BookReservationSystemInfrastructure.csproj" />
   </ItemGroup>
 
 </Project>
