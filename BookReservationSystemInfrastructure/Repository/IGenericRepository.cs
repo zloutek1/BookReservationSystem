@@ -8,12 +8,13 @@ using System.Collections.Generic;
 
 namespace BookReservationSystemDAL.Repository
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<TEntity> : IDisposable 
+        where TEntity : class
     {
-        IEnumerable<T> GetAll();
-        T GetById(object id);
-        void Insert(T obj);
-        void Update(T obj);
+        IEnumerable<TEntity> GetAll();
+        TEntity GetById(object id);
+        void Insert(TEntity obj);
+        void Update(TEntity obj);
         void Delete(object id);
         void Save();
     }

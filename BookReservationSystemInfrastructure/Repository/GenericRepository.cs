@@ -8,40 +8,41 @@ using System.Threading.Tasks;
 
 namespace BookReservationSystemDAL.Repository
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<TEntity> : IDisposable, 
+        IGenericRepository<TEntity> where TEntity : class
     {
         private BookReservationSystemDBContext _context = null;
-        private DbSet<T> table = null;
+        private DbSet<TEntity> table = null;
         public GenericRepository()
         {
             this._context = new BookReservationSystemDBContext();
-            table = _context.Set<T>();
+            table = _context.Set<TEntity>();
         }
         public GenericRepository(BookReservationSystemDBContext _context)
         {
             this._context = _context;
-            table = _context.Set<T>();
+            table = _context.Set<TEntity>();
         }
-        public IEnumerable<T> GetAll()
+        public IEnumerable<TEntity> GetAll()
         {
             return table.ToList();
         }
-        public T GetById(object id)
+        public TEntity GetById(object id)
         {
             return table.Find(id);
         }
-        public void Insert(T obj)
+        public void Insert(TEntity obj)
         {
             table.Add(obj);
         }
-        public void Update(T obj)
+        public void Update(TEntity obj)
         {
             table.Attach(obj);
             _context.Entry(obj).State = EntityState.Modified;
         }
         public void Delete(object id)
         {
-            T existing = table.Find(id);
+            TEntity existing = table.Find(id);
             table.Remove(existing);
         }
         public void Save()
