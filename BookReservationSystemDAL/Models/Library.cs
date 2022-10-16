@@ -9,7 +9,7 @@ public class Library : BaseEntity
     [ForeignKey(nameof(AddressId))]
     public virtual Address? Address { get; set; }
 
-    public virtual List<BooksInLibrary> Books { get; set; } = new List<BooksInLibrary>();
+    public virtual List<BookQuantity> Books { get; set; } = new List<BookQuantity>();
 
     public virtual List<Reservation> Reservations { get; set; } = new List<Reservation>();
 }

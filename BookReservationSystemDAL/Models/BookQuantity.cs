@@ -2,7 +2,7 @@
 
 namespace BookReservationSystemDAL.Models;
 
-public class BooksInLibrary: BaseEntity
+public class BookQuantity: BaseEntity
 {
     public Guid BookId { get; set; }
     
