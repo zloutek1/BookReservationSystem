@@ -1,38 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BookReservationSystemDAL.Models
+namespace BookReservationSystemDAL.Models;
+
+public class Book : BaseEntity
 {
-    public class Book : BaseEntity
-    {
-        [MaxLength(64)]
-        public string Name { get; set; }
+    [Required]
+    [MaxLength(64)]
+    public string Name { get; set; }
 
-        [MaxLength(1000)]
-        public string Abstract { get; set; }
+    [Required]
+    [MaxLength(1000)]
+    public string Abstract { get; set; }
 
-        [MaxLength(256)]
-        public string CoverArtUrl { get; set; }
+    [Required]
+    [MaxLength(256)]
+    public string? CoverArtUrl { get; set; }
 
-        public long ISBN { get; set; }
+    [Required]
+    public long ISBN { get; set; }
 
-        public virtual List<Genre> Genres { get; set; }
+    public virtual List<Genre> Genres { get; set; } = new List<Genre>();
 
-        public Guid AuthorId { get; set; }
+    public virtual List<Author> Authors { get; set; } = new List<Author>();
 
-        [ForeignKey(nameof(AuthorId))]
-        public virtual Author Author { get; set; }
+    public virtual List<Publisher> Publishers { get; set; } = new List<Publisher>();
 
-        public Guid PublisherId { get; set; }
-
-        [ForeignKey(nameof(PublisherId))]
-        public virtual Publisher Publisher { get; set; }
-
-        public virtual List<Review> Reviews { get; set; }
-    }
+    public virtual List<Review> Reviews { get; set; } = new List<Review>();
 }

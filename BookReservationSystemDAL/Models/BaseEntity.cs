@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace BookReservationSystemDAL.Models
+namespace BookReservationSystemDAL.Models;
+
+public class BaseEntity
 {
-    public class BaseEntity
-    {
-        [Key]
-        public Guid Id { get; set; }
-    }
+    [Key]
+    public Guid Id { get; set; }
 }
