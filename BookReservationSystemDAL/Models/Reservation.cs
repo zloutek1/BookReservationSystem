@@ -16,6 +16,8 @@ namespace BookReservationSystemDAL.Models
 
         public DateTime? PickupDate { get; set; }
 
+        public DateTime? ReturnDate { get; set; }
+
         public Guid LibraryId { get; set; }
 
         [ForeignKey(nameof(LibraryId))]
