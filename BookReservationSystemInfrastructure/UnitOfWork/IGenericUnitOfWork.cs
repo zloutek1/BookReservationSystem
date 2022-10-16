@@ -4,15 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BookReservationSystemInfrastructure.Repository;
+using BookReservationSystemDAL.Models;
 
 namespace BookReservationSystemInfrastructure.UnitOfWork
 {
-    internal interface IGenericUnitOfWork<TRepo, TEntity> : IDisposable
-        where TRepo : GenericRepository<TEntity>
-        where TEntity : class
+    internal interface IUnitOfWork : IDisposable
     {
-        TRepo Repository();
-        IEnumerable<TRepo> GetAll();
-        void Save();
+        IGenericRepository<Address> AddressRepository { get; }
+        IGenericRepository<Author> AuthorRepository { get; }
+        IGenericRepository<AuthorRelation> AuthorRelationRepository { get; }
+        IGenericRepository<BaseEntity> BaseEntityRepository { get; }
+        IGenericRepository<Book> BookRepository { get; }
+        IGenericRepository<BookQuantityRelation> BookQuantityRelationRepository { get; }
+        IGenericRepository<Genre> GenreRepository { get; }
+        IGenericRepository<Library> LibraryRepository { get; }
+        IGenericRepository<Publisher> PublisherRepository { get; }
+        IGenericRepository<Reservation> ReservationRepository { get; }
+        IGenericRepository<Review> ReviewRepository { get; }
+        IGenericRepository<Role> RoleRepository { get; }
+        IGenericRepository<User> UserRepository { get; }
+        public Task<bool> Complete();
     }
 }

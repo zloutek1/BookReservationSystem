@@ -15,6 +15,6 @@ namespace BookReservationSystemInfrastructure.Repository
         void Insert(TEntity obj);
         void Update(TEntity obj);
         void Delete(object id);
-        void Save();
+        public Task<bool> Complete();
     }
 }
