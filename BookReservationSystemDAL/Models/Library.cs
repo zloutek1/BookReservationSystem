@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BookReservationSystemDAL.Models
+namespace BookReservationSystemDAL.Models;
+
+public class Library : BaseEntity
 {
-    public class Library : BaseEntity
-    {
-        public string Name { get; set;}
+    [Required]
+    public string Name { get; set; }
+    
+    [Required]
+    public Guid? AddressId { get; set; }
 
-        public Guid AddressId { get; set; }
+    [ForeignKey(nameof(AddressId))]
+    public virtual Address? Address { get; set; }
 
-        [ForeignKey(nameof(AddressId))]
-        public virtual Address Address { get; set; }
+    public virtual List<BookQuantity> Books { get; set; } = new List<BookQuantity>();
 
-        public virtual List<Book> Books { get; set; }
-
-        public virtual List<Reservation> Reservations { get; set; }
-    }
+    public virtual List<Reservation> Reservations { get; set; } = new List<Reservation>();
 }
