@@ -1,10 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookReservationSystemDAL.Models;
 
 public class Library : BaseEntity
 {
-    public Guid AddressId { get; set; }
+    [Required]
+    public string Name { get; set; }
+    
+    [Required]
+    public Guid? AddressId { get; set; }
 
     [ForeignKey(nameof(AddressId))]
     public virtual Address? Address { get; set; }

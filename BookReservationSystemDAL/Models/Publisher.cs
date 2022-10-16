@@ -4,6 +4,7 @@ namespace BookReservationSystemDAL.Models;
 
 public class Publisher : BaseEntity
 {
+    [Required]
     [MaxLength(64)]
     public string Name { get; set; }
 

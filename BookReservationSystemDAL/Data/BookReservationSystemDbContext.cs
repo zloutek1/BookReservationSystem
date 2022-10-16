@@ -51,7 +51,7 @@ public class BookReservationSystemDbContext : DbContext
             .WithMany(c => c.Publishers)
             .UsingEntity(j => j.ToTable("AuthorPublishers"));
 
-        modelBuilder.Entity<BooksInLibrary>()
+        modelBuilder.Entity<BookQuantity>()
             .HasKey(x => new { x.BookId, x.LibraryId });
         
         modelBuilder.Seed();

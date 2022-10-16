@@ -4,15 +4,19 @@ namespace BookReservationSystemDAL.Models;
 
 public class Book : BaseEntity
 {
+    [Required]
     [MaxLength(64)]
     public string Name { get; set; }
 
+    [Required]
     [MaxLength(1000)]
     public string Abstract { get; set; }
 
+    [Required]
     [MaxLength(256)]
     public string? CoverArtUrl { get; set; }
 
+    [Required]
     public long ISBN { get; set; }
 
     public virtual List<Genre> Genres { get; set; } = new List<Genre>();
