@@ -6,6 +6,14 @@ namespace BookReservationSystemDAL.Data;
 
 public class BookReservationSystemDbContext : DbContext
 {
+    public BookReservationSystemDbContext()
+    {
+    }
+
+    public BookReservationSystemDbContext(DbContextOptions options) : base(options)
+    {
+    }
+
     public DbSet<Address> Address { get; set; }
     public DbSet<Author> Author { get; set; }
     public DbSet<Book> Book { get; set; }
