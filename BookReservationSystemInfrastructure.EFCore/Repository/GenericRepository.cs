@@ -32,7 +32,7 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
         return _table.ToList();
     }
 
-    public TEntity? GetById(object id)
+    public TEntity? GetById(Guid id)
     {
         return _table.Find(id);
     }
@@ -48,17 +48,13 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
         _context.Entry(obj).State = EntityState.Modified;
     }
 
-    public void Delete(object id)
+    public void Delete(Guid id)
     {
         var existing = _table.Find(id);
-        if (existing != null)
+        if (existing == null)
         {
-            _table.Remove(existing);
+            throw new ArgumentException("Could not find Item with Id: " + id);
         }
-    }
-
-    public async Task Commit()
-    {
-        await _context.SaveChangesAsync();
+        _table.Remove(existing);
     }
 }

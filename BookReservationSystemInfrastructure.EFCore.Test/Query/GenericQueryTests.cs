@@ -1,7 +1,7 @@
 using BookReservationSystemDAL.Models;
 using BookReservationSystemInfrastructure.EFCore.Query;
 
-namespace BookReservationSystemInfrastructure.EFCore.Test;
+namespace BookReservationSystemInfrastructure.EFCore.Test.Query;
 
 public class GenericQueryTests : TestConfig
 {
@@ -20,6 +20,7 @@ public class GenericQueryTests : TestConfig
         
         SaveBook("Green -> Red", new List<Author>{johnny}, new List<Genre>{horror});
         SaveBook("Hacker", new List<Author>{dude}, new List<Genre>{satire});
+        SaveBook("Hammer", new List<Author>{dude}, new List<Genre>{satire});
 
         Context.SaveChanges();
     }
@@ -27,20 +28,30 @@ public class GenericQueryTests : TestConfig
     [Fact]
     public void Where_GivenBooksWithName_ReturnsOne()
     {
-        var efQuery = new GenericQuery<Book>(Context);
-        efQuery.Where<string>(a => a == "Hacker", "Name");
-        var result = efQuery.Execute().ToList();
+        var query = new GenericQuery<Book>(Context);
+        query.Where<string>(a => a == "Hacker", "Name");
+        var result = query.Execute().ToList();
 
         Assert.True(result.Count == 1);
         Assert.True(result.First().Name == "Hacker");
     }
     
     [Fact]
-    public void OrderBy_GivenBooksWithName_ReturnsOrdered()
+    public void Where_GivenBooksNameStartsWith_ReturnsTwo()
     {
-        var efQuery = new GenericQuery<Book>(Context);
-        efQuery.OrderBy<string>("Name");
-        var result = efQuery.Execute()
+        var query = new GenericQuery<Book>(Context);
+        query.Where<string>(a => a.StartsWith("Ha"), "Name");
+        var result = query.Execute().ToList();
+
+        Assert.True(result.Count == 2);
+    }
+    
+    [Fact]
+    public void OrderByAscending_GivenBooksWithName_ReturnsOrdered()
+    {
+        var query = new GenericQuery<Book>(Context);
+        query.OrderBy<string>("Name");
+        var result = query.Execute()
             .Select(a => a.Name)
             .ToList();
 
@@ -53,19 +64,54 @@ public class GenericQueryTests : TestConfig
     }
     
     [Fact]
-    public void Page_GivenBooksWithName_ReturnsOne()
+    public void OrderByDescending_GivenBooksWithName_ReturnsOrdered()
     {
-        var efQuery = new GenericQuery<Book>(Context);
-        efQuery.Page(1, 1);
+        var query = new GenericQuery<Book>(Context);
+        query.OrderBy<string>("Name", false);
+        var result = query.Execute()
+            .Select(a => a.Name)
+            .ToList();
+
+        var expectedResult = Context.Book
+            .Select(a => a.Name)
+            .OrderByDescending(a => a)
+            .ToList();
         
-        var result = efQuery.Execute()
+        Assert.Equal(expectedResult, result);
+    }
+    
+    [Fact]
+    public void Page_GivenFirstPage_ReturnsOne()
+    {
+        var query = new GenericQuery<Book>(Context);
+        query.Page(1, 1);
+        
+        var result = query.Execute()
             .Select(a => a.Name)
             .ToList();
 
         var expectedResult = Context.Book
             .Take(1)
             .Select(a => a.Name)
-            .OrderBy(a => a)
+            .ToList();
+        
+        Assert.Equal(expectedResult, result);
+    }
+    
+    [Fact]
+    public void Page_GivenSecondPage_ReturnsOne()
+    {
+        var query = new GenericQuery<Book>(Context);
+        query.Page(2, 2);
+        
+        var result = query.Execute()
+            .Select(a => a.Name)
+            .ToList();
+
+        var expectedResult = Context.Book
+            .Skip(2)
+            .Take(2)
+            .Select(a => a.Name)
             .ToList();
         
         Assert.Equal(expectedResult, result);
@@ -83,8 +129,7 @@ public class GenericQueryTests : TestConfig
             Publishers = new List<Publisher>(), 
             Reviews = new List<Review>(), 
             CoverArtUrl = "not null", 
-            ISBN = 0
-        }); 
-
+            Isbn = 0
+        });
     }
 }
