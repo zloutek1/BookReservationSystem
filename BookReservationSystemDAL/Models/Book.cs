@@ -12,12 +12,11 @@ public class Book : BaseEntity
     [MaxLength(1000)]
     public string Abstract { get; set; }
 
-    [Required]
     [MaxLength(256)]
     public string? CoverArtUrl { get; set; }
 
     [Required]
-    public long ISBN { get; set; }
+    public long Isbn { get; set; }
 
     public virtual List<Genre> Genres { get; set; } = new List<Genre>();
 

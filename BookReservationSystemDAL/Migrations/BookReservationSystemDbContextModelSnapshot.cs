@@ -39,8 +39,8 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            AuthorsId = new Guid("28a10a88-7d53-49d8-9588-90f9bed4e485"),
-                            BooksId = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47")
+                            AuthorsId = new Guid("29259d08-7727-4db3-b14e-80c5d557c076"),
+                            BooksId = new Guid("8b8e6385-623a-4a78-9ea3-bbe451fe281e")
                         });
                 });
 
@@ -61,8 +61,8 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            BooksId = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47"),
-                            GenresId = new Guid("21578d23-cf8f-456d-b948-911ec43a63a8")
+                            BooksId = new Guid("8b8e6385-623a-4a78-9ea3-bbe451fe281e"),
+                            GenresId = new Guid("c169b0e6-b219-4fc1-85f3-d426f34b12be")
                         });
                 });
 
@@ -83,8 +83,8 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            BooksId = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47"),
-                            PublishersId = new Guid("bbbf1d7a-fee8-497f-9a6c-768162bff79d")
+                            BooksId = new Guid("8b8e6385-623a-4a78-9ea3-bbe451fe281e"),
+                            PublishersId = new Guid("1cbecd9e-1aab-41f8-a4bf-8f218e4aec27")
                         });
                 });
 
@@ -124,7 +124,7 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2a774a64-525a-44eb-8e7a-fa3addcee172"),
+                            Id = new Guid("092b5589-bc29-473e-8e64-92e2201f2e1a"),
                             City = "Brno",
                             Country = "CZ",
                             PostalCode = " 60200",
@@ -151,7 +151,7 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("28a10a88-7d53-49d8-9588-90f9bed4e485"),
+                            Id = new Guid("29259d08-7727-4db3-b14e-80c5d557c076"),
                             Name = "Kerkeling Hape"
                         });
                 });
@@ -168,11 +168,10 @@ namespace BookReservationSystemDAL.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("CoverArtUrl")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<long>("ISBN")
+                    b.Property<long>("Isbn")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Name")
@@ -187,10 +186,10 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47"),
+                            Id = new Guid("8b8e6385-623a-4a78-9ea3-bbe451fe281e"),
                             Abstract = "Co kočky cítí? Znají humor? Na co myslí? Jak mám svou kočku rozmazlovat a komunikovat s ní? A jsou naši pokojoví tygři jasnovidci? Těmto a mnoha dalším zajímavým otázkám se obšírně věnuje laskavá, vtipná i poučná kniha od milovníka koček, který se svými kočičími mazlíčky prožil třináct let a za tu dobu se jim naučil hodně rozumět. Nabízí čtenářům pár užitečných výchovných rad, ale jak sám poznamenává, nakonec budou stejně k ničemu, protože kočky si vždycky změní páníčka k obrazu svému, nikoli naopak.",
                             CoverArtUrl = "https://www.knihydobrovsky.cz/thumbs/book-detail-fancy-box/mod_eshop/produkty/m/moje-kocky-cizi-kocky-a-ja-9788024282442.jpg",
-                            ISBN = 9788024282442L,
+                            Isbn = 9788024282442L,
                             Name = "Moje kočky, cizí kočky a já"
                         });
                 });
@@ -218,8 +217,8 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            BookId = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47"),
-                            LibraryId = new Guid("9eee9984-6e69-4d25-bf6a-7cfe898d6b24"),
+                            BookId = new Guid("8b8e6385-623a-4a78-9ea3-bbe451fe281e"),
+                            LibraryId = new Guid("6062518f-14d1-45f8-af29-939bd60c9830"),
                             Count = 1,
                             Id = new Guid("00000000-0000-0000-0000-000000000000")
                         });
@@ -233,16 +232,19 @@ namespace BookReservationSystemDAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Genre");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("21578d23-cf8f-456d-b948-911ec43a63a8"),
+                            Id = new Guid("c169b0e6-b219-4fc1-85f3-d426f34b12be"),
                             Name = "Satire"
                         });
                 });
@@ -270,9 +272,9 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9eee9984-6e69-4d25-bf6a-7cfe898d6b24"),
-                            AddressId = new Guid("2a774a64-525a-44eb-8e7a-fa3addcee172"),
-                            Name = "Knihy Dobrovsky"
+                            Id = new Guid("6062518f-14d1-45f8-af29-939bd60c9830"),
+                            AddressId = new Guid("092b5589-bc29-473e-8e64-92e2201f2e1a"),
+                            Name = "Knihy Dobrovský"
                         });
                 });
 
@@ -294,7 +296,7 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bbbf1d7a-fee8-497f-9a6c-768162bff79d"),
+                            Id = new Guid("1cbecd9e-1aab-41f8-a4bf-8f218e4aec27"),
                             Name = "EUROMEDIA GROUP, a.s."
                         });
                 });
@@ -339,11 +341,11 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("fd6c5905-20d2-4cf6-98fb-5241c02b7bbc"),
-                            BookId = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47"),
-                            CustomerId = new Guid("c6aa8c2d-e5e3-434f-bf75-781012cdee0a"),
+                            Id = new Guid("2d9c38a7-e48f-471f-a9f4-72046d3fd3f0"),
+                            BookId = new Guid("8b8e6385-623a-4a78-9ea3-bbe451fe281e"),
+                            CustomerId = new Guid("7faf4d6e-0848-41b6-ae27-5aaf690f6a43"),
                             DueDate = new DateTime(2022, 12, 31, 23, 59, 59, 0, DateTimeKind.Unspecified),
-                            LibraryId = new Guid("9eee9984-6e69-4d25-bf6a-7cfe898d6b24"),
+                            LibraryId = new Guid("6062518f-14d1-45f8-af29-939bd60c9830"),
                             ReservationDate = new DateTime(2022, 10, 1, 18, 40, 1, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -396,7 +398,7 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7e2bfa6f-9b03-4d7f-bcad-f0c1033868ee"),
+                            Id = new Guid("97e0e428-3ee3-465e-a594-cc5fe87e14a6"),
                             Name = "admin"
                         });
                 });
@@ -439,7 +441,7 @@ namespace BookReservationSystemDAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("514deb4e-4602-4433-904f-2f050cad7953"),
+                            Id = new Guid("da67c6a7-b072-4655-bbfa-f53137383b89"),
                             Email = "wmonkman0@zdnet.com",
                             FirstName = "Westbrook",
                             LastName = "Monkman",
@@ -448,7 +450,7 @@ namespace BookReservationSystemDAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c6aa8c2d-e5e3-434f-bf75-781012cdee0a"),
+                            Id = new Guid("7faf4d6e-0848-41b6-ae27-5aaf690f6a43"),
                             Email = "mmaxworthy1@ning.com",
                             FirstName = "Madelene",
                             LastName = "Maxworthy",
