@@ -57,4 +57,9 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
         }
         _table.Remove(existing);
     }
+
+    public void Commit()
+    {
+        _context.SaveChanges();
+    }
 }

@@ -1,78 +1,150 @@
 using BookReservationSystemDAL.Models;
 using BookReservationSystemInfrastructure.EFCore.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookReservationSystemInfrastructure.EFCore.Test.Repository;
 
-public class GenericRepositoryTests : TestConfig
+public class GenericRepositoryTests : IDisposable
 {
-    
+    private readonly DatabaseFixture _databaseFixture;
+
+    public GenericRepositoryTests()
+    {
+        _databaseFixture = new DatabaseFixture();
+    }
+
     [Fact]
     public void GetById_Genre_ReturnNull()
     {
-        var repository = new GenericRepository<Genre>(Context);
-        var actual = repository.GetById(Guid.NewGuid());
-        
-        Assert.True(actual == null);
+        Genre? actual;
+        using (var context = _databaseFixture.CreateContext())
+        {
+            var repository = new GenericRepository<Genre>(context);
+            actual = repository.GetById(Guid.NewGuid());
+        }
+
+        Assert.Null(actual);
     }
-    
+
     [Fact]
     public void Insert_Genre_Inserts()
     {
         var romance = new Genre { Id = Guid.NewGuid(), Name = "Romance" };
-        
-        var repository = new GenericRepository<Genre>(Context);
-        repository.Insert(romance);
-        var actual = repository.GetById(romance.Id);
-        
-        Assert.True(actual?.Equals(romance));
+
+        using (var context = _databaseFixture.CreateContext())
+        {
+            var repository = new GenericRepository<Genre>(context);
+            repository.Insert(romance);
+            repository.Commit();
+        }
+
+        Genre? actual;
+        using (var context = _databaseFixture.CreateContext())
+        {
+            var repository = new GenericRepository<Genre>(context);
+            actual = repository.GetById(romance.Id);
+        }
+
+        Assert.Equal("Romance", actual?.Name);
     }
-    
+
     [Fact]
     public void Insert_GenresWithSameId_Throws()
     {
         var id = Guid.NewGuid();
         var romance = new Genre { Id = id, Name = "Romance" };
         var bromance = new Genre { Id = id, Name = "Bromance" };
-        
-        var repository = new GenericRepository<Genre>(Context);
-        repository.Insert(romance);
 
-        Assert.Throws<InvalidOperationException>(() => repository.Insert(bromance));
+        using (var context = _databaseFixture.CreateContext())
+        {
+            var repository = new GenericRepository<Genre>(context);
+            repository.Insert(romance);
+            repository.Commit();
+        }
+
+        Assert.Throws<DbUpdateException>(() =>
+        {
+            using var context = _databaseFixture.CreateContext();
+            var repository = new GenericRepository<Genre>(context);
+            repository.Insert(bromance);
+            repository.Commit();
+        });
     }
-    
+
     [Fact]
     public void Update_Genre_Updates()
     {
         var romance = new Genre { Id = Guid.NewGuid(), Name = "Romance" };
-        
-        var repository = new GenericRepository<Genre>(Context);
-        repository.Insert(romance);
+
+        using (var context = _databaseFixture.CreateContext())
+        {
+            var repository = new GenericRepository<Genre>(context);
+            repository.Insert(romance);
+            repository.Commit();
+        }
+
         romance.Name = "Bromance";
-        repository.Update(romance);
-        var actual = repository.GetById(romance.Id);
-        
-        Assert.True(actual?.Equals(romance));
+
+        using (var context = _databaseFixture.CreateContext())
+        {
+            var repository = new GenericRepository<Genre>(context);
+            repository.Update(romance);
+            repository.Commit();
+        }
+
+        Genre? actual;
+        using (var context = _databaseFixture.CreateContext())
+        {
+            var repository = new GenericRepository<Genre>(context);
+            actual = repository.GetById(romance.Id);
+        }
+
+        Assert.Equal("Bromance", actual?.Name);
     }
-    
+
     [Fact]
     public void Delete_Genre_Deletes()
     {
         var romance = new Genre { Id = Guid.NewGuid(), Name = "Romance" };
-        
-        var repository = new GenericRepository<Genre>(Context);
-        repository.Insert(romance);
-        repository.Delete(romance.Id);
-        var actual = repository.GetById(romance.Id);
 
-        Assert.True(actual == null);
+        using (var context = _databaseFixture.CreateContext())
+        {
+            var repository = new GenericRepository<Genre>(context);
+            repository.Insert(romance);
+            repository.Commit();
+        }
+
+        using (var context = _databaseFixture.CreateContext())
+        {
+            var repository = new GenericRepository<Genre>(context);
+            repository.Delete(romance.Id);
+            repository.Commit();
+        }
+
+        Genre? actual;
+        using (var context = _databaseFixture.CreateContext())
+        {
+            var repository = new GenericRepository<Genre>(context);
+            actual = repository.GetById(romance.Id);
+        }
+
+        Assert.Null(actual);
     }
-    
+
     [Fact]
     public void Delete_AbsentGenre_Throws()
     {
-        var repository = new GenericRepository<Genre>(Context);
-        
-        Assert.Throws<ArgumentException>(() => repository.Delete(Guid.NewGuid()));
+        Assert.Throws<ArgumentException>(() =>
+        {
+            using var context = _databaseFixture.CreateContext();
+            var repository = new GenericRepository<Genre>(context);
+            repository.Delete(Guid.NewGuid());
+            repository.Commit();
+        });
     }
 
+    public void Dispose()
+    {
+        _databaseFixture.Dispose();
+    }
 }
