@@ -2,7 +2,6 @@ using System.Linq.Expressions;
 using BookReservationSystemDAL.Data;
 using BookReservationSystemInfrastructure.EFCore.Query.Helpers;
 using BookReservationSystemInfrastructure.Query;
-using BookReservationSystemInfrastructure.EFCore.UnitOfWork;
 
 namespace BookReservationSystemInfrastructure.EFCore.Query;
 
@@ -48,22 +47,37 @@ public class GenericQuery<TEntity> : Query<TEntity> where TEntity : class, new()
                 .GetProperty(expr.columnName)
                 ?.Name;
 
+            if (columnNameFromObject == null)
+            {
+                throw new ArgumentException("Invalid column");
+            }
+
             var exprProp = Expression.Property(p, columnNameFromObject);
             
             var expression = expr.expression;
 
-            var parameters = (IReadOnlyCollection<ParameterExpression>)expression
+            var parameters = (IReadOnlyCollection<ParameterExpression>?)expression
                 .GetType()
                 .GetProperty("Parameters")
                 ?.GetValue(expression);
 
-            var body = (Expression)expression
+            var body = (Expression?)expression
                 .GetType()
                 .GetProperty("Body")
                 ?.GetValue(expression);
 
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
             var visitor = new ReplaceParamVisitor(parameters.First(), exprProp);
             var exprNewBody = visitor.Visit(body);
+            
+            if (exprNewBody == null)
+            {
+                throw new ArgumentNullException(nameof(exprNewBody));
+            }
             
             var lambda = Expression.Lambda<Func<TEntity, bool>>(exprNewBody, p);
 
@@ -75,15 +89,20 @@ public class GenericQuery<TEntity> : Query<TEntity> where TEntity : class, new()
 
     private IQueryable<TEntity> OrderBy(IQueryable<TEntity> query)
     {
-        var orderByColumn = OrderByContainer.Value.tableName;
-        var isAscending = OrderByContainer.Value.isAscending;
-        var argumentType = OrderByContainer.Value.argumentType;
+        var orderByColumn = OrderByContainer!.Value.tableName;
+        var isAscending = OrderByContainer!.Value.isAscending;
+        var argumentType = OrderByContainer!.Value.argumentType;
 
         var p = Expression.Parameter(typeof(TEntity), "p");
 
         var columnNameFromObject = typeof(TEntity)
             .GetProperty(orderByColumn)
             ?.Name;
+        
+        if (columnNameFromObject == null)
+        {
+            throw new ArgumentException("Invalid column");
+        }
 
         var exprProp = Expression.Property(p, columnNameFromObject);
         var lambda = Expression.Lambda(exprProp, p);
@@ -99,8 +118,8 @@ public class GenericQuery<TEntity> : Query<TEntity> where TEntity : class, new()
 
     private IQueryable<TEntity> Pagination(IQueryable<TEntity> query)
     {
-        var page = PaginationContainer.Value.PageToFetch;
-        var pageSize = PaginationContainer.Value.PageSize;
+        var page = PaginationContainer!.Value.PageToFetch;
+        var pageSize = PaginationContainer!.Value.PageSize;
 
         return query
             .Skip((page - 1) * pageSize)

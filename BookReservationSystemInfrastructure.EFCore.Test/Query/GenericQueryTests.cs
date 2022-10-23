@@ -1,7 +1,6 @@
 using BookReservationSystemDAL.Data;
 using BookReservationSystemDAL.Models;
 using BookReservationSystemInfrastructure.EFCore.Query;
-using Xunit.Abstractions;
 
 namespace BookReservationSystemInfrastructure.EFCore.Test.Query;
 
@@ -14,8 +13,12 @@ public class GenericQueryTests: IDisposable
     {
         _databaseFixture = new DatabaseFixture();
         _context = _databaseFixture.CreateContext();
+        
+        SaveGenre("Comedy");
+        SaveGenre("European");
+        SaveGenre("Educational");
 
-        SaveBook("Green -> Red");
+        SaveBook("Green");
         SaveBook("Hacker");
         SaveBook("Hammer");
 
@@ -38,6 +41,16 @@ public class GenericQueryTests: IDisposable
     {
         var query = new GenericQuery<Book>(_context);
         query.Where<string>(a => a.StartsWith("Ha"), "Name");
+        var result = query.Execute().ToList();
+
+        Assert.True(result.Count == 2);
+    }
+    
+    [Fact]
+    public void Where_GivenGenresNameStartsWith_ReturnsTwo()
+    {
+        var query = new GenericQuery<Genre>(_context);
+        query.Where<string>(a => a.StartsWith("E"), "Name");
         var result = query.Execute().ToList();
 
         Assert.True(result.Count == 2);
@@ -77,6 +90,21 @@ public class GenericQueryTests: IDisposable
             .OrderBy(a => a)
             .ToList();
         
+        Assert.Equal(expectedResult, result);
+    }
+    
+    [Fact]
+    public void WhereOrderByAscending_GivenGenreWithName_ReturnsOrdered()
+    {
+        var query = new GenericQuery<Genre>(_context);
+        query.Where<string>(a => a.StartsWith("E"), "Name");
+        query.OrderBy<string>("Name");
+        var result = query.Execute()
+            .Select(a => a.Name)
+            .ToList();
+
+        var expectedResult = new List<string> { "Educational", "European" };
+
         Assert.Equal(expectedResult, result);
     }
     
@@ -142,6 +170,15 @@ public class GenericQueryTests: IDisposable
             Name = name, 
             Abstract = "Definitely not null",
             Isbn = 0
+        });
+    }
+    
+    private void SaveGenre(string name) 
+    { 
+        _context.Genre.Add(new Genre()
+        {
+            Id = Guid.NewGuid(), 
+            Name = name,
         });
     }
 
