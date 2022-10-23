@@ -16,14 +16,14 @@ public class GenericRepositoryTests : IDisposable
     [Fact]
     public void GetById_Genre_ReturnNull()
     {
-        Genre? actual;
+        Genre? current;
         using (var context = _databaseFixture.CreateContext())
         {
             var repository = new GenericRepository<Genre>(context);
-            actual = repository.GetById(Guid.NewGuid());
+            current = repository.GetById(Guid.NewGuid());
         }
 
-        Assert.Null(actual);
+        Assert.Null(current);
     }
 
     [Fact]
@@ -38,14 +38,14 @@ public class GenericRepositoryTests : IDisposable
             repository.Commit();
         }
 
-        Genre? actual;
+        Genre? current;
         using (var context = _databaseFixture.CreateContext())
         {
             var repository = new GenericRepository<Genre>(context);
-            actual = repository.GetById(romance.Id);
+            current = repository.GetById(romance.Id);
         }
 
-        Assert.Equal("Romance", actual?.Name);
+        Assert.Equal("Romance", current?.Name);
     }
 
     [Fact]
@@ -92,14 +92,14 @@ public class GenericRepositoryTests : IDisposable
             repository.Commit();
         }
 
-        Genre? actual;
+        Genre? current;
         using (var context = _databaseFixture.CreateContext())
         {
             var repository = new GenericRepository<Genre>(context);
-            actual = repository.GetById(romance.Id);
+            current = repository.GetById(romance.Id);
         }
 
-        Assert.Equal("Bromance", actual?.Name);
+        Assert.Equal("Bromance", current?.Name);
     }
 
     [Fact]
@@ -121,14 +121,14 @@ public class GenericRepositoryTests : IDisposable
             repository.Commit();
         }
 
-        Genre? actual;
+        Genre? current;
         using (var context = _databaseFixture.CreateContext())
         {
             var repository = new GenericRepository<Genre>(context);
-            actual = repository.GetById(romance.Id);
+            current = repository.GetById(romance.Id);
         }
 
-        Assert.Null(actual);
+        Assert.Null(current);
     }
 
     [Fact]

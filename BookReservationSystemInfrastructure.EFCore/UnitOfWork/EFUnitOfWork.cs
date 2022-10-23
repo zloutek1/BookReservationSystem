@@ -9,10 +9,6 @@ namespace BookReservationSystemInfrastructure.EFCore.UnitOfWork;
 public class EFUnitOfWork : IUnitOfWork 
 {
     private readonly BookReservationSystemDbContext _context;
-    public EFUnitOfWork()
-    {
-        _context = new BookReservationSystemDbContext();
-    }
 
     public EFUnitOfWork(BookReservationSystemDbContext context)
     {

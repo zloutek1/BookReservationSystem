@@ -24,7 +24,7 @@ public class DatabaseFixture: IDisposable
         context.Database.EnsureCreated();
     }
 
-    public BookReservationSystemDbContext CreateContext() => new(_contextOptions);
+    public BookReservationSystemDbContext CreateContext() => new(_contextOptions, shouldSeed: false);
 
     public void Dispose()
     {

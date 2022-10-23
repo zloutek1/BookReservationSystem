@@ -9,22 +9,10 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
     private readonly BookReservationSystemDbContext _context;
     private readonly DbSet<TEntity> _table;
 
-    public GenericRepository()
-    {
-        _context = new BookReservationSystemDbContext();
-        _table = _context.Set<TEntity>();
-    }
-
     public GenericRepository(BookReservationSystemDbContext context)
     {
         _context = context;
         _table = _context.Set<TEntity>();
-    }
-
-    public GenericRepository(DbSet<TEntity> table)
-    {
-        _context = new BookReservationSystemDbContext();
-        _table = table;
     }
 
     public IEnumerable<TEntity> GetAll()
