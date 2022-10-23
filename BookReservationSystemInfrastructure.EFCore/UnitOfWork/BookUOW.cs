@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookReservationSystemInfrastructure.EFCore.UnitOfWork
 {
-    public class BookUOW : IUnitOfWork
+    public class BookUOW : IBookUOW
     {
         private readonly BookReservationSystemDbContext _context;
         private IRepository<Author>? _authorRepository;
