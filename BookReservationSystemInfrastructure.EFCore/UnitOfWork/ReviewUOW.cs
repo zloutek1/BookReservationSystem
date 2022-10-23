@@ -2,6 +2,7 @@
 using BookReservationSystemDAL.Models;
 using BookReservationSystemInfrastructure.EFCore.Repository;
 using BookReservationSystemInfrastructure.Repository;
+using BookReservationSystemInfrastructure.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookReservationSystemInfrastructure.EFCore.UnitOfWork
 {
-    public class ReviewUOW : IUnitOfWork
+    public class ReviewUOW : IReviewUOW
     {
         private readonly BookReservationSystemDbContext _context;
         private IRepository<Book>? _bookRepository;

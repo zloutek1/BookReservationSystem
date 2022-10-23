@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookReservationSystemInfrastructure.EFCore.UnitOfWork
 {
-    public class UserRoleUOW : IUnitOfWork
+    public class UserRoleUOW : IUserRoleUOW
     {
         private readonly BookReservationSystemDbContext _context;
         private IRepository<Role>? _roleRepository;
@@ -28,7 +28,7 @@ namespace BookReservationSystemInfrastructure.EFCore.UnitOfWork
         }
 
         public IRepository<User> UserRepository => _userRepository ??= new GenericRepository<User>(_context);
-        public IRepository<Role> RolerRepository => _roleRepository ??= new GenericRepository<Role>(_context);
+        public IRepository<Role> RoleRepository => _roleRepository ??= new GenericRepository<Role>(_context);
 
         public async Task Commit()
         {
