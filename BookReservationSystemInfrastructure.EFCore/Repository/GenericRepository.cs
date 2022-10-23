@@ -57,4 +57,13 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
         }
         _table.Remove(existing);
     }
+
+    public void Delete(TEntity obj)
+    {
+        if (obj == null)
+        {
+            throw new ArgumentException("Could not find Item");
+        }
+        _table.Remove(obj);
+    }
 }
