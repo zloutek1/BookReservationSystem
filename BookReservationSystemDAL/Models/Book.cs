@@ -13,7 +13,7 @@ public class Book : BaseEntity
     public string Abstract { get; set; }
 
     [MaxLength(256)]
-    public string? CoverArtUrl { get; set; }
+    public string? CoverArtPath { get; set; }
 
     [Required]
     public long Isbn { get; set; }
