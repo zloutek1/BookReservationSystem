@@ -4,14 +4,14 @@ namespace BookReservationSystemInfrastructure.EFCore.Query.Helpers;
 
 public class ReplaceParamVisitor : ExpressionVisitor
 {
-    private readonly ParameterExpression param;
-    private readonly Expression replacement;
+    private readonly ParameterExpression _param;
+    private readonly Expression _replacement;
 
     public ReplaceParamVisitor(ParameterExpression param, Expression replacement)
     {
-        this.param = param;
-        this.replacement = replacement;
+        this._param = param;
+        this._replacement = replacement;
     }
 
-    protected override Expression VisitParameter(ParameterExpression node) => node == param ? replacement : node;
+    protected override Expression VisitParameter(ParameterExpression node) => node == _param ? _replacement : node;
 }
