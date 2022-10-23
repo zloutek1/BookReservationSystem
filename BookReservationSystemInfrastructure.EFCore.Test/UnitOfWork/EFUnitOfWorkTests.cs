@@ -22,7 +22,7 @@ public class EFUnitOfWorkTests : IDisposable
                 Id = bookId,
                 Abstract = "",
                 Isbn = 123456789L,
-                CoverArtUrl = "http://example.com",
+                CoverArtPath = "/BookReservationSystemInfrastructure.EFCore.Test/Resources/example.jpg",
                 Name = "BooName"
             });
             await bookUow.Commit();
