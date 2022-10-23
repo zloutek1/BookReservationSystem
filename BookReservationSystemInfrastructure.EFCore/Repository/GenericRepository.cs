@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BookReservationSystemDAL.Data;
 using BookReservationSystemInfrastructure.Repository;
+using System.Collections.Generic;
 
 namespace BookReservationSystemInfrastructure.EFCore.Repository;
 
@@ -44,6 +45,15 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
             throw new ArgumentException("Could not find Item with Id: " + id);
         }
         _table.Remove(existing);
+    }
+
+    public void Delete(TEntity obj)
+    {
+        if (_context.Entry(obj).State == EntityState.Detached)
+        {
+            _table.Attach(obj);
+        }
+        _table.Remove(obj);
     }
 
     public void Commit()

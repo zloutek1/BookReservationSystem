@@ -7,5 +7,6 @@ public interface IRepository<TEntity> where TEntity : class
     void Insert(TEntity obj);
     void Update(TEntity obj);
     void Delete(Guid id);
+    void Delete(TEntity obj);
     void Commit();
 }

@@ -16,9 +16,8 @@ public class Address : BaseEntity
     [MaxLength(16)]
     public string PostalCode { get; set; }
 
-    [Required]
     [MaxLength(64)]
-    public string Street { get; set; }
+    public string? Street { get; set; }
 
     [Required]
     public int StreetNumber { get; set; }
