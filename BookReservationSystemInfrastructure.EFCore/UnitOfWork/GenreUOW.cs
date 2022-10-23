@@ -17,11 +17,6 @@ namespace BookReservationSystemInfrastructure.EFCore.UnitOfWork
         private IRepository<Book>? _bookRepository;
         private IRepository<Genre>? _genreRepository;
 
-        public GenreUOW()
-        {
-            _context = new BookReservationSystemDbContext();
-        }
-
         public GenreUOW(BookReservationSystemDbContext context)
         {
             _context = context;

@@ -15,10 +15,9 @@ public class EFUnitOfWorkTests : IDisposable
         Library? foundLibrary;
         await using (var context = _databaseFixture.CreateContext())
         {
-            var unitOfWork = new EFUnitOfWork(context);
-
+            var bookUow = new BookUOW(context);
             var bookId = Guid.NewGuid();
-            unitOfWork.BookRepository.Insert(new Book
+            bookUow.BookRepository.Insert(new Book
             {
                 Id = bookId,
                 Abstract = "",
@@ -26,9 +25,11 @@ public class EFUnitOfWorkTests : IDisposable
                 CoverArtUrl = "http://example.com",
                 Name = "BooName"
             });
+            await bookUow.Commit();
 
+            var libraryUow = new LibraryUOW(context);
             var addressId = Guid.NewGuid();
-            unitOfWork.AddressRepository.Insert(new Address
+            libraryUow.AddressRepository.Insert(new Address
             {
                 Id = addressId,
                 City = "A",
@@ -46,11 +47,10 @@ public class EFUnitOfWorkTests : IDisposable
                 AddressId = addressId,
                 Books = new List<BookQuantity> { new() { BookId = bookId, LibraryId = libraryId, Count = 4 } }
             };
-            unitOfWork.LibraryRepository.Insert(library);
+            libraryUow.LibraryRepository.Insert(library);
+            await libraryUow.Commit();
 
-            await unitOfWork.Commit();
-
-            foundLibrary = unitOfWork.LibraryRepository.GetById(libraryId);
+            foundLibrary = libraryUow.LibraryRepository.GetById(libraryId);
         }
 
         Assert.Equal(1, foundLibrary?.Books.Count);
@@ -59,18 +59,14 @@ public class EFUnitOfWorkTests : IDisposable
     [Fact]
     public async void GenreRepository_SameName_Throws()
     {
-        Genre? current;
-        await using (var context = _databaseFixture.CreateContext())
-        {
-            var unitOfWork = new EFUnitOfWork(context);
+        await using var context = _databaseFixture.CreateContext();
+        var unitOfWork = new GenreUOW(context);
 
-            var id = Guid.NewGuid();
-            unitOfWork.GenreRepository.Insert(new Genre { Id = id, Name = "Horror" });
-            unitOfWork.GenreRepository.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
+        var id = Guid.NewGuid();
+        unitOfWork.GenreRepository.Insert(new Genre { Id = id, Name = "Horror" });
+        unitOfWork.GenreRepository.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
             
-            await Assert.ThrowsAsync<DbUpdateException>( async () => await unitOfWork.Commit());
-
-        }
+        await Assert.ThrowsAsync<DbUpdateException>( async () => await unitOfWork.Commit());
     }
     
     public void Dispose()

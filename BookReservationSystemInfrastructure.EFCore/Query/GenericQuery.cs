@@ -10,9 +10,6 @@ public class GenericQuery<TEntity> : Query<TEntity> where TEntity : class, new()
 {
     protected BookReservationSystemDbContext Context { get; set; }
 
-    private EFUnitOfWork? _unitOfWork;
-    protected EFUnitOfWork EfUnitOfWork => _unitOfWork ??= new EFUnitOfWork(Context);
-    
     public GenericQuery(BookReservationSystemDbContext context)
     {
         Context = context;

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BookReservationSystemDAL.Data;
 using BookReservationSystemInfrastructure.Repository;
-using System.Collections.Generic;
 
 namespace BookReservationSystemInfrastructure.EFCore.Repository;
 
