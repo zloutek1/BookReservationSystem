@@ -141,7 +141,6 @@ public class GenericQueryTests: IDisposable
             Id = Guid.NewGuid(), 
             Name = name, 
             Abstract = "Definitely not null",
-            CoverArtUrl = "not null", 
             Isbn = 0
         });
     }
