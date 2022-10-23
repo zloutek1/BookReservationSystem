@@ -7,7 +7,7 @@ namespace BookReservationSystemDAL.Data;
 public class BookReservationSystemDbContext : DbContext
 {
     private readonly bool _shouldSeed; 
-    
+
     public BookReservationSystemDbContext(DbContextOptions options, bool shouldSeed = true) : base(options)
     {
         _shouldSeed = shouldSeed;
