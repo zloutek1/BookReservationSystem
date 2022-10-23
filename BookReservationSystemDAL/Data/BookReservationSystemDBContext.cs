@@ -6,24 +6,23 @@ namespace BookReservationSystemDAL.Data;
 
 public class BookReservationSystemDbContext : DbContext
 {
-    public BookReservationSystemDbContext()
+    private readonly bool _shouldSeed;
+
+    public BookReservationSystemDbContext(DbContextOptions options, bool shouldSeed = true) : base(options)
     {
+        _shouldSeed = shouldSeed;
     }
 
-    public BookReservationSystemDbContext(DbContextOptions options) : base(options)
-    {
-    }
-
-    public DbSet<Address> Address { get; set; }
-    public DbSet<Author> Author { get; set; }
-    public DbSet<Book> Book { get; set; }
-    public DbSet<Genre> Genre { get; set; }
-    public DbSet<Library> Library { get; set; }
-    public DbSet<Publisher> Publisher { get; set; }
-    public DbSet<Reservation> Reservation { get; set; }
-    public DbSet<Review> Review { get; set; }
-    public DbSet<Role> Role { get; set; }
-    public DbSet<User> User { get; set; }
+    public DbSet<Address> Address { get; set; } = null!;
+    public DbSet<Author> Author { get; set; } = null!;
+    public DbSet<Book> Book { get; set; } = null!;
+    public DbSet<Genre> Genre { get; set; } = null!;
+    public DbSet<Library> Library { get; set; } = null!;
+    public DbSet<Publisher> Publisher { get; set; } = null!;
+    public DbSet<Reservation> Reservation { get; set; } = null!;
+    public DbSet<Review> Review { get; set; } = null!;
+    public DbSet<Role> Role { get; set; } = null!;
+    public DbSet<User> User { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -61,8 +60,11 @@ public class BookReservationSystemDbContext : DbContext
 
         modelBuilder.Entity<BookQuantity>()
             .HasKey(x => new { x.BookId, x.LibraryId });
-        
-        modelBuilder.Seed();
+
+        if (_shouldSeed)
+        {
+            modelBuilder.Seed();
+        }
 
         base.OnModelCreating(modelBuilder);
     }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookReservationSystemDAL.Models;
 
+[Index(nameof(Name), IsUnique = true)]
 public class Genre : BaseEntity
 {
     [Required]

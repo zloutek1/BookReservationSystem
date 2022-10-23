@@ -16,12 +16,7 @@ namespace BookReservationSystemInfrastructure.EFCore.UnitOfWork
         private readonly BookReservationSystemDbContext _context;
         private IRepository<Role>? _roleRepository;
         private IRepository<User>? _userRepository;
-
-        public UserRoleUOW()
-        {
-            _context = new BookReservationSystemDbContext();
-        }
-
+        
         public UserRoleUOW(BookReservationSystemDbContext context)
         {
             _context = context;

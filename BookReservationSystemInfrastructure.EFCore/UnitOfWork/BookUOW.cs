@@ -21,11 +21,6 @@ namespace BookReservationSystemInfrastructure.EFCore.UnitOfWork
         private IRepository<Review>? _reviewRepository;
         private IRepository<BookQuantity>? _bookQuantityRepository;
 
-        public BookUOW()
-        {
-            _context = new BookReservationSystemDbContext();
-        }
-
         public BookUOW(BookReservationSystemDbContext context)
         {
             _context = context;

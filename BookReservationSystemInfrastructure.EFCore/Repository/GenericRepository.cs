@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BookReservationSystemDAL.Data;
 using BookReservationSystemInfrastructure.Repository;
-using System.Collections.Generic;
 
 namespace BookReservationSystemInfrastructure.EFCore.Repository;
 
@@ -10,22 +9,10 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
     private readonly BookReservationSystemDbContext _context;
     private readonly DbSet<TEntity> _table;
 
-    public GenericRepository()
-    {
-        _context = new BookReservationSystemDbContext();
-        _table = _context.Set<TEntity>();
-    }
-
     public GenericRepository(BookReservationSystemDbContext context)
     {
         _context = context;
         _table = _context.Set<TEntity>();
-    }
-
-    public GenericRepository(DbSet<TEntity> table)
-    {
-        _context = new BookReservationSystemDbContext();
-        _table = table;
     }
 
     public IEnumerable<TEntity> GetAll()
@@ -66,5 +53,10 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
             _table.Attach(obj);
         }
         _table.Remove(obj);
+    }
+
+    public void Commit()
+    {
+        _context.SaveChanges();
     }
 }

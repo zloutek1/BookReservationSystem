@@ -17,11 +17,6 @@ namespace BookReservationSystemInfrastructure.EFCore.UnitOfWork
         private IRepository<Book>? _bookRepository;
         private IRepository<Publisher>? _publisherRepository;
 
-        public PublisherUOW()
-        {
-            _context = new BookReservationSystemDbContext();
-        }
-
         public PublisherUOW(BookReservationSystemDbContext context)
         {
             _context = context;

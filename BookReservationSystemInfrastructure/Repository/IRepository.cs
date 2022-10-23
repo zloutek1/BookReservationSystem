@@ -8,4 +8,5 @@ public interface IRepository<TEntity> where TEntity : class
     void Update(TEntity obj);
     void Delete(Guid id);
     void Delete(TEntity obj);
+    void Commit();
 }
