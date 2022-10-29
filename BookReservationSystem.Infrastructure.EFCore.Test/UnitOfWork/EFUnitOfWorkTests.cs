@@ -6,66 +6,79 @@ namespace BookReservationSystem.Infrastructure.EFCore.Test.UnitOfWork;
 
 public class EFUnitOfWorkTests : IDisposable
 {
-    private readonly DatabaseFixture _databaseFixture = new DatabaseFixture();
+    private readonly DatabaseFixture _databaseFixture = new();
     
     [Fact]
     public async void LibraryRepository_WithPositiveBookCount_Saves()
     {
+        var addressId = Guid.NewGuid();
+        var libraryId = Guid.NewGuid();
+        var bookId = Guid.NewGuid();
+
+        await using (var context = _databaseFixture.CreateContext())
+        {
+            using (var bookUow = new BookUOW(context))
+            {
+                bookUow.BookRepository.Insert(new Book
+                {
+                    Id = bookId,
+                    Abstract = "",
+                    Isbn = 123456789L,
+                    CoverArtPath = "../Resources/example.jpg",
+                    Name = "BooName"
+                });
+                await bookUow.Commit();
+            }
+
+            using (var libraryUow = new LibraryUOW(context))
+            {
+                var address = new Address
+                {
+                    Id = addressId,
+                    City = "A",
+                    Country = "B",
+                    PostalCode = "C",
+                    Street = "D",
+                    StreetNumber = 1
+                };
+                libraryUow.AddressRepository.Insert(address);
+
+                var library = new Library
+                {
+                    Id = libraryId,
+                    Name = "Dobrovsky",
+                    AddressId = addressId,
+                    Books = new List<BookQuantity> { new() { BookId = bookId, LibraryId = libraryId, Count = 4 } }
+                };
+                libraryUow.LibraryRepository.Insert(library);
+                var x = libraryUow.LibraryRepository.GetById(libraryId);
+                await libraryUow.Commit();
+            }
+        }
+
         Library? foundLibrary;
         await using (var context = _databaseFixture.CreateContext())
         {
-            var bookUow = new BookUOW(context);
-            var bookId = Guid.NewGuid();
-            bookUow.BookRepository.Insert(new Book
-            {
-                Id = bookId,
-                Abstract = "",
-                Isbn = 123456789L,
-                CoverArtPath = "../Resources/example.jpg",
-                Name = "BooName"
-            });
-            await bookUow.Commit();
-
-            var libraryUow = new LibraryUOW(context);
-            var addressId = Guid.NewGuid();
-            libraryUow.AddressRepository.Insert(new Address
-            {
-                Id = addressId,
-                City = "A",
-                Country = "B",
-                PostalCode = "C",
-                Street = "D",
-                StreetNumber = 1
-            });
-
-            var libraryId = Guid.NewGuid();
-            var library = new Library
-            {
-                Id = libraryId,
-                Name = "Dobrovsky",
-                AddressId = addressId,
-                Books = new List<BookQuantity> { new() { BookId = bookId, LibraryId = libraryId, Count = 4 } }
-            };
-            libraryUow.LibraryRepository.Insert(library);
-            await libraryUow.Commit();
-
+            using var libraryUow = new LibraryUOW(context);
             foundLibrary = libraryUow.LibraryRepository.GetById(libraryId);
+            
+            Assert.NotNull(foundLibrary);
+            await context.Entry(foundLibrary!).Collection("Books").LoadAsync();
         }
-
-        Assert.Equal(1, foundLibrary?.Books.Count);
+        
+        Assert.Single(foundLibrary!.Books);
     }
     
     [Fact]
     public async void GenreRepository_SameName_Throws()
     {
         await using var context = _databaseFixture.CreateContext();
-        var unitOfWork = new GenreUOW(context);
+        using var unitOfWork = new GenreUOW(context);
 
-        var id = Guid.NewGuid();
-        unitOfWork.GenreRepository.Insert(new Genre { Id = id, Name = "Horror" });
+        unitOfWork.GenreRepository.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
         unitOfWork.GenreRepository.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
             
-        await Assert.ThrowsAsync<DbUpdateException>( async () => await unitOfWork.Commit());
+        await Assert.ThrowsAsync<DbUpdateException>(async () => await unitOfWork.Commit());
     }
     
     public void Dispose()
