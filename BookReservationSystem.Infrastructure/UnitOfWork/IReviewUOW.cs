@@ -3,10 +3,9 @@ using BookReservationSystem.Infrastructure.Repository;
 
 namespace BookReservationSystem.Infrastructure.UnitOfWork;
 
-public interface IReviewUOW : IDisposable
+public interface IReviewUOW : IUnitOfWork
 {
     IRepository<Book> BookRepository { get; }
     IRepository<Review> ReviewRepository { get; }
     IRepository<User> UserRepository { get; }
-    public Task Commit();
 }

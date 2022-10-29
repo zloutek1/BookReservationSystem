@@ -3,9 +3,8 @@ using BookReservationSystem.Infrastructure.Repository;
 
 namespace BookReservationSystem.Infrastructure.UnitOfWork;
 
-public interface IGenreUOW : IDisposable
+public interface IGenreUOW : IUnitOfWork
 { 
     IRepository<Book> BookRepository { get; }
     IRepository<Genre> GenreRepository { get; }
-    public Task Commit();
 }
