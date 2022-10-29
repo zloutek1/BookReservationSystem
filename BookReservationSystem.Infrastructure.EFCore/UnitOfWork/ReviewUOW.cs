@@ -6,29 +6,17 @@ using BookReservationSystem.Infrastructure.UnitOfWork;
 
 namespace BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
 
-public class ReviewUOW : IReviewUOW
+public class ReviewUOW : GenericUOW, IReviewUOW
 {
-    private readonly BookReservationSystemDbContext _context;
     private IRepository<Book>? _bookRepository;
     private IRepository<Review>? _reviewRepository;
     private IRepository<User>? _userRepository;
 
-    public ReviewUOW(BookReservationSystemDbContext context)
+    public ReviewUOW(BookReservationSystemDbContext context): base(context)
     {
-        _context = context;
     }
 
-    public IRepository<Book> BookRepository => _bookRepository ??= new GenericRepository<Book>(_context);
-    public IRepository<Review> ReviewRepository => _reviewRepository ??= new GenericRepository<Review>(_context);
-    public IRepository<User> UserRepository => _userRepository ??= new GenericRepository<User>(_context);
-
-    public async Task Commit()
-    {
-        await _context.SaveChangesAsync();
-    }
-
-    public void Dispose()
-    {
-        _context.Dispose();
-    }
+    public IRepository<Book> BookRepository => _bookRepository ??= new GenericRepository<Book>(Context);
+    public IRepository<Review> ReviewRepository => _reviewRepository ??= new GenericRepository<Review>(Context);
+    public IRepository<User> UserRepository => _userRepository ??= new GenericRepository<User>(Context);
 }

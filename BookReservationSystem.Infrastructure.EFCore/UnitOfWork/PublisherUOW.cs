@@ -6,27 +6,15 @@ using BookReservationSystem.Infrastructure.UnitOfWork;
 
 namespace BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
 
-public class PublisherUOW : IPublisherUOW
+public class PublisherUOW : GenericUOW, IPublisherUOW
 {
-    private readonly BookReservationSystemDbContext _context;
     private IRepository<Book>? _bookRepository;
     private IRepository<Publisher>? _publisherRepository;
 
-    public PublisherUOW(BookReservationSystemDbContext context)
+    public PublisherUOW(BookReservationSystemDbContext context): base(context)
     {
-        _context = context;
     }
 
-    public IRepository<Book> BookRepository => _bookRepository ??= new GenericRepository<Book>(_context);
-    public IRepository<Publisher> PublisherRepository => _publisherRepository ??= new GenericRepository<Publisher>(_context);
-
-    public async Task Commit()
-    {
-        await _context.SaveChangesAsync();
-    }
-
-    public void Dispose()
-    {
-        _context.Dispose();
-    }
+    public IRepository<Book> BookRepository => _bookRepository ??= new GenericRepository<Book>(Context);
+    public IRepository<Publisher> PublisherRepository => _publisherRepository ??= new GenericRepository<Publisher>(Context);
 }
