@@ -3,7 +3,7 @@ using BookReservationSystem.Infrastructure.Repository;
 
 namespace BookReservationSystem.Infrastructure.UnitOfWork;
 
-public interface IBookUOW : IDisposable
+public interface IBookUOW : IUnitOfWork
 {      
     IRepository<Author> AuthorRepository { get; }
     IRepository<Book> BookRepository { get; }
@@ -11,5 +11,4 @@ public interface IBookUOW : IDisposable
     IRepository<Publisher> PublisherRepository { get; }
     IRepository<Review> ReviewRepository { get; }
     IRepository<BookQuantity> BookQuantityRepository { get; }
-    public Task Commit();
 }

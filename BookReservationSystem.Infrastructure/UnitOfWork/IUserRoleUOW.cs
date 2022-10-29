@@ -3,9 +3,8 @@ using BookReservationSystem.Infrastructure.Repository;
 
 namespace BookReservationSystem.Infrastructure.UnitOfWork;
 
-public interface IUserRoleUOW : IDisposable
+public interface IUserRoleUOW : IUnitOfWork
 {
     IRepository<Role> RoleRepository { get; }
     IRepository<User> UserRepository { get; }
-    public Task Commit();
 }
