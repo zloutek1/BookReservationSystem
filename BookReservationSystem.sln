@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystem.Infra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystem.Infrastructure.EFCore.Test", "BookReservationSystem.Infrastructure.EFCore.Test\BookReservationSystem.Infrastructure.EFCore.Test.csproj", "{488E3D4D-2111-4FB6-9BF6-9CFF90DC1A97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystem.BL", "BookReservationSystem.BL\BookReservationSystem.BL.csproj", "{A88299F2-7980-46B8-94B2-0EE5149BE58F}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystem.Domain", "BookReservationSystem.Domain\BookReservationSystem.Domain.csproj", "{14FA2B96-019F-46BC-BA6C-AAEA809D3FD7}"
 EndProject
 Global
