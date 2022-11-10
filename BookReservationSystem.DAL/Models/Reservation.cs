@@ -12,17 +12,20 @@ public class Reservation : BaseEntity
     public DateTime? PickupDate { get; set; }
     public DateTime? ReturnDate { get; set; }
 
-    public Guid? LibraryId { get; set; }
+    [Required]
+    public Guid LibraryId { get; set; }
 
     [ForeignKey(nameof(LibraryId))]
     public virtual Library? Library { get; set; }
 
-    public Guid? BookId { get; set; }
+    [Required]
+    public Guid BookId { get; set; }
 
     [ForeignKey(nameof(BookId))]
     public virtual Book? Book { get; set; }
 
-    public Guid? CustomerId { get; set; }
+    [Required]
+    public Guid CustomerId { get; set; }
 
     [ForeignKey(nameof(CustomerId))]
     public virtual User? Customer { get; set; }
