@@ -1,6 +1,6 @@
 ﻿namespace BookReservationSystem.Domain;
 
-public class BookQuantity
+public class BookQuantityDto
 {
     public Guid Id { get; set; }
     public Guid BookId { get; set; }

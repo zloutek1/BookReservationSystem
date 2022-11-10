@@ -1,6 +1,6 @@
 namespace BookReservationSystem.Domain;
 
-public class Author
+public class RoleDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

@@ -1,6 +1,6 @@
 namespace BookReservationSystem.Domain;
 
-public class Book
+public class BookDto
 {
     public string Name { get; set; }
     public string Abstract { get; set; }
