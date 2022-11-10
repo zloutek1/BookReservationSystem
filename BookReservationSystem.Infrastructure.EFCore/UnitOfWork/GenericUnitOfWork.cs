@@ -5,32 +5,31 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
 
-public class GenericUOW: IUnitOfWork
+public class GenericUnitOfWork: IUnitOfWork
 {
-    private IDbContextTransaction? _transaction;
+    private IDbContextTransaction _transaction;
     protected readonly BookReservationSystemDbContext Context;
 
-    protected GenericUOW(BookReservationSystemDbContext context)
+    protected GenericUnitOfWork(BookReservationSystemDbContext context)
     {
         Context = context;
         _transaction = Context.Database.BeginTransaction();
     }
 
-    public async Task Commit()
+    public async Task CommitAsync()
     {
-        Debug.Assert(_transaction != null, nameof(_transaction) + " != null");
-        await Context.SaveChangesAsync();
         await _transaction.CommitAsync();
+        _transaction = await Context.Database.BeginTransactionAsync();
     }
 
-    public async Task Rollback()
+    public async Task RollbackAsync()
     {
-        Debug.Assert(_transaction != null, nameof(_transaction) + " != null");
         await _transaction.RollbackAsync();
+        _transaction = await Context.Database.BeginTransactionAsync();
     }
     
     public void Dispose()
     {
-        _transaction?.Dispose();
+        _transaction.Dispose();
     }
 }

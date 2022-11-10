@@ -6,13 +6,13 @@ using BookReservationSystem.Infrastructure.UnitOfWork;
 
 namespace BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
 
-public class ReviewUOW : GenericUOW, IReviewUOW
+public class ReviewUnitOfWork : GenericUnitOfWork, IReviewUnitOfWork
 {
     private IRepository<Book>? _bookRepository;
     private IRepository<Review>? _reviewRepository;
     private IRepository<User>? _userRepository;
 
-    public ReviewUOW(BookReservationSystemDbContext context): base(context)
+    public ReviewUnitOfWork(BookReservationSystemDbContext context): base(context)
     {
     }
 

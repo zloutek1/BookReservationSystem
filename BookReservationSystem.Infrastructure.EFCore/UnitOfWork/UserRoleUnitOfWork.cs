@@ -6,12 +6,12 @@ using BookReservationSystem.Infrastructure.UnitOfWork;
 
 namespace BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
 
-public class UserRoleUOW : GenericUOW, IUserRoleUOW
+public class UserRoleUnitOfWork : GenericUnitOfWork, IUserRoleUnitOfWork
 {
     private IRepository<Role>? _roleRepository;
     private IRepository<User>? _userRepository;
         
-    public UserRoleUOW(BookReservationSystemDbContext context): base(context)
+    public UserRoleUnitOfWork(BookReservationSystemDbContext context): base(context)
     {
     }
 

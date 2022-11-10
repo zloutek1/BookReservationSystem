@@ -17,7 +17,7 @@ public class EFUnitOfWorkTests : IDisposable
 
         await using (var context = _databaseFixture.CreateContext())
         {
-            using (var bookUow = new BookUOW(context))
+            using (var bookUow = new BookUnitOfWork(context))
             {
                 bookUow.BookRepository.Insert(new Book
                 {
@@ -27,10 +27,10 @@ public class EFUnitOfWorkTests : IDisposable
                     CoverArtPath = "../Resources/example.jpg",
                     Name = "BooName"
                 });
-                await bookUow.Commit();
+                await bookUow.CommitAsync();
             }
 
-            using (var libraryUow = new LibraryUOW(context))
+            using (var libraryUow = new LibraryUnitOfWork(context))
             {
                 var address = new Address
                 {
@@ -52,14 +52,14 @@ public class EFUnitOfWorkTests : IDisposable
                 };
                 libraryUow.LibraryRepository.Insert(library);
                 var x = libraryUow.LibraryRepository.GetById(libraryId);
-                await libraryUow.Commit();
+                await libraryUow.CommitAsync();
             }
         }
 
         Library? foundLibrary;
         await using (var context = _databaseFixture.CreateContext())
         {
-            using var libraryUow = new LibraryUOW(context);
+            using var libraryUow = new LibraryUnitOfWork(context);
             foundLibrary = libraryUow.LibraryRepository.GetById(libraryId);
             
             Assert.NotNull(foundLibrary);
@@ -73,12 +73,12 @@ public class EFUnitOfWorkTests : IDisposable
     public async void GenreRepository_SameName_Throws()
     {
         await using var context = _databaseFixture.CreateContext();
-        using var unitOfWork = new GenreUOW(context);
+        using var unitOfWork = new GenreUnitOfWork(context);
 
         unitOfWork.GenreRepository.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
         unitOfWork.GenreRepository.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
             
-        await Assert.ThrowsAsync<DbUpdateException>(async () => await unitOfWork.Commit());
+        await Assert.ThrowsAsync<DbUpdateException>(async () => await unitOfWork.CommitAsync());
     }
     
     public void Dispose()

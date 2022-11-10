@@ -3,7 +3,7 @@ using BookReservationSystem.Infrastructure.Repository;
 
 namespace BookReservationSystem.Infrastructure.UnitOfWork;
 
-public interface IReservationUOW : IUnitOfWork
+public interface IReservationUnitOfWork : IUnitOfWork
 {
     IRepository<Book> BookRepository { get; }
     IRepository<Library> LibraryRepository { get; }

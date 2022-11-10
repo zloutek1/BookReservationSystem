@@ -6,7 +6,7 @@ using BookReservationSystem.Infrastructure.UnitOfWork;
 
 namespace BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
 
-public class BookUOW : GenericUOW, IBookUOW
+public class BookUnitOfWork : GenericUnitOfWork, IBookUnitOfWork
 {
     private IRepository<Author>? _authorRepository;
     private IRepository<Book>? _bookRepository;
@@ -15,7 +15,7 @@ public class BookUOW : GenericUOW, IBookUOW
     private IRepository<Review>? _reviewRepository;
     private IRepository<BookQuantity>? _bookQuantityRepository;
 
-    public BookUOW(BookReservationSystemDbContext context): base(context)
+    public BookUnitOfWork(BookReservationSystemDbContext context): base(context)
     {
     }
 

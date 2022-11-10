@@ -3,8 +3,8 @@ using BookReservationSystem.Infrastructure.Repository;
 
 namespace BookReservationSystem.Infrastructure.UnitOfWork;
 
-public interface IPublisherUOW : IUnitOfWork
+public interface IUserRoleUnitOfWork : IUnitOfWork
 {
-    IRepository<Book> BookRepository { get; }
-    IRepository<Publisher> PublisherRepository { get; }
+    IRepository<Role> RoleRepository { get; }
+    IRepository<User> UserRepository { get; }
 }
