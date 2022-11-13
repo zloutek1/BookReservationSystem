@@ -7,7 +7,7 @@ namespace BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
 
 public class GenericUnitOfWork: IUnitOfWork
 {
-    private IDbContextTransaction? _transaction;
+    private IDbContextTransaction _transaction;
     protected readonly BookReservationSystemDbContext Context;
 
     protected GenericUnitOfWork(BookReservationSystemDbContext context)
@@ -18,19 +18,25 @@ public class GenericUnitOfWork: IUnitOfWork
 
     public async Task Commit()
     {
-        Debug.Assert(_transaction != null, nameof(_transaction) + " != null");
         await Context.SaveChangesAsync();
         await _transaction.CommitAsync();
+        _transaction = await Context.Database.BeginTransactionAsync();
     }
 
     public async Task Rollback()
     {
-        Debug.Assert(_transaction != null, nameof(_transaction) + " != null");
         await _transaction.RollbackAsync();
+        _transaction = await Context.Database.BeginTransactionAsync();
     }
     
     public void Dispose()
     {
         _transaction?.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _transaction.DisposeAsync();
     }
 }
