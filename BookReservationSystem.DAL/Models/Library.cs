@@ -9,7 +9,7 @@ public class Library : BaseEntity
     public string Name { get; set; }
     
     [Required]
-    public Guid? AddressId { get; set; }
+    public Guid AddressId { get; set; }
 
     [ForeignKey(nameof(AddressId))]
     public virtual Address? Address { get; set; }

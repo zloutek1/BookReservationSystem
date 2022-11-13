@@ -14,12 +14,14 @@ public class Review : BaseEntity
     [Required]
     public int Rating { get; set; }
 
-    public Guid? BookId { get; set; }
+    [Required]
+    public Guid BookId { get; set; }
 
     [ForeignKey(nameof(BookId))]
     public virtual Book? Book { get; set; }
 
-    public Guid? UserId { get; set; }
+    [Required]
+    public Guid UserId { get; set; }
 
     [ForeignKey(nameof(UserId))]
     public virtual User? Author { get; set; }
