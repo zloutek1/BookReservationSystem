@@ -51,7 +51,7 @@ public class EFUnitOfWorkTests : IDisposable
                     Books = new List<BookQuantity> { new() { BookId = bookId, LibraryId = libraryId, Count = 4 } }
                 };
                 libraryUow.LibraryRepository.Insert(library);
-                var x = libraryUow.LibraryRepository.GetById(libraryId);
+                var x = libraryUow.LibraryRepository.FindById(libraryId);
                 await libraryUow.Commit();
             }
         }
@@ -60,7 +60,7 @@ public class EFUnitOfWorkTests : IDisposable
         await using (var context = _databaseFixture.CreateContext())
         {
             using var libraryUow = new LibraryUnitOfWork(context);
-            foundLibrary = libraryUow.LibraryRepository.GetById(libraryId);
+            foundLibrary = libraryUow.LibraryRepository.FindById(libraryId);
             
             Assert.NotNull(foundLibrary);
             await context.Entry(foundLibrary!).Collection("Books").LoadAsync();

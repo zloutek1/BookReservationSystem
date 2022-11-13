@@ -15,12 +15,12 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
         _table = _context.Set<TEntity>();
     }
 
-    public IEnumerable<TEntity> GetAll()
+    public IEnumerable<TEntity> FindAll()
     {
         return _table.ToList();
     }
 
-    public TEntity? GetById(Guid id)
+    public TEntity? FindById(Guid id)
     {
         return _table.Find(id);
     }

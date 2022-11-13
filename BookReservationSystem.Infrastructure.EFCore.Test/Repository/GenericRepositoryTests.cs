@@ -20,7 +20,7 @@ public class GenericRepositoryTests : IDisposable
         using (var context = _databaseFixture.CreateContext())
         {
             var repository = new GenericRepository<Genre>(context);
-            current = repository.GetById(Guid.NewGuid());
+            current = repository.FindById(Guid.NewGuid());
         }
 
         Assert.Null(current);
@@ -42,7 +42,7 @@ public class GenericRepositoryTests : IDisposable
         using (var context = _databaseFixture.CreateContext())
         {
             var repository = new GenericRepository<Genre>(context);
-            current = repository.GetById(romance.Id);
+            current = repository.FindById(romance.Id);
         }
 
         Assert.Equal("Romance", current?.Name);
@@ -96,7 +96,7 @@ public class GenericRepositoryTests : IDisposable
         using (var context = _databaseFixture.CreateContext())
         {
             var repository = new GenericRepository<Genre>(context);
-            current = repository.GetById(romance.Id);
+            current = repository.FindById(romance.Id);
         }
 
         Assert.Equal("Bromance", current?.Name);
@@ -125,7 +125,7 @@ public class GenericRepositoryTests : IDisposable
         using (var context = _databaseFixture.CreateContext())
         {
             var repository = new GenericRepository<Genre>(context);
-            current = repository.GetById(romance.Id);
+            current = repository.FindById(romance.Id);
         }
 
         Assert.Null(current);

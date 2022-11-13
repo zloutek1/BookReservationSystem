@@ -2,8 +2,8 @@
 
 public interface IRepository<TEntity> where TEntity : class
 {
-    IEnumerable<TEntity> GetAll();
-    TEntity? GetById(Guid id);
+    IEnumerable<TEntity> FindAll();
+    TEntity? FindById(Guid id);
     void Insert(TEntity obj);
     void Update(TEntity obj);
     void Delete(Guid id);
