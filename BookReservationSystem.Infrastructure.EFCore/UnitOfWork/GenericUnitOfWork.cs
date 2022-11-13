@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
 
-public class GenericUOW: IUnitOfWork
+public class GenericUnitOfWork: IUnitOfWork
 {
     private IDbContextTransaction? _transaction;
     protected readonly BookReservationSystemDbContext Context;
 
-    protected GenericUOW(BookReservationSystemDbContext context)
+    protected GenericUnitOfWork(BookReservationSystemDbContext context)
     {
         Context = context;
         _transaction = Context.Database.BeginTransaction();

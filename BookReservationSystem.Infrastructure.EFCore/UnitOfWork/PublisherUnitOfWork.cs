@@ -6,15 +6,15 @@ using BookReservationSystem.Infrastructure.UnitOfWork;
 
 namespace BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
 
-public class AuthorUOW : GenericUOW, IAuthorUOW
+public class PublisherUnitOfWork : GenericUnitOfWork, IPublisherUnitOfWork
 {
-    private IRepository<Author>? _authorRepository;
     private IRepository<Book>? _bookRepository;
+    private IRepository<Publisher>? _publisherRepository;
 
-    public AuthorUOW(BookReservationSystemDbContext context): base(context)
+    public PublisherUnitOfWork(BookReservationSystemDbContext context): base(context)
     {
     }
 
-    public IRepository<Author> AuthorRepository => _authorRepository ??= new GenericRepository<Author>(Context);
     public IRepository<Book> BookRepository => _bookRepository ??= new GenericRepository<Book>(Context);
+    public IRepository<Publisher> PublisherRepository => _publisherRepository ??= new GenericRepository<Publisher>(Context);
 }

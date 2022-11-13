@@ -3,11 +3,12 @@ using BookReservationSystem.Infrastructure.Repository;
 
 namespace BookReservationSystem.Infrastructure.UnitOfWork;
 
-public interface ILibraryUOW : IUnitOfWork
-{
-    IRepository<Address> AddressRepository { get; }
+public interface IBookUnitOfWork : IUnitOfWork
+{      
+    IRepository<Author> AuthorRepository { get; }
     IRepository<Book> BookRepository { get; }
-    IRepository<Library> LibraryRepository { get; }
-    IRepository<Reservation> ReservationRepository { get; }
+    IRepository<Genre> GenreRepository { get; }
+    IRepository<Publisher> PublisherRepository { get; }
+    IRepository<Review> ReviewRepository { get; }
     IRepository<BookQuantity> BookQuantityRepository { get; }
 }
