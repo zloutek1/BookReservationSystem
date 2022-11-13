@@ -16,7 +16,7 @@ public class BookQueryObject
         _query = query;
     }
 
-    public QueryResultDto<Book> Execute(BookFilterDto bookFilterDto)
+    public IEnumerable<BookDto> Execute(BookFilterDto bookFilterDto)
     {
         _query.Where<string>(name => name == bookFilterDto.Name, "Name");
 
@@ -30,6 +30,6 @@ public class BookQueryObject
             _query.Page(bookFilterDto.RequestedPageNumber.Value, bookFilterDto.PageSize);
         }
 
-        return _mapper.Map<QueryResultDto<Book>>(_query.Execute());
+        return _mapper.Map<IEnumerable<BookDto>>(_query.Execute());
     }
 }
