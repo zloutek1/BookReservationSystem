@@ -27,7 +27,7 @@ public class EFUnitOfWorkTests : IDisposable
                     CoverArtPath = "../Resources/example.jpg",
                     Name = "BooName"
                 });
-                await bookUow.CommitAsync();
+                await bookUow.Commit();
             }
 
             using (var libraryUow = new LibraryUnitOfWork(context))
@@ -51,8 +51,8 @@ public class EFUnitOfWorkTests : IDisposable
                     Books = new List<BookQuantity> { new() { BookId = bookId, LibraryId = libraryId, Count = 4 } }
                 };
                 libraryUow.LibraryRepository.Insert(library);
-                var x = libraryUow.LibraryRepository.GetById(libraryId);
-                await libraryUow.CommitAsync();
+                var x = libraryUow.LibraryRepository.FindById(libraryId);
+                await libraryUow.Commit();
             }
         }
 
@@ -60,7 +60,7 @@ public class EFUnitOfWorkTests : IDisposable
         await using (var context = _databaseFixture.CreateContext())
         {
             using var libraryUow = new LibraryUnitOfWork(context);
-            foundLibrary = libraryUow.LibraryRepository.GetById(libraryId);
+            foundLibrary = libraryUow.LibraryRepository.FindById(libraryId);
             
             Assert.NotNull(foundLibrary);
             await context.Entry(foundLibrary!).Collection("Books").LoadAsync();
@@ -78,7 +78,7 @@ public class EFUnitOfWorkTests : IDisposable
         unitOfWork.GenreRepository.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
         unitOfWork.GenreRepository.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
             
-        await Assert.ThrowsAsync<DbUpdateException>(async () => await unitOfWork.CommitAsync());
+        await Assert.ThrowsAsync<DbUpdateException>(async () => await unitOfWork.Commit());
     }
     
     public void Dispose()

@@ -16,13 +16,14 @@ public class GenericUnitOfWork: IUnitOfWork
         _transaction = Context.Database.BeginTransaction();
     }
 
-    public async Task CommitAsync()
+    public async Task Commit()
     {
+        await Context.SaveChangesAsync();
         await _transaction.CommitAsync();
         _transaction = await Context.Database.BeginTransactionAsync();
     }
 
-    public async Task RollbackAsync()
+    public async Task Rollback()
     {
         await _transaction.RollbackAsync();
         _transaction = await Context.Database.BeginTransactionAsync();
@@ -30,6 +31,12 @@ public class GenericUnitOfWork: IUnitOfWork
     
     public void Dispose()
     {
-        _transaction.Dispose();
+        _transaction?.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _transaction.DisposeAsync();
     }
 }
