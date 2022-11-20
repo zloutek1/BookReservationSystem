@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookReservationSystem.BL.Helpers;
 using BookReservationSystem.BL.Services;
 using BookReservationSystem.Infrastructure.EFCore.Repository;
 using BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
@@ -13,6 +14,7 @@ public static class DependencyInjectionConfig
     public static void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(AutoMapperConfig.ConfigureMapping)));
+        services.AddSingleton(new SecurityHelper());
         
         services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         
