@@ -1,4 +1,5 @@
 using BookReservationSystem.DAL.Models;
+using BookReservationSystem.Infrastructure.EFCore.Repository;
 using BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,21 +18,20 @@ public class EFUnitOfWorkTests : IDisposable
 
         await using (var context = _databaseFixture.CreateContext())
         {
-            using (var bookUow = new BookUnitOfWork(context))
+            await using (var uow = new GenericUnitOfWork(context))
             {
-                bookUow.BookRepository.Insert(new Book
+                var book = new Book
                 {
                     Id = bookId,
                     Abstract = "",
                     Isbn = 123456789L,
                     CoverArtPath = "../Resources/example.jpg",
                     Name = "BooName"
-                });
-                await bookUow.Commit();
-            }
+                };
+                
+                var bookRepo = new GenericRepository<Book>(context);
+                bookRepo.Insert(book);
 
-            using (var libraryUow = new LibraryUnitOfWork(context))
-            {
                 var address = new Address
                 {
                     Id = addressId,
@@ -41,8 +41,10 @@ public class EFUnitOfWorkTests : IDisposable
                     Street = "D",
                     StreetNumber = 1
                 };
-                libraryUow.AddressRepository.Insert(address);
-
+                
+                var addressRepo = new GenericRepository<Address>(context);
+                addressRepo.Insert(address); 
+                
                 var library = new Library
                 {
                     Id = libraryId,
@@ -50,17 +52,19 @@ public class EFUnitOfWorkTests : IDisposable
                     AddressId = addressId,
                     Books = new List<BookQuantity> { new() { BookId = bookId, LibraryId = libraryId, Count = 4 } }
                 };
-                libraryUow.LibraryRepository.Insert(library);
-                var x = libraryUow.LibraryRepository.FindById(libraryId);
-                await libraryUow.Commit();
+                
+                var libraryRepo = new GenericRepository<Library>(context);
+                libraryRepo.Insert(library);
+                
+                await uow.Commit();
             }
         }
 
         Library? foundLibrary;
         await using (var context = _databaseFixture.CreateContext())
         {
-            using var libraryUow = new LibraryUnitOfWork(context);
-            foundLibrary = libraryUow.LibraryRepository.FindById(libraryId);
+            var libraryRepo = new GenericRepository<Library>(context);
+            foundLibrary = libraryRepo.FindById(libraryId);
             
             Assert.NotNull(foundLibrary);
             await context.Entry(foundLibrary!).Collection("Books").LoadAsync();
@@ -73,10 +77,11 @@ public class EFUnitOfWorkTests : IDisposable
     public async void GenreRepository_SameName_Throws()
     {
         await using var context = _databaseFixture.CreateContext();
-        using var unitOfWork = new GenreUnitOfWork(context);
+        await using var unitOfWork = new GenericUnitOfWork(context);
 
-        unitOfWork.GenreRepository.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
-        unitOfWork.GenreRepository.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
+        var genreRepo = new GenericRepository<Genre>(context);
+        genreRepo.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
+        genreRepo.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
             
         await Assert.ThrowsAsync<DbUpdateException>(async () => await unitOfWork.Commit());
     }
