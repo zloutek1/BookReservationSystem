@@ -2,6 +2,8 @@ using AutoMapper;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.UnitOfWork;
+using BookReservationSystem.BL.Helpers;
+using System.Security.Cryptography;
 
 namespace BookReservationSystem.BL.Services;
 
@@ -32,6 +34,14 @@ public class UserService: ICrudService<LibraryDto>
     {
         userQueryObject = new UserQuery(_mapper, _userUnitOfWork);
         return userQueryObject.Execute(new UserFilterDto() { Email = email, SortAscending = true }).Items;
+    }
+
+    public UserCreateDto RegisterUser(string email, string firstName, string lastName, string password)
+    {
+        SecurityHelper ph = new SecurityHelper();
+        string passwordSalt = ph.GenerateSalt();
+        string passwordHash = ph.HashPassword(password);
+        return new UserCreateDto() { Email = email, FirstName = firstName, LastName = lastName, PasswordSalt = passwordSalt, Password = passwordHash });
     }
 
     public void Insert(UserDto userDto)
