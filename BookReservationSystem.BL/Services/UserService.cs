@@ -36,12 +36,17 @@ public class UserService: ICrudService<LibraryDto>
         return userQueryObject.Execute(new UserFilterDto() { Email = email, SortAscending = true }).Items;
     }
 
-    public UserCreateDto RegisterUser(string email, string firstName, string lastName, string password)
+    public void RegisterUser(UserCreateDto userDto)
     {
         SecurityHelper ph = new SecurityHelper();
         string passwordSalt = ph.GenerateSalt();
         string passwordHash = ph.HashPassword(password);
-        return new UserCreateDto() { Email = email, FirstName = firstName, LastName = lastName, PasswordSalt = passwordSalt, Password = passwordHash });
+        User user = new User() { Email = userDto.Email, 
+                                FirstName = userDto.FirstName, 
+                                LastName = userDto.LastName,
+                                PasswordSalt = passwordSalt, 
+                                Password = passwordHash });
+        _userUnitOfWork.UserRepository.Insert(user);
     }
 
     public void Insert(UserDto userDto)
