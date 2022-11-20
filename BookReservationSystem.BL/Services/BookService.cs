@@ -28,6 +28,12 @@ public class BookService: ICrudService<BookDto>
         return _mapper.Map<BookDto?>(foundBook);
     }
 
+    public IEnumerable<BookDto> GetBooksWithName(string name)
+    {
+        bookQueryObject = new BookQueryObject(_mapper, _bookUnitOfWork);
+        return bookQueryObject.Execute(new BookFilterDto() { Name = name, SortAscending = true }).Items;
+    }
+
     public void Insert(BookDto bookDto)
     {
         var book = _mapper.Map<Book>(bookDto);
