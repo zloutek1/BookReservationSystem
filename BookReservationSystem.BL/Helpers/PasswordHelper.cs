@@ -4,7 +4,7 @@ namespace BookReservationSystem.BL.Helpers;
 
 public class SecurityHelper
 {
-    public string GenerateSalt()
+    public virtual string GenerateSalt()
     {
         var saltBytes = new byte[24];
         using var rng = RandomNumberGenerator.Create();
@@ -12,7 +12,7 @@ public class SecurityHelper
         return Convert.ToBase64String(saltBytes);
     }
 
-    public string HashPassword(string password, string salt)
+    public virtual string HashPassword(string password, string salt)
     {
         var saltedPassword = Convert.FromBase64String(password + salt);
         using var alg = SHA512.Create();
