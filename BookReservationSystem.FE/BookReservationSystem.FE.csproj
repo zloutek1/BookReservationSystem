@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BookReservationSystem.Infrastructure\BookReservationSystem.Infrastructure.csproj" />
+    <ProjectReference Include="..\BookReservationSystem.BL\BookReservationSystem.BL.csproj" />
   </ItemGroup>
 
 </Project>

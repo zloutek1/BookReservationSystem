@@ -1,7 +1,11 @@
+
+using BookReservationSystem.BL.Configs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+DependencyInjectionConfig.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 

@@ -3,14 +3,14 @@ using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.Query;
 
-namespace BookReservationSystem.BL.QueryObjects;
+namespace BookReservationSystem.BL.Query;
 
-public class BookQueryObject
+public class BookQuery
 {
     private readonly IMapper _mapper;
     private readonly IQuery<Book> _query;
 
-    public BookQueryObject(IMapper mapper, IQuery<Book> query)
+    public BookQuery(IMapper mapper, IQuery<Book> query)
     {
         _mapper = mapper;
         _query = query;
