@@ -9,13 +9,13 @@ namespace BookReservationSystem.BL.Services;
 public class BookService: ICrudService<BookDto>
 {
     private readonly IMapper _mapper;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly Func<IUnitOfWork> _unitOfWorkFactory;
     private readonly IRepository<Book> _bookRepository;
 
-    public BookService(IMapper mapper, IUnitOfWork unitOfWork, IRepository<Book> bookRepository)
+    public BookService(IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<Book> bookRepository)
     {
         _mapper = mapper;
-        _unitOfWork = unitOfWork;
+        _unitOfWorkFactory = unitOfWorkFactory;
         _bookRepository = bookRepository;
     }
     
@@ -34,17 +34,23 @@ public class BookService: ICrudService<BookDto>
     public void Insert(BookDto bookDto)
     {
         var book = _mapper.Map<Book>(bookDto);
+        using var uow = _unitOfWorkFactory();
         _bookRepository.Insert(book);
+        uow.Commit();
     }
 
     public void Update(BookDto bookDto)
     {
         var book = _mapper.Map<Book>(bookDto);
+        using var uow = _unitOfWorkFactory();
         _bookRepository.Update(book);
+        uow.Commit();
     }
 
     public void Delete(Guid id)
     {
+        using var uow = _unitOfWorkFactory();
         _bookRepository.Delete(id);
+        uow.Commit();
     }
 }

@@ -1,18 +1,18 @@
 using AutoMapper;
-using BookReservationSystem.BL.QueryObjects;
+using BookReservationSystem.BL.Query;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.Query;
 using Moq;
 
-namespace BookReservationSystem.BL.Test.QueryObjects;
+namespace BookReservationSystem.BL.Test.Query;
 
-public class BookQueryObjectTest
+public class BookQueryTest
 {
     private readonly IMapper _mapper;
     private readonly Mock<IQuery<Book>> _bookQueryMock;
     
-    public BookQueryObjectTest(IMapper mapper)
+    public BookQueryTest(IMapper mapper)
     {
         _mapper = mapper;
         _bookQueryMock = new Mock<IQuery<Book>>();
@@ -30,7 +30,7 @@ public class BookQueryObjectTest
             .Setup(x => x.Execute())
             .Returns(filteredBooks);
         
-        var query = new BookQueryObject(_mapper, _bookQueryMock.Object);
+        var query = new BookQuery(_mapper, _bookQueryMock.Object);
         var filters = new BookFilterDto { Name = "Hacker" };
         
         var result = query.Execute(filters).ToList();
