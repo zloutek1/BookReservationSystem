@@ -16,10 +16,10 @@ public static class DependencyInjectionConfig
         
         services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         
+        services.AddScoped<IUnitOfWork, GenericUnitOfWork>();
+        services.AddSingleton(provider => new Func<IUnitOfWork>(() => provider.GetService<IUnitOfWork>()!));
+        
         services.AddScoped<BookService>();
         services.AddScoped<LibraryService>();
-        services.AddScoped<IUnitOfWork, GenericUnitOfWork>();
-
-        services.AddSingleton(provider => new Func<IUnitOfWork>(() => provider.GetService<IUnitOfWork>()!));
     }
 }
