@@ -8,11 +8,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BookReservationSystem.Domain\BookReservationSystem.Domain.csproj" />
+      <ProjectReference Include="..\BookReservationSystem.Infrastructure.EFCore\BookReservationSystem.Infrastructure.EFCore.csproj" />
       <ProjectReference Include="..\BookReservationSystem.Infrastructure\BookReservationSystem.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.4.0" />
       <PackageReference Include="AutoMapper" Version="12.0.0" />
     </ItemGroup>
 

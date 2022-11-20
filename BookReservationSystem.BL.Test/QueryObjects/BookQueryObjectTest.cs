@@ -1,5 +1,4 @@
 using AutoMapper;
-using BookReservationSystem.BL.Configs;
 using BookReservationSystem.BL.QueryObjects;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
@@ -13,9 +12,9 @@ public class BookQueryObjectTest
     private readonly IMapper _mapper;
     private readonly Mock<IQuery<Book>> _bookQueryMock;
     
-    public BookQueryObjectTest()
+    public BookQueryObjectTest(IMapper mapper)
     {
-        _mapper = new Mapper(new MapperConfiguration(AutoMapperConfig.ConfigureMapping));
+        _mapper = mapper;
         _bookQueryMock = new Mock<IQuery<Book>>();
     }
     
