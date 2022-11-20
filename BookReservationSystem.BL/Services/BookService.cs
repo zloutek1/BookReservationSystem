@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using BookReservationSystem.BL.Query;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
+using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.Infrastructure.UnitOfWork;
 
@@ -11,12 +13,14 @@ public class BookService: ICrudService<BookDto>
     private readonly IMapper _mapper;
     private readonly Func<IUnitOfWork> _unitOfWorkFactory;
     private readonly IRepository<Book> _bookRepository;
+    private readonly IQuery<Book> _bookQuery;
 
-    public BookService(IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<Book> bookRepository)
+    public BookService(IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<Book> bookRepository, IQuery<Book> bookQuery)
     {
         _mapper = mapper;
         _unitOfWorkFactory = unitOfWorkFactory;
         _bookRepository = bookRepository;
+        _bookQuery = bookQuery;
     }
     
     public IEnumerable<BookDto> FindAll()
@@ -29,6 +33,12 @@ public class BookService: ICrudService<BookDto>
     {
         var foundBook = _bookRepository.FindById(id);
         return _mapper.Map<BookDto?>(foundBook);
+    }
+
+    public IEnumerable<BookDto> GetBooksWithName(string name)
+    {
+        var bookQuery = new BookQuery(_mapper, _bookQuery);
+        return bookQuery.Execute(new BookFilterDto { Name = name, SortAscending = true });
     }
 
     public void Insert(BookDto bookDto)
