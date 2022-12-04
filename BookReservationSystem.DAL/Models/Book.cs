@@ -25,4 +25,6 @@ public class Book : BaseEntity
     public virtual List<Publisher> Publishers { get; set; } = new List<Publisher>();
 
     public virtual List<Review> Reviews { get; set; } = new List<Review>();
+
+    public float AverageRating { get; set; } = 0;
 }

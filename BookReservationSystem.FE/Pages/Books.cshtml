@@ -1,0 +1,27 @@
+﻿@page
+@model BooksModel
+@{
+    ViewData["Title"] = "Books page";
+}
+
+<div class="text-center">
+    <form method="post" class="m-bottom">
+        <input type="text" name="title" placeholder="Title">
+    </form>
+    <form method="post" class="m-bottom">
+        <input type="text" name="author" placeholder="Author">
+    </form>
+    <form method="post" class="m-bottom">
+        <input type="text" name="publisher" placeholder="Publisher">
+    </form>
+    <form method="post" class="m-bottom">
+         <input type="number" name="isbn" placeholder="ISBN">
+     </form>
+    <form method="post" class="m-bottom">
+        <input type="text" name="genre" placeholder="Genre">
+    </form>
+    <form method="post" class="m-bottom">
+        <input type="checkbox" name="rating"> Sort by rating
+    </form>
+    <button type="button" class="m-bottom">Search</button>
+</div>
