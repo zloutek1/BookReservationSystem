@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookReservationSystem.BL.Services
 {
-    public class ReservationService //: ICrudService<ReservationDto>
+    public class ReservationService : ICrudService<ReservationDto>
     {
         private readonly IMapper _mapper;
         private readonly Func<IUnitOfWork> _unitOfWorkFactory;
@@ -36,6 +36,27 @@ namespace BookReservationSystem.BL.Services
             return _mapper.Map<ReservationDto?>(foundReservation);
         }
 
+        public void Insert(ReservationDto reservationDto)
+        {
+            var reservation = _mapper.Map<Reservation>(reservationDto);
+            using var uow = _unitOfWorkFactory();
+            _reservationRepository.Insert(reservation);
+            uow.Commit();
+        }
 
+        public void Update(ReservationDto reservationDto)
+        {
+            var reservation = _mapper.Map<Reservation>(reservationDto);
+            using var uow = _unitOfWorkFactory();
+            _reservationRepository.Update(reservation);
+            uow.Commit();
+        }
+
+        public void Delete(Guid id)
+        {
+            using var uow = _unitOfWorkFactory();
+            _reservationRepository.Delete(id);
+            uow.Commit();
+        }
     }
 }
