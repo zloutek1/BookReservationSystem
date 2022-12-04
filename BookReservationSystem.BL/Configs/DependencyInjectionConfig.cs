@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using BookReservationSystem.BL.Helpers;
 using BookReservationSystem.BL.Services;
+using BookReservationSystem.DAL.Data;
+using BookReservationSystem.Infrastructure.EFCore.Query;
 using BookReservationSystem.Infrastructure.EFCore.Repository;
 using BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
+using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.Infrastructure.UnitOfWork;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +18,10 @@ public static class DependencyInjectionConfig
     {
         services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(AutoMapperConfig.ConfigureMapping)));
         services.AddSingleton(new SecurityHelper());
-        
+
+        services.AddDbContext<BookReservationSystemDbContext>();
+
+        services.AddScoped(typeof(IQuery<>), typeof(GenericQuery<>));
         services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         
         services.AddScoped<IUnitOfWork, GenericUnitOfWork>();
