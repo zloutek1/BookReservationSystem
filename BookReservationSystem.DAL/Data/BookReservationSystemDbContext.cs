@@ -1,10 +1,12 @@
 ﻿using BookReservationSystem.DAL.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace BookReservationSystem.DAL.Data;
 
-public class BookReservationSystemDbContext : DbContext
+public class BookReservationSystemDbContext: IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
     private readonly bool _shouldSeed; 
 
@@ -21,8 +23,6 @@ public class BookReservationSystemDbContext : DbContext
     public DbSet<Publisher> Publisher { get; set; } = null!;
     public DbSet<Reservation> Reservation { get; set; } = null!;
     public DbSet<Review> Review { get; set; } = null!;
-    public DbSet<Role> Role { get; set; } = null!;
-    public DbSet<User> User { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -61,6 +61,14 @@ public class BookReservationSystemDbContext : DbContext
         modelBuilder.Entity<BookQuantity>()
             .HasKey(x => new { x.BookId, x.LibraryId });
 
+        modelBuilder.Entity<User>().ToTable("Users");
+        modelBuilder.Entity<Role>().ToTable("Roles");
+        modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
+        modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
+        modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
+        modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
+        modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserToken");
+        
         if (_shouldSeed)
         {
             modelBuilder.Seed();

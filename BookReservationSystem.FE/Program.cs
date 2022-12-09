@@ -1,5 +1,8 @@
 
 using BookReservationSystem.BL.Configs;
+using BookReservationSystem.DAL.Data;
+using BookReservationSystem.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 

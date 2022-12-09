@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using BookReservationSystem.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookReservationSystem.DAL.Data;
 
@@ -93,12 +94,11 @@ public static class DataInitializer
         };
         modelBuilder.Entity<BookQuantity>().HasData(bookInLibrary);
 
-        var admin = new Role 
+        var admin = new IdentityRole("admin") 
         {
-            Id = Guid.NewGuid(),
-            Name = "admin" 
+            NormalizedName = "ADMIN"
         };
-        modelBuilder.Entity<Role>().HasData(admin);
+        modelBuilder.Entity<IdentityRole>().HasData(admin);
 
         var monkman = new User
         {
@@ -106,7 +106,7 @@ public static class DataInitializer
             FirstName = "Westbrook",
             LastName = "Monkman",
             Email = "wmonkman0@zdnet.com",
-            Password = "RLreUYnARxnE",
+            PasswordHash = "RLreUYnARxnE",
             PasswordSalt = ""
         };
         modelBuilder.Entity<User>().HasData(monkman);
@@ -117,7 +117,7 @@ public static class DataInitializer
             FirstName = "Madelene",
             LastName = "Maxworthy",
             Email = "mmaxworthy1@ning.com",
-            Password = "bo09BbrTa",
+            PasswordHash = "bo09BbrTa",
             PasswordSalt = ""
         };
         modelBuilder.Entity<User>().HasData(maxworthy);

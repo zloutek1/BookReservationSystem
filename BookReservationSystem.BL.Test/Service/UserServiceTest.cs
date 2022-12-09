@@ -52,7 +52,7 @@ public class UserServiceTest
         
         _userRepositoryMock.Verify(mock => 
             mock.Insert(
-                It.Is<User>(user => user.Password == "Hashed123456")), 
+                It.Is<User>(user => user.PasswordHash == "Hashed123456")), 
             Times.Once());
         _uowMock.Verify(mock => mock.Commit(), Times.Once());
     }
