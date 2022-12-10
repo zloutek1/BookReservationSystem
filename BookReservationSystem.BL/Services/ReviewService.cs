@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.BL.Query;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.Infrastructure.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace BookReservationSystem.BL.Services
 {
-    public class ReviewService : ICrudService<ReviewDto>
+    public class ReviewService : IReviewService
     {
         private readonly IMapper _mapper;
         private readonly Func<IUnitOfWork> _unitOfWorkFactory;
@@ -29,6 +31,8 @@ namespace BookReservationSystem.BL.Services
             _bookRepository = bookRepository;
             _reviewQuery = reviewQuery;
         }
+
+        #region crud
         public IEnumerable<ReviewDto> FindAll()
         {
             var foundReviews = _reviewRepository.FindAll();
@@ -45,7 +49,7 @@ namespace BookReservationSystem.BL.Services
         {
             var review = _mapper.Map<Review>(reviewDto);
 
-            var reviewQuery = new ReviewQuery(_mapper, _reviewQuery);
+            var reviewQuery = new GetReviewAuthorQuery(_mapper, _reviewQuery);
             var book = _mapper.Map<Book>(reviewQuery.Execute(reviewDto));
 
             float temp = 0;
@@ -55,6 +59,8 @@ namespace BookReservationSystem.BL.Services
             }
             temp += review.Rating;
             temp /= book.Reviews.Count + 1;
+
+            book.AverageRating = temp;
 
             using var uow = _unitOfWorkFactory();
             _bookRepository.Update(book);
@@ -75,6 +81,13 @@ namespace BookReservationSystem.BL.Services
             using var uow = _unitOfWorkFactory();
             _reviewRepository.Delete(id);
             uow.Commit();
+        }
+        #endregion
+
+        public IEnumerable<ReviewDto> FindAllFromUser(string email)
+        {
+            var reviewQuery = new FilterReviewsQuery(_mapper, _reviewQuery);
+            return reviewQuery.Execute(new ReviewUserFilterDto() { Email = email, SortAscending = true });
         }
     }
 }

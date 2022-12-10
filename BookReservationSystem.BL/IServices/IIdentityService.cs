@@ -1,6 +1,6 @@
 ﻿using BookReservationSystem.Domain;
 
-namespace BookReservationSystem.BL.Services;
+namespace BookReservationSystem.BL.IServices;
 
 public interface IIdentityService
 {

@@ -6,12 +6,12 @@ using System.Linq;
 
 namespace BookReservationSystem.BL.Query;
 
-public class BookQuery
+public class FilterBookQuery
 {
     private readonly IMapper _mapper;
     private readonly IQuery<Book> _query;
 
-    public BookQuery(IMapper mapper, IQuery<Book> query)
+    public FilterBookQuery(IMapper mapper, IQuery<Book> query)
     {
         _mapper = mapper;
         _query = query;
