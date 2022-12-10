@@ -3,7 +3,6 @@ using BookReservationSystem.BL.Helpers;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookReservationSystem.BL.Services;
 
@@ -33,6 +32,10 @@ public class IdentityService : IIdentityService
         
         var user = await _userManager.FindByNameAsync(model.UserName).ConfigureAwait(false);
         await _userManager.AddToRoleAsync(user, "User").ConfigureAwait(false);
+        if (model.IsAdmin)
+        {
+            await _userManager.AddToRoleAsync(user, "Admin").ConfigureAwait(false);
+        }
         await _signInManager.SignInAsync(user, true).ConfigureAwait(false);
     }
 
