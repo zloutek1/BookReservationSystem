@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 using BookReservationSystem.DAL.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace BookReservationSystem.DAL.Data;
 
@@ -94,15 +92,27 @@ public static class DataInitializer
         };
         modelBuilder.Entity<BookQuantity>().HasData(bookInLibrary);
 
-        var admin = new IdentityRole("admin") 
+        
+        var user = new Role 
         {
+            Id = Guid.NewGuid(),
+            Name = "User",
+            NormalizedName = "USER"
+        };
+        modelBuilder.Entity<Role>().HasData(user);
+        
+        var admin = new Role 
+        {
+            Id = Guid.NewGuid(),
+            Name = "Admin",
             NormalizedName = "ADMIN"
         };
-        modelBuilder.Entity<IdentityRole>().HasData(admin);
+        modelBuilder.Entity<Role>().HasData(admin);
 
         var monkman = new User
         {
             Id = Guid.NewGuid(),
+            UserName = "monkman",
             FirstName = "Westbrook",
             LastName = "Monkman",
             Email = "wmonkman0@zdnet.com",
@@ -114,6 +124,7 @@ public static class DataInitializer
         var maxworthy = new User
         {
             Id = Guid.NewGuid(),
+            UserName = "maxworthy",
             FirstName = "Madelene",
             LastName = "Maxworthy",
             Email = "mmaxworthy1@ning.com",

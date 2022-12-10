@@ -12,17 +12,21 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookReservationSystem.DAL.Migrations
 {
     [DbContext(typeof(BookReservationSystemDbContext))]
-    [Migration("20221016183541_RequiredFeields")]
-    partial class RequiredFeields
+    [Migration("20221210102038_Initial")]
+    partial class Initial
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("AuthorBook", b =>
                 {
@@ -41,8 +45,8 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            AuthorsId = new Guid("28a10a88-7d53-49d8-9588-90f9bed4e485"),
-                            BooksId = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47")
+                            AuthorsId = new Guid("cd872f62-2e62-41dc-96c7-6fcd6641638b"),
+                            BooksId = new Guid("d8fed630-f13b-40fe-97b7-51919399eb85")
                         });
                 });
 
@@ -63,8 +67,8 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            BooksId = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47"),
-                            GenresId = new Guid("21578d23-cf8f-456d-b948-911ec43a63a8")
+                            BooksId = new Guid("d8fed630-f13b-40fe-97b7-51919399eb85"),
+                            GenresId = new Guid("0040f572-657d-4f3a-8df3-34ba51cec36f")
                         });
                 });
 
@@ -85,8 +89,8 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            BooksId = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47"),
-                            PublishersId = new Guid("bbbf1d7a-fee8-497f-9a6c-768162bff79d")
+                            BooksId = new Guid("d8fed630-f13b-40fe-97b7-51919399eb85"),
+                            PublishersId = new Guid("d5c9c306-7067-4d66-bf63-59796c8ce827")
                         });
                 });
 
@@ -112,7 +116,6 @@ namespace BookReservationSystem.DAL.Migrations
                         .HasColumnType("nvarchar(16)");
 
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
@@ -126,7 +129,7 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2a774a64-525a-44eb-8e7a-fa3addcee172"),
+                            Id = new Guid("33fbbf6b-658d-4624-84f4-a4b9518afd48"),
                             City = "Brno",
                             Country = "CZ",
                             PostalCode = " 60200",
@@ -153,7 +156,7 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("28a10a88-7d53-49d8-9588-90f9bed4e485"),
+                            Id = new Guid("cd872f62-2e62-41dc-96c7-6fcd6641638b"),
                             Name = "Kerkeling Hape"
                         });
                 });
@@ -169,12 +172,11 @@ namespace BookReservationSystem.DAL.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("CoverArtUrl")
-                        .IsRequired()
+                    b.Property<string>("CoverArtPath")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<long>("ISBN")
+                    b.Property<long>("Isbn")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Name")
@@ -189,20 +191,20 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47"),
+                            Id = new Guid("d8fed630-f13b-40fe-97b7-51919399eb85"),
                             Abstract = "Co kočky cítí? Znají humor? Na co myslí? Jak mám svou kočku rozmazlovat a komunikovat s ní? A jsou naši pokojoví tygři jasnovidci? Těmto a mnoha dalším zajímavým otázkám se obšírně věnuje laskavá, vtipná i poučná kniha od milovníka koček, který se svými kočičími mazlíčky prožil třináct let a za tu dobu se jim naučil hodně rozumět. Nabízí čtenářům pár užitečných výchovných rad, ale jak sám poznamenává, nakonec budou stejně k ničemu, protože kočky si vždycky změní páníčka k obrazu svému, nikoli naopak.",
-                            CoverArtUrl = "https://www.knihydobrovsky.cz/thumbs/book-detail-fancy-box/mod_eshop/produkty/m/moje-kocky-cizi-kocky-a-ja-9788024282442.jpg",
-                            ISBN = 9788024282442L,
+                            CoverArtPath = "../Resources/kockybookcover.jpg",
+                            Isbn = 9788024282442L,
                             Name = "Moje kočky, cizí kočky a já"
                         });
                 });
 
             modelBuilder.Entity("BookReservationSystem.DAL.Models.BookQuantity", b =>
                 {
-                    b.Property<Guid?>("BookId")
+                    b.Property<Guid>("BookId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("LibraryId")
+                    b.Property<Guid>("LibraryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Count")
@@ -220,8 +222,8 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            BookId = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47"),
-                            LibraryId = new Guid("9eee9984-6e69-4d25-bf6a-7cfe898d6b24"),
+                            BookId = new Guid("d8fed630-f13b-40fe-97b7-51919399eb85"),
+                            LibraryId = new Guid("b3a67ec0-2001-4372-b016-e0e292c5a825"),
                             Count = 1,
                             Id = new Guid("00000000-0000-0000-0000-000000000000")
                         });
@@ -235,16 +237,19 @@ namespace BookReservationSystem.DAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Genre");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("21578d23-cf8f-456d-b948-911ec43a63a8"),
+                            Id = new Guid("0040f572-657d-4f3a-8df3-34ba51cec36f"),
                             Name = "Satire"
                         });
                 });
@@ -255,8 +260,7 @@ namespace BookReservationSystem.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AddressId")
-                        .IsRequired()
+                    b.Property<Guid>("AddressId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -272,9 +276,9 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9eee9984-6e69-4d25-bf6a-7cfe898d6b24"),
-                            AddressId = new Guid("2a774a64-525a-44eb-8e7a-fa3addcee172"),
-                            Name = "Knihy Dobrovsky"
+                            Id = new Guid("b3a67ec0-2001-4372-b016-e0e292c5a825"),
+                            AddressId = new Guid("33fbbf6b-658d-4624-84f4-a4b9518afd48"),
+                            Name = "Knihy Dobrovský"
                         });
                 });
 
@@ -296,7 +300,7 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bbbf1d7a-fee8-497f-9a6c-768162bff79d"),
+                            Id = new Guid("d5c9c306-7067-4d66-bf63-59796c8ce827"),
                             Name = "EUROMEDIA GROUP, a.s."
                         });
                 });
@@ -307,16 +311,16 @@ namespace BookReservationSystem.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BookId")
+                    b.Property<Guid>("BookId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CustomerId")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("LibraryId")
+                    b.Property<Guid>("LibraryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("PickupDate")
@@ -341,11 +345,11 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("fd6c5905-20d2-4cf6-98fb-5241c02b7bbc"),
-                            BookId = new Guid("8ba2a6e3-8c73-43dc-90b8-311fe917da47"),
-                            CustomerId = new Guid("c6aa8c2d-e5e3-434f-bf75-781012cdee0a"),
+                            Id = new Guid("ed83d7d8-d6cb-48fd-ae27-6a386b344081"),
+                            BookId = new Guid("d8fed630-f13b-40fe-97b7-51919399eb85"),
+                            CustomerId = new Guid("ef2b7bcc-cbdd-403d-bdd8-5e4491707eaa"),
                             DueDate = new DateTime(2022, 12, 31, 23, 59, 59, 0, DateTimeKind.Unspecified),
-                            LibraryId = new Guid("9eee9984-6e69-4d25-bf6a-7cfe898d6b24"),
+                            LibraryId = new Guid("b3a67ec0-2001-4372-b016-e0e292c5a825"),
                             ReservationDate = new DateTime(2022, 10, 1, 18, 40, 1, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -356,7 +360,7 @@ namespace BookReservationSystem.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BookId")
+                    b.Property<Guid>("BookId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
@@ -369,7 +373,7 @@ namespace BookReservationSystem.DAL.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -381,38 +385,25 @@ namespace BookReservationSystem.DAL.Migrations
                     b.ToTable("Review");
                 });
 
-            modelBuilder.Entity("BookReservationSystem.DAL.Models.Role", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Role");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("7e2bfa6f-9b03-4d7f-bcad-f0c1033868ee"),
-                            Name = "admin"
-                        });
-                });
-
             modelBuilder.Entity("BookReservationSystem.DAL.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -424,54 +415,249 @@ namespace BookReservationSystem.DAL.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordSalt")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("514deb4e-4602-4433-904f-2f050cad7953"),
+                            Id = new Guid("916e29de-b5db-4fb5-93c1-ef8b601039b4"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a1afe091-f2ac-4e8f-8ec9-031a8a030e06",
                             Email = "wmonkman0@zdnet.com",
+                            EmailConfirmed = false,
                             FirstName = "Westbrook",
                             LastName = "Monkman",
-                            Password = "RLreUYnARxnE",
-                            PasswordSalt = ""
+                            LockoutEnabled = false,
+                            PasswordHash = "RLreUYnARxnE",
+                            PasswordSalt = "",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "monkman"
                         },
                         new
                         {
-                            Id = new Guid("c6aa8c2d-e5e3-434f-bf75-781012cdee0a"),
+                            Id = new Guid("ef2b7bcc-cbdd-403d-bdd8-5e4491707eaa"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "003c4fc8-ef9d-4564-a358-614da0babea9",
                             Email = "mmaxworthy1@ning.com",
+                            EmailConfirmed = false,
                             FirstName = "Madelene",
                             LastName = "Maxworthy",
-                            Password = "bo09BbrTa",
-                            PasswordSalt = ""
+                            LockoutEnabled = false,
+                            PasswordHash = "bo09BbrTa",
+                            PasswordSalt = "",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "maxworthy"
                         });
                 });
 
-            modelBuilder.Entity("RoleUser", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
-                    b.Property<Guid>("RolesId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UsersId")
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("RolesId", "UsersId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("RoleId");
 
-                    b.ToTable("RoleUser");
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("BookReservationSystem.DAL.Models.Role", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>");
+
+                    b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("6f63be94-90fe-4ec4-97b1-1b765c0a491a"),
+                            ConcurrencyStamp = "df6e953f-9052-4783-bd27-47239fcd6e21",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = new Guid("1c446c00-3b5f-4683-8a07-2a013614ad73"),
+                            ConcurrencyStamp = "db6cd3af-88ab-4ef0-ab20-7cba9db843be",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("AuthorBook", b =>
@@ -554,17 +740,20 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasOne("BookReservationSystem.DAL.Models.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookReservationSystem.DAL.Models.User", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookReservationSystem.DAL.Models.Library", "Library")
                         .WithMany("Reservations")
                         .HasForeignKey("LibraryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Book");
 
@@ -578,30 +767,77 @@ namespace BookReservationSystem.DAL.Migrations
                     b.HasOne("BookReservationSystem.DAL.Models.Book", "Book")
                         .WithMany("Reviews")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookReservationSystem.DAL.Models.User", "Author")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Author");
 
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("RoleUser", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("BookReservationSystem.DAL.Models.Role", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.HasOne("BookReservationSystem.DAL.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.HasOne("BookReservationSystem.DAL.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BookReservationSystem.DAL.Models.User", null)
                         .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.HasOne("BookReservationSystem.DAL.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookReservationSystem.DAL.Models.Role", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                        .WithOne()
+                        .HasForeignKey("BookReservationSystem.DAL.Models.Role", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
