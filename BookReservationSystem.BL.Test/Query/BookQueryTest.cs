@@ -30,7 +30,7 @@ public class BookQueryTest
             .Setup(x => x.Execute())
             .Returns(filteredBooks);
         
-        var query = new BookQuery(_mapper, _bookQueryMock.Object);
+        var query = new FilterBookQuery(_mapper, _bookQueryMock.Object);
         var filters = new BookFilterDto { Name = "Hacker" };
         
         var result = query.Execute(filters).ToList();

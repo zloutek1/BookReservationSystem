@@ -41,7 +41,7 @@ public class UserService: ICrudService<UserDto>
 
     public IEnumerable<UserDto> GetUsersWithEmail(string email)
     {
-        var userQuery = new UserQuery(_mapper, _userQuery);
+        var userQuery = new FilterUserQuery(_mapper, _userQuery);
         return userQuery.Execute(new UserFilterDto { Email = email, SortAscending = true });
     }
 
@@ -79,6 +79,7 @@ public class UserService: ICrudService<UserDto>
         uow.Commit();
     }
 
+    //delete all reservations for this user
     public void Delete(Guid id)
     {
         using var uow = _unitOfWorkFactory();

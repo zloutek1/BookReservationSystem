@@ -5,6 +5,7 @@ using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.Infrastructure.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,11 +42,17 @@ namespace BookReservationSystem.BL.Services
             return _mapper.Map<ReviewDto?>(foundReview);
         }
 
+        public IEnumerable<ReviewDto> FindAllFromUser(string email)
+        {
+            var reviewQuery = new AllReviewsQuery(_mapper, _reviewQuery);
+            return reviewQuery.Execute(new ReviewUserFilterDto() { Email = email, SortAscending = true });
+        }
+
         public void Insert(ReviewDto reviewDto)
         {
             var review = _mapper.Map<Review>(reviewDto);
 
-            var reviewQuery = new ReviewQuery(_mapper, _reviewQuery);
+            var reviewQuery = new ReviewAuthorQuery(_mapper, _reviewQuery);
             var book = _mapper.Map<Book>(reviewQuery.Execute(reviewDto));
 
             float temp = 0;

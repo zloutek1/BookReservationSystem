@@ -37,7 +37,7 @@ public class BookService: ICrudService<BookDto>
 
     public IEnumerable<BookDto> FilterBooks(string name, string author, long isbn, string publisher, string genre, bool sortByRating, bool onlyAvailable)
     {
-        var bookQuery = new BookQuery(_mapper, _bookQuery);
+        var bookQuery = new FilterBookQuery(_mapper, _bookQuery);
         return bookQuery.Execute(new BookFilterDto { Name = name, Author = author,
             Isbn = isbn, Publisher = publisher, Genre = genre, 
             SortByRating = sortByRating, OnlyAvailable = onlyAvailable });
@@ -59,6 +59,7 @@ public class BookService: ICrudService<BookDto>
         uow.Commit();
     }
 
+    //delete all reviews and reservations for this book
     public void Delete(Guid id)
     {
         using var uow = _unitOfWorkFactory();
