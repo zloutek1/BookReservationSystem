@@ -7,7 +7,7 @@ public interface IQuery<TEntity> where TEntity : class, new()
     /// <summary>
     /// Adds a possibility to filter the result
     /// </summary>
-    IQuery<TEntity> Where<T>(Expression<Func<T, bool>> rootPredicate, string columnName) where T : IComparable<T>;
+    IQuery<TEntity> Where<T>(Expression<Func<T, bool>> rootPredicate, string columnName);
 
     /// <summary>
     /// Adds a specified sort criteria to the query.

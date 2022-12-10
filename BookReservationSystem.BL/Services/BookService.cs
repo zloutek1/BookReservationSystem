@@ -35,10 +35,12 @@ public class BookService: ICrudService<BookDto>
         return _mapper.Map<BookDto?>(foundBook);
     }
 
-    public IEnumerable<BookDto> GetBooksWithName(string name)
+    public IEnumerable<BookDto> FilterBooks(string name, string author, long isbn, string publisher, string genre, bool sortByRating, bool onlyAvailable)
     {
         var bookQuery = new BookQuery(_mapper, _bookQuery);
-        return bookQuery.Execute(new BookFilterDto { Name = name, SortAscending = true });
+        return bookQuery.Execute(new BookFilterDto { Name = name, Author = author,
+            Isbn = isbn, Publisher = publisher, Genre = genre, 
+            SortByRating = sortByRating, OnlyAvailable = onlyAvailable });
     }
 
     public void Insert(BookDto bookDto)
