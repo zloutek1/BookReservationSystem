@@ -8,26 +8,56 @@ using BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
 using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace BookReservationSystem.BL.Configs;
 
 public static class DependencyInjectionConfig
 {
     public static void ConfigureServices(IServiceCollection services)
+    { 
+        AddUtilities(services);
+        AddIdentity(services);
+        services.AddDbContext<BookReservationSystemDbContext>();
+        AddRepositories(services);
+        AddQueries(services);
+        AddUnitOfWork(services);
+        AddServices(services);
+    }
+
+    private static void AddUtilities(IServiceCollection services)
     {
         services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(AutoMapperConfig.ConfigureMapping)));
-        services.AddSingleton(new SecurityHelper());
+        services.AddSingleton<ISecurityHelper, SecurityHelper>();
+    }
 
-        services.AddDbContext<BookReservationSystemDbContext>();
-
-        services.AddScoped(typeof(IQuery<>), typeof(GenericQuery<>));
+    private static void AddIdentity(IServiceCollection services)
+    {
+        services.TryAddSingleton<ISystemClock, SystemClock>();
+    }
+    
+    private static void AddRepositories(IServiceCollection services)
+    {
         services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-        
+    }
+
+    private static void AddQueries(IServiceCollection services)
+    {
+        services.AddScoped(typeof(IQuery<>), typeof(GenericQuery<>));
+    }
+
+    private static void AddUnitOfWork(IServiceCollection services)
+    {
         services.AddScoped<IUnitOfWork, GenericUnitOfWork>();
         services.AddSingleton(provider => new Func<IUnitOfWork>(() => provider.GetService<IUnitOfWork>()!));
-        
+    }
+    
+    private static void AddServices(IServiceCollection services)
+    {
         services.AddScoped<BookService>();
         services.AddScoped<LibraryService>();
+        services.AddScoped<IIdentityService, IdentityService>();
     }
 }

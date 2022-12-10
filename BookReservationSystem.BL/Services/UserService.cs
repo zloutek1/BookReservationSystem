@@ -55,7 +55,7 @@ public class UserService: ICrudService<UserDto>
             FirstName = userCreateDto.FirstName, 
             LastName = userCreateDto.LastName,
             PasswordSalt = passwordSalt, 
-            Password = passwordHash 
+            PasswordHash = passwordHash 
         };
 
         using var uow = _unitOfWorkFactory();

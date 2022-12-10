@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookReservationSystem.DAL.Models;
 
-public class Role : BaseEntity
+public class Role : IdentityRole<Guid>
 {
-    [Required]
-    public string Name { get; set; }
-
-    public virtual List<User> Users { get; set; } = new List<User>();
+    
 }
