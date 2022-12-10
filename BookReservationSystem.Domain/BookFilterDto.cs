@@ -15,4 +15,7 @@ public class BookFilterDto
     public string Author { get; set; }
     public string Publisher { get; set; }
     public long Isbn { get; set; }
+
+    public bool SortByRating { get; set; }
+    public bool OnlyAvailable { get; set; }
 }
