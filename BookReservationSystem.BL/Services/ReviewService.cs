@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.BL.Query;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace BookReservationSystem.BL.Services
 {
-    public class ReviewService : ICrudService<ReviewDto>
+    public class ReviewService : IReviewService
     {
         private readonly IMapper _mapper;
         private readonly Func<IUnitOfWork> _unitOfWorkFactory;
@@ -30,6 +31,8 @@ namespace BookReservationSystem.BL.Services
             _bookRepository = bookRepository;
             _reviewQuery = reviewQuery;
         }
+
+        #region crud
         public IEnumerable<ReviewDto> FindAll()
         {
             var foundReviews = _reviewRepository.FindAll();
@@ -42,17 +45,11 @@ namespace BookReservationSystem.BL.Services
             return _mapper.Map<ReviewDto?>(foundReview);
         }
 
-        public IEnumerable<ReviewDto> FindAllFromUser(string email)
-        {
-            var reviewQuery = new AllReviewsQuery(_mapper, _reviewQuery);
-            return reviewQuery.Execute(new ReviewUserFilterDto() { Email = email, SortAscending = true });
-        }
-
         public void Insert(ReviewDto reviewDto)
         {
             var review = _mapper.Map<Review>(reviewDto);
 
-            var reviewQuery = new ReviewAuthorQuery(_mapper, _reviewQuery);
+            var reviewQuery = new GetReviewAuthorQuery(_mapper, _reviewQuery);
             var book = _mapper.Map<Book>(reviewQuery.Execute(reviewDto));
 
             float temp = 0;
@@ -82,6 +79,13 @@ namespace BookReservationSystem.BL.Services
             using var uow = _unitOfWorkFactory();
             _reviewRepository.Delete(id);
             uow.Commit();
+        }
+        #endregion
+
+        public IEnumerable<ReviewDto> FindAllFromUser(string email)
+        {
+            var reviewQuery = new FilterReviewsQuery(_mapper, _reviewQuery);
+            return reviewQuery.Execute(new ReviewUserFilterDto() { Email = email, SortAscending = true });
         }
     }
 }

@@ -5,12 +5,12 @@ using BookReservationSystem.Infrastructure.Query;
 
 namespace BookReservationSystem.BL.Query;
 
-public class UserQuery
+public class FilterUserQuery
 {
     private readonly IMapper _mapper;
     private readonly IQuery<User> _query;
 
-    public UserQuery(IMapper mapper, IQuery<User> query)
+    public FilterUserQuery(IMapper mapper, IQuery<User> query)
     {
         _mapper = mapper;
         _query = query;

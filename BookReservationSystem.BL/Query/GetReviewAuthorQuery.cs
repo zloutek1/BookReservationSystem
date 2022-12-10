@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace BookReservationSystem.BL.Query
 {
-    public class ReviewUserQuery
+    public class ReviewAuthorQuery
     {
         private readonly IMapper _mapper;
         private readonly IQuery<Review> _query;
 
-        public ReviewUserQuery(IMapper mapper, IQuery<Review> query)
+        public ReviewAuthorQuery(IMapper mapper, IQuery<Review> query)
         {
             _mapper = mapper;
             _query = query;

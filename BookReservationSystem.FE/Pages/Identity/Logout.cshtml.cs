@@ -1,4 +1,4 @@
-﻿using BookReservationSystem.BL.Services;
+﻿using BookReservationSystem.BL.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

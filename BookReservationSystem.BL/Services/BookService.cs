@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.BL.Query;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
@@ -8,7 +9,7 @@ using BookReservationSystem.Infrastructure.UnitOfWork;
 
 namespace BookReservationSystem.BL.Services;
 
-public class BookService: ICrudService<BookDto>
+public class BookService : IBookService
 {
     private readonly IMapper _mapper;
     private readonly Func<IUnitOfWork> _unitOfWorkFactory;
@@ -22,7 +23,8 @@ public class BookService: ICrudService<BookDto>
         _bookRepository = bookRepository;
         _bookQuery = bookQuery;
     }
-    
+
+    #region crud
     public IEnumerable<BookDto> FindAll()
     {
         var foundBooks = _bookRepository.FindAll();
@@ -33,14 +35,6 @@ public class BookService: ICrudService<BookDto>
     {
         var foundBook = _bookRepository.FindById(id);
         return _mapper.Map<BookDto?>(foundBook);
-    }
-
-    public IEnumerable<BookDto> FilterBooks(string name, string author, long isbn, string publisher, string genre, bool sortByRating, bool onlyAvailable)
-    {
-        var bookQuery = new FilterBookQuery(_mapper, _bookQuery);
-        return bookQuery.Execute(new BookFilterDto { Name = name, Author = author,
-            Isbn = isbn, Publisher = publisher, Genre = genre, 
-            SortByRating = sortByRating, OnlyAvailable = onlyAvailable });
     }
 
     public void Insert(BookDto bookDto)
@@ -65,5 +59,21 @@ public class BookService: ICrudService<BookDto>
         using var uow = _unitOfWorkFactory();
         _bookRepository.Delete(id);
         uow.Commit();
+    }
+    #endregion
+
+    public IEnumerable<BookDto> FilterBooks(string name, string author, long isbn, string publisher, string genre, bool sortByRating, bool onlyAvailable)
+    {
+        var bookQuery = new FilterBookQuery(_mapper, _bookQuery);
+        return bookQuery.Execute(new BookFilterDto
+        {
+            Name = name,
+            Author = author,
+            Isbn = isbn,
+            Publisher = publisher,
+            Genre = genre,
+            SortByRating = sortByRating,
+            OnlyAvailable = onlyAvailable
+        });
     }
 }

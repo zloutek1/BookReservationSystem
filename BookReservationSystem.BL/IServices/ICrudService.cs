@@ -1,4 +1,4 @@
-﻿namespace BookReservationSystem.BL.Services;
+﻿namespace BookReservationSystem.BL.IServices;
 
 public interface ICrudService<TDto>
 {

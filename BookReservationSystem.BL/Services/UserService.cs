@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using BookReservationSystem.BL.Query;
 using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
+using BookReservationSystem.BL.IServices;
 
 namespace BookReservationSystem.BL.Services;
 
@@ -26,7 +27,8 @@ public class UserService: ICrudService<UserDto>
         _securityHelper = securityHelper;
         _userQuery = userQuery;
     }
-    
+
+    #region crud
     public IEnumerable<UserDto> FindAll()
     {
         var foundUsers = _userRepository.FindAll();
@@ -37,30 +39,6 @@ public class UserService: ICrudService<UserDto>
     {
         var foundUser = _userRepository.FindById(id);
         return _mapper.Map<UserDto?>(foundUser);
-    }
-
-    public IEnumerable<UserDto> GetUsersWithEmail(string email)
-    {
-        var userQuery = new FilterUserQuery(_mapper, _userQuery);
-        return userQuery.Execute(new UserFilterDto { Email = email, SortAscending = true });
-    }
-
-    public void RegisterUser(UserCreateDto userCreateDto)
-    {
-        var passwordSalt = _securityHelper.GenerateSalt();
-        var passwordHash = _securityHelper.HashPassword(userCreateDto.Password, passwordSalt);
-        
-        var user = new User { 
-            Email = userCreateDto.Email, 
-            FirstName = userCreateDto.FirstName, 
-            LastName = userCreateDto.LastName,
-            PasswordSalt = passwordSalt, 
-            PasswordHash = passwordHash 
-        };
-
-        using var uow = _unitOfWorkFactory();
-        _userRepository.Insert(user);
-        uow.Commit();
     }
 
     public void Insert(UserDto userDto)
@@ -84,6 +62,32 @@ public class UserService: ICrudService<UserDto>
     {
         using var uow = _unitOfWorkFactory();
         _userRepository.Delete(id);
+        uow.Commit();
+    }
+    #endregion
+
+    public IEnumerable<UserDto> GetUsersWithEmail(string email)
+    {
+        var userQuery = new FilterUserQuery(_mapper, _userQuery);
+        return userQuery.Execute(new UserFilterDto { Email = email, SortAscending = true });
+    }
+
+    public void RegisterUser(UserCreateDto userCreateDto)
+    {
+        var passwordSalt = _securityHelper.GenerateSalt();
+        var passwordHash = _securityHelper.HashPassword(userCreateDto.Password, passwordSalt);
+
+        var user = new User
+        {
+            Email = userCreateDto.Email,
+            FirstName = userCreateDto.FirstName,
+            LastName = userCreateDto.LastName,
+            PasswordSalt = passwordSalt,
+            PasswordHash = passwordHash
+        };
+
+        using var uow = _unitOfWorkFactory();
+        _userRepository.Insert(user);
         uow.Commit();
     }
 }
