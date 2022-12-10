@@ -57,7 +57,7 @@ public class UserService: ICrudService<UserDto>
         uow.Commit();
     }
 
-    //delete all reservations for this user
+    //delete all reservations and reviews for this user
     public void Delete(Guid id)
     {
         using var uow = _unitOfWorkFactory();
