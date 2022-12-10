@@ -60,6 +60,8 @@ namespace BookReservationSystem.BL.Services
             temp += review.Rating;
             temp /= book.Reviews.Count + 1;
 
+            book.AverageRating = temp;
+
             using var uow = _unitOfWorkFactory();
             _bookRepository.Update(book);
             _reviewRepository.Insert(review);
