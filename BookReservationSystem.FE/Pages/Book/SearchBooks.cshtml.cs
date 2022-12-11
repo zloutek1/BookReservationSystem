@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BookReservationSystemMVC.Pages;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BookReservationSystemMVC.Pages
+namespace BookReservationSystem.FE.Pages.Book
 {
-    public class ProfileModel : PageModel
+    public class SearchBooks : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
 
-        public ProfileModel(ILogger<IndexModel> logger)
+        public SearchBooks(ILogger<IndexModel> logger)
         {
             _logger = logger;
         }
@@ -17,6 +18,11 @@ namespace BookReservationSystemMVC.Pages
         public int MyProperty { get; set; }
 
         public void OnGet()
+        {
+
+        }
+
+        public void OnPost()
         {
 
         }

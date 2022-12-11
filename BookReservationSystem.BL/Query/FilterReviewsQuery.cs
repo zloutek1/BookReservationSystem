@@ -12,12 +12,12 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BookReservationSystem.BL.Query
 {
-    public class AllReviewsQuery
+    public class FilterReviewsQuery
     {
         private readonly IMapper _mapper;
         private readonly IQuery<Review> _query;
 
-        public AllReviewsQuery(IMapper mapper, IQuery<Review> query)
+        public FilterReviewsQuery(IMapper mapper, IQuery<Review> query)
         {
             _mapper = mapper;
             _query = query;
