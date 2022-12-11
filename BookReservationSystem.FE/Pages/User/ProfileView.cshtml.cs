@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BookReservationSystemMVC.Pages
+namespace BookReservationSystem.FE.Pages.User
 {
-    public class BooksModel : PageModel
+    public class ProfileView : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        //private readonly ILogger<IndexModel> _logger;
 
-        public BooksModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
+        //public ProfileView(ILogger<IndexModel> logger)
+        //{
+        //    _logger = logger;
+        //}
 
         // [BindProperty]  // POST-Only
         [BindProperty(SupportsGet = true)]
