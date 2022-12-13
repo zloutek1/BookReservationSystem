@@ -7,14 +7,16 @@ public static class DataInitializer
 {
     public static void Seed(this ModelBuilder modelBuilder)
     {
-        var satire = new Genre
-        {
-            Id = Guid.NewGuid(),
-            Name = "Satire"
-        };
-        modelBuilder.Entity<Genre>().HasData(satire);
+        #region genres
+        var satire = new Genre  { Id = Guid.NewGuid(), Name = "Satire" };
+        var beletry = new Genre{ Id = Guid.NewGuid(), Name = "Beletry" };
+        var horor = new Genre { Id = Guid.NewGuid(), Name = "Horor" };
+        var fantasy = new Genre { Id = Guid.NewGuid(), Name = "Fantasy" };
+        modelBuilder.Entity<Genre>().HasData(satire, beletry, horor, fantasy, detective, comic);
+        #endregion
 
-        var book = new Book
+        #region books
+        var kockyBook = new Book
         {
             Id = Guid.NewGuid(),
             Name = "Moje kočky, cizí kočky a já",
@@ -22,49 +24,86 @@ public static class DataInitializer
             CoverArtPath = "../Resources/kockybookcover.jpg",
             Isbn = 9788024282442
         };
-        modelBuilder.Entity<Book>(b =>
-        {
-            b.HasData(book);
-            b.HasMany(p => p.Genres).WithMany(p => p.Books)
-                .UsingEntity(j => j.HasData(new
-                {
-                    BooksId = book.Id, 
-                    GenresId = satire.Id
-                }));
-        });
-
-        var hape = new Author 
+        var pavoukBook = new Book
         {
             Id = Guid.NewGuid(),
-            Name = "Kerkeling Hape" 
+            Name = "Pavouk",
+            Abstract = "Joona Linna se znovu ocitá v ohrožení života a zachránit ho může jedině Saga Bauerová.",
+            CoverArtPath = "",
+            Isbn = 9788027513765
         };
+        var draculaBook = new Book
+        {
+            Id = Guid.NewGuid(),
+            Name = "Dracula",
+            Abstract = "",
+            Isbn = 9780141199337
+        };
+        var shiningBook = new Book
+        {
+            Id = Guid.NewGuid(),
+            Name = "Shining",
+            Abstract = "peepo",
+            Isbn = 9788055138343
+        };
+        var hobbitBook = new Book
+        {
+            Id = Guid.NewGuid(),
+            Name = "Hobbit",
+            Abstract = "hehe",
+            Isbn = 9788025707418
+        };
+
+        modelBuilder.Entity<Book>(b =>
+        {
+            b.HasData(kockyBook, pavoukBook, draculaBook, shiningBook, hobbitBook);
+            b.HasMany(p => p.Genres).WithMany(p => p.Books)
+                .UsingEntity(j => j.HasData(new { BooksId = kockyBook.Id, GenresId = satire.Id }, 
+                new {BooksId = pavoukBook.Id, GenresId = beletry.Id},
+                new {BooksId = draculaBook.Id, GenresId = horor.Id},
+                new {BooksId = shiningBook.Id, GenresId = horor.Id},
+                new {BooksId = hobbitBook.Id, GenresId = fantasy.Id}));
+        });
+        #endregion
+
+        #region authors
+        var hape = new Author { Id = Guid.NewGuid(), Name = "Kerkeling Hape" };
+        var kepler = new Author { Id = Guid.NewGuid(), Name = "Lars Kepler" };
+        var stoker = new Author { Id = Guid.NewGuid(), Name = "Bram Stoker" };
+        var king = new Author { Id = Guid.NewGuid(), Name = "Stephen King" };
+        var tolkien = new Author { Id = Guid.NewGuid(), Name = "John Tolkien" };
+
         modelBuilder.Entity<Author>(b =>
         {
             b.HasData(hape);
             b.HasMany(p => p.Books).WithMany(p => p.Authors)
-                .UsingEntity(j => j.HasData(new
-                {
-                    AuthorsId = hape.Id,
-                    BooksId = book.Id
-                }));
+                .UsingEntity(j => j.HasData(new { AuthorsId = hape.Id, BooksId = kockyBook.Id },
+                new {AuthorsId = kepler.Id, BooksId = pavoukBook.Id},
+                new {AuthorsId = stoker.Id, BooksId = draculaBook.Id}, 
+                new {AuthorsId = king.Id, BooksId = shiningBook.Id},
+                new {AuthorsId = tolkien.Id, BooksId = hobbitBook.Id}));
         });
+        #endregion
 
-        var euromedia = new Publisher
-        {
-            Id = Guid.NewGuid(),
-            Name = "EUROMEDIA GROUP, a.s." 
-        };
+        #region publishers
+        var euromedia = new Publisher { Id = Guid.NewGuid(), Name = "EUROMEDIA GROUP, a.s." };
+        var host = new Publisher { Id = Guid.NewGuid(), Name = "Host" };
+        var argo = new Publisher { Id = Guid.NewGuid(), Name = "ARGO" };
+        var ikar = new Publisher { Id = Guid.NewGuid(), Name = "Ikar" };
+
         modelBuilder.Entity<Publisher>(b =>
         {
             b.HasData(euromedia);
             b.HasMany(p => p.Books).WithMany(p => p.Publishers)
-                .UsingEntity(j => j.HasData(new
-                {
-                    PublishersId = euromedia.Id,
-                    BooksId = book.Id
-                }));
+                .UsingEntity(j => j.HasData(new { PublishersId = euromedia.Id, BooksId = kockyBook.Id },
+                new {PublishersId = host.Id, BooksId = pavoukBook.Id},
+                new {PublishersId = argo.Id, BooksId = draculaBook.Id},
+                new {PublishersId = ikar.Id, BooksId = shiningBook.Id},
+                new {PublishersId = argo.Id, BooksId = hobbitBook.Id}));
         });
+        #endregion
 
+        #region library
         var jostova = new Address
         {
             Id = Guid.NewGuid(),
@@ -84,15 +123,15 @@ public static class DataInitializer
         };
         modelBuilder.Entity<Library>().HasData(dobrovsky);
 
-        var bookInLibrary = new BookQuantity
-        {
-            BookId = book.Id,
-            LibraryId = dobrovsky.Id,
-            Count = 1
-        };
-        modelBuilder.Entity<BookQuantity>().HasData(bookInLibrary);
+        var kockyLibBook = new BookQuantity{BookId = kockyBook.Id,LibraryId = dobrovsky.Id,Count = 1};
+        var pavoukLibBook = new BookQuantity { BookId = pavoukBook.Id, LibraryId = dobrovsky.Id, Count = 1 };
+        var draculaLibBook = new BookQuantity { BookId = draculaBook.Id, LibraryId = dobrovsky.Id, Count = 2 };
+        var shiningLibBook = new BookQuantity { BookId = shiningBook.Id, LibraryId = dobrovsky.Id, Count = 2 };
+        var hobbitLibBook = new BookQuantity { BookId = hobbitBook.Id, LibraryId = dobrovsky.Id, Count = 0 };
+        modelBuilder.Entity<BookQuantity>().HasData(kockyLibBook, pavoukLibBook, draculaLibBook, shiningLibBook, hobbitLibBook);
+        #endregion
 
-        
+        #region roles
         var user = new Role 
         {
             Id = Guid.NewGuid(),
@@ -108,7 +147,9 @@ public static class DataInitializer
             NormalizedName = "ADMIN"
         };
         modelBuilder.Entity<Role>().HasData(admin);
+        #endregion
 
+        #region users
         var monkman = new User
         {
             Id = Guid.NewGuid(),
@@ -132,17 +173,19 @@ public static class DataInitializer
             PasswordSalt = ""
         };
         modelBuilder.Entity<User>().HasData(maxworthy);
+        #endregion
 
+        #region reservations
         var reservation = new Reservation
         {
             Id = Guid.NewGuid(),
             LibraryId = dobrovsky.Id,
-            BookId = book.Id,
+            BookId = kockyBook.Id,
             CustomerId = maxworthy.Id,
             ReservationDate = new DateTime(2022, 10, 1, 18, 40, 01),
             DueDate = new DateTime(2022, 12, 31, 23, 59, 59)
         };
         modelBuilder.Entity<Reservation>().HasData(reservation);
-
+        #endregion
     }
 }
