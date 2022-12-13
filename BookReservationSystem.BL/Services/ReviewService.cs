@@ -89,5 +89,11 @@ namespace BookReservationSystem.BL.Services
             var reviewQuery = new FilterReviewsQuery(_mapper, _reviewQuery);
             return reviewQuery.Execute(new ReviewUserFilterDto() { Email = email, SortAscending = true });
         }
+
+        public IEnumerable<ReviewDto> FindAllForBook(Guid bookId)
+        {
+            var reviewQuery = new GetBookReviews(_mapper, _reviewQuery);
+            return reviewQuery.Execute(new BookDto() { Id = bookId });
+        }
     }
 }

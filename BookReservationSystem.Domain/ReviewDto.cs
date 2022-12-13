@@ -10,5 +10,6 @@ public class ReviewDto
     public int Rating { get; set; }
     public Guid BookId { get; set; }
     public BookDto Book { get; set; }
+    public User Author { get; set; }
     public Guid UserId { get; set; }
 }

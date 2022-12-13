@@ -18,5 +18,16 @@ namespace BookReservationSystem.MVC.Models
             LastName = userDto.LastName;
             Id = userDto.Id;
         }
+
+        public UserProfileDto ConvertToProfileDto()
+        {
+            return new UserProfileDto
+            {
+                FirstName = this.FirstName,
+                LastName = this.LastName,
+                Email = this.Email,
+                Id = this.Id,
+            };
+        }
     }
 }

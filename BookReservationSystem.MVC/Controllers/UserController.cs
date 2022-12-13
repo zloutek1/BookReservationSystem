@@ -18,21 +18,51 @@ namespace BookReservationSystem.MVC.Controllers
         }
 
         [HttpGet("Profile")]
-        public IActionResult ProfileView()
+        public IActionResult ProfileView(Guid userId)
         {
-            //try
-            //{
+            try
+            {
                 var profileModel = new ProfileModel();
-            //kill me
-            profileModel.Profile = new UserProfileDto { Email = "peepo", FirstName = "Peepo", LastName = "pepe", Id = Guid.NewGuid(), Reservations = new List<ReservationDto> { }, Reviews = new List<ReviewDto> { } };
-
-            //profileModel.Profile = _userService.FindById(guid); how the fuck
+                profileModel.Profile = _userService.FindById(userId);
                 return View(profileModel);
-            //}
-            //catch (Exception)
-            //{
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "User");
+            }
+        }
+
+        //[HttpGet("EditProfile")]
+        //public IActionResult EditProfile(Guid userId)
+        //{
+            //if (!User.Identity.IsAuthenticated)
+            // {
             //    return RedirectToAction("Login", "User");
             //}
+          //  var profile = _userService.FindById(userId);
+            //var editProfileModel = new EditProfileModel(profile);
+            //return View(editProfileModel);
+        //}
+
+        [HttpPost("EditProfile")]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditProfile(EditProfileModel user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("EditProfile");
+            }
+
+            try
+            {
+                _userService.Update(user.ConvertToProfileDto());
+                return RedirectToAction("Profile", "User");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("EmailAddress", "Account with that email address already exists!");
+                return View("EditProfile");
+            }
         }
     }
 }
