@@ -16,7 +16,7 @@ public class FilterUserQuery
         _query = query;
     }
 
-    public IEnumerable<UserDto> Execute(UserFilterDto userFilterDto)
+    public UserDto Execute(UserFilterDto userFilterDto)
     {
         _query.Where<string>(email => email == userFilterDto.Email, "Email");
 
@@ -30,6 +30,6 @@ public class FilterUserQuery
             _query.Page(userFilterDto.RequestedPageNumber.Value, userFilterDto.PageSize);
         }
 
-        return _mapper.Map<IEnumerable<UserDto>>(_query.Execute());
+        return _mapper.Map<UserDto>(_query.Execute());
     }
 }

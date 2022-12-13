@@ -1,0 +1,97 @@
+﻿@model ProfileModel
+@{
+    ViewData["Title"] = "Profile View";
+}
+
+<h1>Your Profile</h1>
+
+<h3>Your personal information</h3>
+<table class="table">
+    <tbody>
+        <tr>
+            <td>Name</td>
+            <td>@Model.Profile.FirstName @Model.Profile.LastName</td>
+        </tr>
+        <tr>
+            <td>Email address</td>
+            <td>@Model.Profile.Email</td>
+        </tr>
+    </tbody>
+</table>
+
+<td>@Html.ActionLink("Edit profile", "EditProfile", "User", new { }, new { @class = "btn btn-primary" })</td>
+
+<p>
+    <h2>Reservations</h2>
+</p>
+@if (Model.Profile.Reservations.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Book</th>
+                <th>Library</th>
+                <th>Reservation date</th>
+                <th>Due date</th>
+                <th>Pickup date</th>
+                <th>Return date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reservation in Model.Profile.Reservations)
+            {
+                <tr>
+                    <td>@reservation.Book.Name</td>
+                    <td>@reservation.Library.Name</td>
+                    <td>@reservation.ReturnDate</td>
+                    <td>@reservation.ReservationDate</td>
+                    <td>@reservation.DueDate</td>
+                    <td>@reservation.PickupDate</td>
+                    <td>@reservation.ReturnDate</td>
+                    <!--add action link to pickup and return reservation-->
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h5>No reservations yet.</h5>
+}
+
+<h3>Your book reviews</h3>
+@if (Model.Profile.Reviews.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Book</th>
+                <th>Description</th>
+                <th>Rating</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var review in Model.Profile.Reviews)
+            {
+                <tr>
+                    <td>@review.Book.Name</td>
+                    <td>@review.Content</td>
+                    <td>@review.Rating /10</td>
+                    <td>@review.Date</td>
+                    <td>@Html.ActionLink("Delete Review", "DeleteReview", "Review", new { reviewId = review.Id }, new { @class = "btn btn-primary" })</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h5>No reviews yet.</h5>
+}
+
+<p>
+    <a href='javascript:history.go(-1)'>Go back</a>
+</p>

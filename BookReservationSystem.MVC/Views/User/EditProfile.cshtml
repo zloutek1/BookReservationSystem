@@ -1,0 +1,48 @@
+﻿@model EditProfileModel
+@{
+    ViewData["Title"] = "Edit profile";
+}
+
+<div class="row">
+    <div class="col s12">
+        @using (Html.BeginForm("EditProfile", "UserController", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <p class="text-red">@Html.ValidationSummary(true, "")</p>
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="row valign-wrapper">
+                <div class="col s12 l4">First name:</div>
+                <div class="input-field col s12 l8">
+                    @Html.TextBoxFor(model => model.FirstName, new { placeholder = "First name" })
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+
+                </div>
+            </div>
+            <div class="row valign-wrapper">
+                <div class="col s12 l4">Last name:</div>
+                <div class="input-field col s12 l8">
+                    @Html.TextBoxFor(model => model.LastName, new { placeholder = "Last name" })
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+
+                </div>
+            </div>
+            <div class="row valign-wrapper">
+                <div class="col s12 l4">Email:</div>
+                <div class="input-field col s12 l8">
+                    @Html.TextBoxFor(model => model.Email, new { placeholder = "user@mail.com" })
+                    <span asp-validation-for="Email" class="text-danger"></span>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <input type="submit" value="Submit changes" class="btn orange col s12" />
+            </div>
+        }
+    </div>
+</div>
+
+<p>
+    <a href='javascript:history.go(-1)'>Go back</a>
+</p>

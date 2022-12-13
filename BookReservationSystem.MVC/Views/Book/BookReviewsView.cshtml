@@ -1,0 +1,36 @@
+﻿@model BookReviewViewModel
+@{
+    ViewData["Title"] = "Book Reviews";
+}
+
+<h3>Rating</h3>
+@if (Model.Reviews.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Author</th>
+                <th>Content</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var review in Model.Reviews)
+            {
+                <tr>
+                    <td>@review.Author.FirstName @review.Author.LastName</td>
+                    <td>@review.Content</td>
+                    <td>@review.Rating</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h5>No reviews yet.</h5>
+}
+
+<p>
+    <a href='javascript:history.go(-1)'>Go back</a>
+</p>

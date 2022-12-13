@@ -5,19 +5,19 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookReservationSystem.DAL", "BookReservationSystem.DAL\BookReservationSystem.DAL.csproj", "{63D14F6A-0AA8-4D14-9F4A-48E76D7C3091}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookReservationSystem.FE", "BookReservationSystem.FE\BookReservationSystem.FE.csproj", "{F54B2948-A051-4CFE-8926-AEEAA6FAA423}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookReservationSystem.Infrastructure", "BookReservationSystem.Infrastructure\BookReservationSystem.Infrastructure.csproj", "{A06C1E70-5FCF-439C-BB04-A5D068146F3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystem.Infrastructure", "BookReservationSystem.Infrastructure\BookReservationSystem.Infrastructure.csproj", "{A06C1E70-5FCF-439C-BB04-A5D068146F3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookReservationSystem.Infrastructure.EFCore", "BookReservationSystem.Infrastructure.EFCore\BookReservationSystem.Infrastructure.EFCore.csproj", "{135F2811-412A-48A4-A4BD-F47FC7987E97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystem.Infrastructure.EFCore", "BookReservationSystem.Infrastructure.EFCore\BookReservationSystem.Infrastructure.EFCore.csproj", "{135F2811-412A-48A4-A4BD-F47FC7987E97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookReservationSystem.Infrastructure.EFCore.Test", "BookReservationSystem.Infrastructure.EFCore.Test\BookReservationSystem.Infrastructure.EFCore.Test.csproj", "{488E3D4D-2111-4FB6-9BF6-9CFF90DC1A97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystem.Infrastructure.EFCore.Test", "BookReservationSystem.Infrastructure.EFCore.Test\BookReservationSystem.Infrastructure.EFCore.Test.csproj", "{488E3D4D-2111-4FB6-9BF6-9CFF90DC1A97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookReservationSystem.BL", "BookReservationSystem.BL\BookReservationSystem.BL.csproj", "{A88299F2-7980-46B8-94B2-0EE5149BE58F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystem.BL", "BookReservationSystem.BL\BookReservationSystem.BL.csproj", "{A88299F2-7980-46B8-94B2-0EE5149BE58F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookReservationSystem.Domain", "BookReservationSystem.Domain\BookReservationSystem.Domain.csproj", "{14FA2B96-019F-46BC-BA6C-AAEA809D3FD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystem.Domain", "BookReservationSystem.Domain\BookReservationSystem.Domain.csproj", "{14FA2B96-019F-46BC-BA6C-AAEA809D3FD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookReservationSystem.BL.Test", "BookReservationSystem.BL.Test\BookReservationSystem.BL.Test.csproj", "{16D44917-DA85-47B5-B1A0-DB9ECADAFAA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystem.BL.Test", "BookReservationSystem.BL.Test\BookReservationSystem.BL.Test.csproj", "{16D44917-DA85-47B5-B1A0-DB9ECADAFAA8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReservationSystem.MVC", "BookReservationSystem.MVC\BookReservationSystem.MVC.csproj", "{47B83C5E-5ACE-45C5-8041-E3B1A89C9EE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,6 @@ Global
 		{63D14F6A-0AA8-4D14-9F4A-48E76D7C3091}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63D14F6A-0AA8-4D14-9F4A-48E76D7C3091}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63D14F6A-0AA8-4D14-9F4A-48E76D7C3091}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F54B2948-A051-4CFE-8926-AEEAA6FAA423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F54B2948-A051-4CFE-8926-AEEAA6FAA423}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F54B2948-A051-4CFE-8926-AEEAA6FAA423}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F54B2948-A051-4CFE-8926-AEEAA6FAA423}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A06C1E70-5FCF-439C-BB04-A5D068146F3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A06C1E70-5FCF-439C-BB04-A5D068146F3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A06C1E70-5FCF-439C-BB04-A5D068146F3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,6 +53,10 @@ Global
 		{16D44917-DA85-47B5-B1A0-DB9ECADAFAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16D44917-DA85-47B5-B1A0-DB9ECADAFAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16D44917-DA85-47B5-B1A0-DB9ECADAFAA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47B83C5E-5ACE-45C5-8041-E3B1A89C9EE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47B83C5E-5ACE-45C5-8041-E3B1A89C9EE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47B83C5E-5ACE-45C5-8041-E3B1A89C9EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47B83C5E-5ACE-45C5-8041-E3B1A89C9EE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,15 +11,15 @@ using BookReservationSystem.BL.IServices;
 
 namespace BookReservationSystem.BL.Services;
 
-public class UserService: ICrudService<UserDto>
+public class UserService: IUserService
 {
     private readonly IMapper _mapper;
     private readonly Func<IUnitOfWork> _unitOfWorkFactory;
     private readonly IRepository<User> _userRepository;
-    private readonly SecurityHelper _securityHelper;
+    private readonly ISecurityHelper _securityHelper;
     private readonly IQuery<User> _userQuery;
 
-    public UserService(IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<User> userRepository, SecurityHelper securityHelper, IQuery<User> userQuery)
+    public UserService(IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<User> userRepository, ISecurityHelper securityHelper, IQuery<User> userQuery)
     {
         _mapper = mapper;
         _unitOfWorkFactory = unitOfWorkFactory;
@@ -28,20 +28,21 @@ public class UserService: ICrudService<UserDto>
         _userQuery = userQuery;
     }
 
+    //make crud class for user profile dto, revert back to crud on userdto
     #region crud
-    public IEnumerable<UserDto> FindAll()
+    public IEnumerable<UserProfileDto> FindAll()
     {
         var foundUsers = _userRepository.FindAll();
-        return _mapper.Map<IEnumerable<UserDto>>(foundUsers);
+        return _mapper.Map<IEnumerable<UserProfileDto>>(foundUsers);
     }
 
-    public UserDto? FindById(Guid id)
+    public UserProfileDto? FindById(Guid id)
     {
         var foundUser = _userRepository.FindById(id);
-        return _mapper.Map<UserDto?>(foundUser);
+        return _mapper.Map<UserProfileDto?>(foundUser);
     }
 
-    public void Insert(UserDto userDto)
+    public void Insert(UserProfileDto userDto)
     {
         var user = _mapper.Map<User>(userDto);
         using var uow = _unitOfWorkFactory();
@@ -49,7 +50,7 @@ public class UserService: ICrudService<UserDto>
         uow.Commit();
     }
 
-    public void Update(UserDto userDto)
+    public void Update(UserProfileDto userDto)
     {
         var user = _mapper.Map<User>(userDto);
         using var uow = _unitOfWorkFactory();
@@ -66,7 +67,7 @@ public class UserService: ICrudService<UserDto>
     }
     #endregion
 
-    public IEnumerable<UserDto> GetUsersWithEmail(string email)
+    public UserDto GetUserWithEmail(string email)
     {
         var userQuery = new FilterUserQuery(_mapper, _userQuery);
         return userQuery.Execute(new UserFilterDto { Email = email, SortAscending = true });

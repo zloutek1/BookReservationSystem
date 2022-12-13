@@ -1,0 +1,60 @@
+﻿@model BookFilterModel
+@{
+    ViewData["Title"] = "Search books";
+}
+
+<div class="row">
+    <div class="col s12">
+        @using (Html.BeginForm("SearchBooks", "Book"))
+        {
+            <p class="text-red">@Html.ValidationSummary(true, "")</p>
+            <div class="row valign-wrapper">
+                <div class="col s12 l4">Title:</div>
+                <div class="input-field col s12 l8">
+                    @Html.TextBoxFor(model => model.Name, new { placeholder = "Title" })
+                </div>
+            </div>
+            <div class="row valign-wrapper">
+                <div class="col s12 l4">Author:</div>
+                <div class="input-field col s12 l8">
+                    @Html.TextBoxFor(model => model.Author, new { placeholder = "Author" })
+                </div>
+            </div>
+            <div class="row valign-wrapper">
+                <div class="col s12 l4">ISBN:</div>
+                <div class="input-field col s12 l8">
+                    @Html.TextBoxFor(model => model.Isbn, new { placeholder = "Isbn" })
+                </div>
+            </div>
+            <div class="row valign-wrapper">
+                <div class="col s12 l4">Publisher:</div>
+                <div class="input-field col s12 l8">
+                    @Html.TextBoxFor(model => model.Publisher, new { placeholder = "Publisher" })
+                </div>
+            </div>
+            <div class="row valign-wrapper">
+                <div class="col s12 l4">Genre:</div>
+                <div class="input-field col s12 l8">
+                    @Html.TextBoxFor(model => model.Genre, new { placeholder = "Genre" })
+                </div>
+            </div>
+            <div class="row valign-wrapper">
+                <div class="col s12 l4">Sort by best rating:</div>
+                <div class="input-field col s12 l8">
+                    <input type="checkbox" id="SortByRating" class="form-control" />
+                </div>
+            </div>
+            <div class="row valign-wrapper">
+                <div class="col s12 l4">Show only available books:</div>
+                <div class="input-field col s12 l8">
+                    <input type="checkbox" id="ShowAvailable" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group" style="text-align: right; width: 100%;">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        }
+    </div>
+</div>
+
+@await Html.PartialAsync("_Search.cshtml", Model.Books)
