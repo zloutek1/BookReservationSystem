@@ -1,0 +1,69 @@
+﻿@model BookReservationSystem.Domain.BookProfileDto
+@{
+    ViewData["Title"] = "Book Profile";
+}
+
+<h1>@Model.Name</h1>
+<img src="@Url.Content(book.CoverArtPath ?? "~/Resources/empty.jpg")" alt="cover art" class="h-200" />
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>Author</td>
+            <td>@Model.Author.Name</td>
+        </tr>
+        <tr>
+            <td>Publisher</td>
+            <td>@Model.Publisher.Name</td>
+        </tr>
+        <tr>
+            <td>ISBN</td>
+            <td>@Model.Isbn</td>
+        </tr>
+        <tr>
+            <td>Abstract</td>
+            <td>@Model.Abstract</td>
+        </tr>
+    </tbody>
+</table>
+
+<td>@Html.ActionLink("Create Reservation", "CreateReservation", "Reservation", new { }, new { @class = "btn btn-primary" })</td>
+
+<p>
+    <h2>Reviews</h2>
+</p>
+@if (Model.Reviews.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Author</th>
+                <th>Content</th>
+                <th>Rating</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var review in Model.Reviews)
+            {
+                <tr>
+                    <td>@review.Author.Name</td>
+                    <td>@review.Content</td>
+                    <td>@review.Rating /10</td>
+                    <td>@review.Date</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h5>No reviews yet.</h5>
+}
+
+<td>@Html.ActionLink("Write Review", "WriteReview", "Review", new { }, new { @class = "btn btn-primary" })</td>
+
+<p>
+    <a href='javascript:history.go(-1)'>Go back</a>
+</p>
