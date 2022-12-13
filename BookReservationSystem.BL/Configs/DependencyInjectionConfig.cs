@@ -54,11 +54,13 @@ public static class DependencyInjectionConfig
         services.AddScoped<IUnitOfWork, GenericUnitOfWork>();
         services.AddSingleton(provider => new Func<IUnitOfWork>(() => provider.GetService<IUnitOfWork>()!));
     }
-    
+
     private static void AddServices(IServiceCollection services)
     {
-        services.AddScoped<BookService>();
-        services.AddScoped<LibraryService>();
+        services.AddScoped<IBookService, BookService>();
+        services.AddScoped<IReservationService, ReservationService>();
+        services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IIdentityService, IdentityService>();
     }
 }

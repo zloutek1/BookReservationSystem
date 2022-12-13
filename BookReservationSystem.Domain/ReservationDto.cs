@@ -9,7 +9,7 @@ public class ReservationDto
     public DateTime? PickupDate { get; set; }
     public DateTime? ReturnDate { get; set; }
 
-    public Guid LibraryId { get; set; }
-    public Guid BookId { get; set; }
+    public LibraryDto Library { get; set; }
+    public BookDto Book { get; set; }
     public Guid CustomerId { get; set; }
 }
