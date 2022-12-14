@@ -1,68 +1,64 @@
 ﻿using BookReservationSystem.BL.IServices;
-using BookReservationSystem.DAL.Models;
-using BookReservationSystem.Domain;
 using BookReservationSystem.MVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Azure.Core.HttpHeader;
 
 
-namespace BookReservationSystem.MVC.Controllers
+namespace BookReservationSystem.MVC.Controllers;
+
+public class UserController : Controller
 {
-    public class UserController : Controller
+    private readonly IUserService _userService;
+
+    public UserController(IUserService userService)
     {
-        private IUserService _userService;
+        _userService = userService;
+    }
 
-        public UserController(IUserService userService)
+    [HttpGet]
+    [Authorize]
+    public IActionResult Profile()
+    {
+        var username = User.Identity?.Name;
+        if (username == null)
         {
-            _userService = userService;
+            return View("Error");
+        }
+            
+        var profile = _userService.FindByUsername(username);
+        return profile == null ? View("Error") : View("Profile", profile);
+    }
+
+    //[HttpGet("EditProfile")]
+    //public IActionResult EditProfile(Guid userId)
+    //{
+    //if (!User.Identity.IsAuthenticated)
+    // {
+    //    return RedirectToAction("Login", "User");
+    //}
+    //  var profile = _userService.FindById(userId);
+    //var editProfileModel = new EditProfileModel(profile);
+    //return View(editProfileModel);
+    //}
+
+    [HttpPost("EditProfile")]
+    [ValidateAntiForgeryToken]
+    public IActionResult EditProfile(EditProfileModel user)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View("EditProfile");
         }
 
-        [HttpGet("Profile")]
-        public IActionResult ProfileView(Guid userId)
+        try
         {
-            try
-            {
-                var profileModel = new ProfileModel();
-                profileModel.Profile = _userService.FindById(userId);
-                return View(profileModel);
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("Login", "User");
-            }
+            _userService.Update(user.ConvertToProfileDto());
+            return RedirectToAction("Profile", "User");
         }
-
-        //[HttpGet("EditProfile")]
-        //public IActionResult EditProfile(Guid userId)
-        //{
-            //if (!User.Identity.IsAuthenticated)
-            // {
-            //    return RedirectToAction("Login", "User");
-            //}
-          //  var profile = _userService.FindById(userId);
-            //var editProfileModel = new EditProfileModel(profile);
-            //return View(editProfileModel);
-        //}
-
-        [HttpPost("EditProfile")]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditProfile(EditProfileModel user)
+        catch (Exception)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("EditProfile");
-            }
-
-            try
-            {
-                _userService.Update(user.ConvertToProfileDto());
-                return RedirectToAction("Profile", "User");
-            }
-            catch (Exception)
-            {
-                ModelState.AddModelError("EmailAddress", "Account with that email address already exists!");
-                return View("EditProfile");
-            }
+            ModelState.AddModelError("EmailAddress", "Account with that email address already exists!");
+            return View("EditProfile");
         }
     }
 }

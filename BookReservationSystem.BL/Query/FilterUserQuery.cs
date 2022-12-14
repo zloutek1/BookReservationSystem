@@ -16,9 +16,9 @@ public class FilterUserQuery
         _query = query;
     }
 
-    public UserDto Execute(UserFilterDto userFilterDto)
+    public UserDto? Execute(UserFilterDto userFilterDto)
     {
-        _query.Where<string>(email => email == userFilterDto.Email, "Email");
+        _query.Where<string>(email => email == userFilterDto.UserName, "UserName");
 
         if (!string.IsNullOrWhiteSpace(userFilterDto.SortCriteria))
         {
@@ -30,6 +30,6 @@ public class FilterUserQuery
             _query.Page(userFilterDto.RequestedPageNumber.Value, userFilterDto.PageSize);
         }
 
-        return _mapper.Map<UserDto>(_query.Execute());
+        return _mapper.Map<UserDto?>(_query.Execute().FirstOrDefault());
     }
 }
