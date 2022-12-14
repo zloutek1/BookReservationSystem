@@ -57,7 +57,7 @@ public class BookController : Controller
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public IActionResult Add(BookDto createDto)
+    public IActionResult Add(BookCreateDto createDto)
     {
         /*
         if (!ModelState.IsValid)
@@ -65,10 +65,30 @@ public class BookController : Controller
             return View("../Admin/AddBook", createDto);
         }
         */
-        _bookService.Insert(createDto);
+
+        var coverArtPath = SaveImage(createDto.CoverArt);
+        var book = new BookDto
+        {
+            Name = createDto.Name,
+            Isbn = createDto.Isbn,
+            Abstract = createDto.Abstract,
+            CoverArtPath = coverArtPath
+        };
+
+        _bookService.Insert(book);
         return RedirectToAction("Index", "Book");
     }
-    
+
+    private static string SaveImage(IFormFile image)
+    {
+        var fileName =image.FileName;
+        fileName = Guid.NewGuid() + Path.GetExtension(fileName);
+        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Resources", fileName);
+        var stream = new FileStream(uploadPath, FileMode.Create);
+        image.CopyToAsync(stream);
+        return "~/Resources/"+fileName;
+    }
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public IActionResult Delete(Guid id)

@@ -1,9 +1,9 @@
-﻿@model BookReservationSystem.Domain.BookDto
+﻿@model BookReservationSystem.Domain.BookCreateDto
 @{
     ViewData["Title"] = "Create Book";
 }
 
-@using (Html.BeginForm("Add", "Book", new{enctype="multipart/form-data"}))
+@using (Html.BeginForm("Add", "Book", FormMethod.Post,new{ @enctype="multipart/form-data"}))
 {
     <p class="text-red">@Html.ValidationSummary(true, "")</p>
     <div class="row valign-wrapper">
@@ -27,7 +27,8 @@
     <div class="row valign-wrapper">
         <div class="col s12 l4">Cover image:</div>
         <div class="input-field col s12 l8">
-            <input type="file" name="file" />
+            <input asp-for="CoverArt" type="file">
+            <span asp-validation-for="CoverArt"></span>
         </div>
     </div>
     <div class="form-group mt-1">
