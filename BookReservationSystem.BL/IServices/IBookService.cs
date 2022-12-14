@@ -9,6 +9,6 @@ namespace BookReservationSystem.BL.IServices
 {
     public interface IBookService : ICrudService<BookDto>
     {
-        IEnumerable<BookDto> FilterBooks(string name, string author, long isbn, string publisher, string genre, bool sortByRating, bool onlyAvailable);
+        IEnumerable<BookDto> FilterBooks(BookFilterDto filter);
     }
 }

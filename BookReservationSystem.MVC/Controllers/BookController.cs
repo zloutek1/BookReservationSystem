@@ -1,29 +1,50 @@
 ﻿using BookReservationSystem.BL.IServices;
-using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
-using BookReservationSystem.MVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookReservationSystem.MVC.Controllers
+namespace BookReservationSystem.MVC.Controllers;
+
+public class BookController : Controller
 {
-    public class BookController : Controller
+    private readonly IBookService _bookService;
+
+    public BookController(IBookService bookService)
     {
-        private IBookService _bookService;
+        _bookService = bookService;
+    }
 
-        public BookController(IBookService bookService)
+    [HttpGet]
+    public IActionResult Index(Guid? bookId)
+    {
+        if (!bookId.HasValue)
         {
-            _bookService = bookService;
+            var books = _bookService.FindAll();
+            return View(books);
         }
+        else
+        {
+            return BookDetail(bookId.Value);
+        }
+    }
 
-        [HttpPost("SearchBooks")]
-        public IActionResult SearchBooks(BookFilterModel model)
+    private IActionResult BookDetail(Guid bookId)
+    {
+        var book = _bookService.FindById(bookId);
+        return book == null ? View("Error") : View(nameof(BookDetail), book);
+    }
+        
+    [HttpPost]
+    public IActionResult Search(BookFilterDto filter)
+    {
+        /*
+        if (!ModelState.IsValid)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("SearchBooks");
-            }
-            model.Books = _bookService.FilterBooks(model.Name, model.Author, model.Isbn, model.Publisher, model.Genre, model.SortByRating, model.OnlyAvailable);
-            return View("SearchBooks", model);
+            return View("Index");
         }
+        */
+        
+        var books = _bookService.FilterBooks(filter);
+        return View("Index", books);
     }
 }

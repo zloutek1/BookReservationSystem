@@ -1,0 +1,29 @@
+﻿@using BookReservationSystem.Domain
+@using Castle.Core.Internal
+@model IEnumerable<BookReservationSystem.Domain.BookDto>
+@{
+    ViewData["Title"] = "Book";
+}
+
+@await Html.PartialAsync("_SearchBooks.cshtml", new BookFilterDto())
+
+<div class="d-flex mt-5">
+    @if (!Model.Any())
+    {
+        <h5>No books found.</h5>
+    }
+    @foreach (var book in Model)
+    {
+        <div class="card">
+            <div class="card-header text-center" style="max-height: 10em;">
+                <img src="@Url.Content(book.CoverArtPath.IsNullOrEmpty() ? "~/Resources/empty.jpg": book.CoverArtPath)" alt="cover art" class="h-100"/>
+            </div>
+            <div class="card-body">
+                @book.Name
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-primary" asp-area="" asp-controller="Book" asp-action="Index" asp-route-bookId="@book.Id">View</a>
+            </div>
+        </div>
+    }
+</div>
