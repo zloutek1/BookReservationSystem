@@ -19,11 +19,13 @@ public class FilterBookQuery
 
     public IEnumerable<BookDto> Execute(BookFilterDto bookFilterDto)
     {
-        _query.Where<string>(name => name == bookFilterDto.Name || bookFilterDto.Name == "", "Name")
-            .Where<long>(isbn => isbn.Equals(bookFilterDto.Isbn) || bookFilterDto.Isbn.Equals(null), "Isbn")
-            .Where<List<Author>>(author => author.Select(author => author.Name).Contains(bookFilterDto.Author) || bookFilterDto.Author == "", "Author")
-            .Where<List<Publisher>>(publisher => publisher.Select(publisher => publisher.Name).Contains(bookFilterDto.Publisher) || bookFilterDto.Publisher == "", "Publisher")
-            .Where<List<Genre>>(genre => genre.Select(genre => genre.Name).Contains(bookFilterDto.Genre), "Genre");
+        // TODO: repair query
+        _query
+            .Where<string>(name => name.ToLower().Contains(bookFilterDto.Name.ToLower()) || bookFilterDto.Name == "", "Name")
+            .Where<long>(isbn => isbn.Equals(bookFilterDto.Isbn) || bookFilterDto.Isbn.Equals(0), "Isbn");
+            //.Where<List<Author>>(author => author.Select(a => a.Name).Contains(bookFilterDto.Author) || bookFilterDto.Author == "", "Authors")
+            //.Where<List<Publisher>>(publisher => publisher.Select(p => p.Name).Contains(bookFilterDto.Publisher) || bookFilterDto.Publisher == "", "Publishers")
+            //.Where<List<Genre>>(genre => genre.Select(g => g.Name).Contains(bookFilterDto.Genre), "Genres");
 
         //if (!string.IsNullOrWhiteSpace(bookFilterDto.SortCriteria))
         //{
@@ -32,7 +34,7 @@ public class FilterBookQuery
 
         if (bookFilterDto.OnlyAvailable)
         {
-            _query.Where<BookQuantity>(quantityObj => quantityObj.Available > 0, "Quantity");
+            _query.Where<BookQuantity>(quantityObj => quantityObj.Count > 0, "Quantity");
         }
 
         if (bookFilterDto.SortByRating)

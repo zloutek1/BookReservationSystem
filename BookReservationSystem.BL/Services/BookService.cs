@@ -53,7 +53,7 @@ public class BookService : IBookService
         uow.Commit();
     }
 
-    //delete all reviews and reservations for this book
+    //TODO: delete all reviews and reservations for this book
     public void Delete(Guid id)
     {
         using var uow = _unitOfWorkFactory();
@@ -62,18 +62,9 @@ public class BookService : IBookService
     }
     #endregion
 
-    public IEnumerable<BookDto> FilterBooks(string name, string author, long isbn, string publisher, string genre, bool sortByRating, bool onlyAvailable)
+    public IEnumerable<BookDto> FilterBooks(BookFilterDto filter)
     {
         var bookQuery = new FilterBookQuery(_mapper, _bookQuery);
-        return bookQuery.Execute(new BookFilterDto
-        {
-            Name = name,
-            Author = author,
-            Isbn = isbn,
-            Publisher = publisher,
-            Genre = genre,
-            SortByRating = sortByRating,
-            OnlyAvailable = onlyAvailable
-        });
+        return bookQuery.Execute(filter);
     }
 }
