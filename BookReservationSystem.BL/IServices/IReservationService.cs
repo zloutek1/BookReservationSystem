@@ -9,6 +9,7 @@ namespace BookReservationSystem.BL.IServices
 {
     public interface IReservationService : ICrudService<ReservationDto>
     {
+        void Insert(ReservationCreateDto createDto);
         IEnumerable<ReservationDto> FindAllForUser(string email);
     }
 }
