@@ -12,6 +12,8 @@ public static class DataInitializer
         var beletry = new Genre{ Id = Guid.NewGuid(), Name = "Beletry" };
         var horor = new Genre { Id = Guid.NewGuid(), Name = "Horor" };
         var fantasy = new Genre { Id = Guid.NewGuid(), Name = "Fantasy" };
+        var detective = new Genre { Id = Guid.NewGuid(), Name = "Detective" };
+        var comic = new Genre { Id = Guid.NewGuid(), Name = "Comic" };
         modelBuilder.Entity<Genre>().HasData(satire, beletry, horor, fantasy, detective, comic);
         #endregion
 
@@ -21,7 +23,7 @@ public static class DataInitializer
             Id = Guid.NewGuid(),
             Name = "Moje kočky, cizí kočky a já",
             Abstract = "Co kočky cítí? Znají humor? Na co myslí? Jak mám svou kočku rozmazlovat a komunikovat s ní? A jsou naši pokojoví tygři jasnovidci? Těmto a mnoha dalším zajímavým otázkám se obšírně věnuje laskavá, vtipná i poučná kniha od milovníka koček, který se svými kočičími mazlíčky prožil třináct let a za tu dobu se jim naučil hodně rozumět. Nabízí čtenářům pár užitečných výchovných rad, ale jak sám poznamenává, nakonec budou stejně k ničemu, protože kočky si vždycky změní páníčka k obrazu svému, nikoli naopak.",
-            CoverArtPath = "../Resources/kockybookcover.jpg",
+            CoverArtPath = "~/Resources/kockybookcover.jpg",
             Isbn = 9788024282442
         };
         var pavoukBook = new Book
@@ -29,7 +31,7 @@ public static class DataInitializer
             Id = Guid.NewGuid(),
             Name = "Pavouk",
             Abstract = "Joona Linna se znovu ocitá v ohrožení života a zachránit ho může jedině Saga Bauerová.",
-            CoverArtPath = "",
+            CoverArtPath = "~/Resources/pavouk.jpg",
             Isbn = 9788027513765
         };
         var draculaBook = new Book
@@ -75,7 +77,7 @@ public static class DataInitializer
 
         modelBuilder.Entity<Author>(b =>
         {
-            b.HasData(hape);
+            b.HasData(hape, kepler, stoker, king, tolkien);
             b.HasMany(p => p.Books).WithMany(p => p.Authors)
                 .UsingEntity(j => j.HasData(new { AuthorsId = hape.Id, BooksId = kockyBook.Id },
                 new {AuthorsId = kepler.Id, BooksId = pavoukBook.Id},
@@ -93,7 +95,7 @@ public static class DataInitializer
 
         modelBuilder.Entity<Publisher>(b =>
         {
-            b.HasData(euromedia);
+            b.HasData(euromedia, host, argo, ikar);
             b.HasMany(p => p.Books).WithMany(p => p.Publishers)
                 .UsingEntity(j => j.HasData(new { PublishersId = euromedia.Id, BooksId = kockyBook.Id },
                 new {PublishersId = host.Id, BooksId = pavoukBook.Id},

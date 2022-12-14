@@ -37,4 +37,6 @@ public class UserCreateDto
     public string ConfirmPassword { get; set; }
 
     public bool IsAdmin { get; set; }
+    
+    public string? ReturnUrl { get; set; }
 }

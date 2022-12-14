@@ -3,7 +3,6 @@ using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.UnitOfWork;
 using BookReservationSystem.BL.Helpers;
-using System.Security.Cryptography;
 using BookReservationSystem.BL.Query;
 using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
@@ -67,10 +66,10 @@ public class UserService: IUserService
     }
     #endregion
 
-    public UserDto GetUserWithEmail(string email)
+    public UserDto? FindByUsername(string username)
     {
         var userQuery = new FilterUserQuery(_mapper, _userQuery);
-        return userQuery.Execute(new UserFilterDto { Email = email, SortAscending = true });
+        return userQuery.Execute(new UserFilterDto { UserName = username, SortAscending = true });
     }
 
     public void RegisterUser(UserCreateDto userCreateDto)

@@ -31,7 +31,7 @@ public class GenericUnitOfWork: IUnitOfWork
     
     public void Dispose()
     {
-        _transaction?.Dispose();
+        _transaction.Dispose();
         GC.SuppressFinalize(this);
     }
 

@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col s12">
-        @using (Html.BeginForm("EditProfile", "UserController", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("EditProfile", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
             <p class="text-red">@Html.ValidationSummary(true, "")</p>

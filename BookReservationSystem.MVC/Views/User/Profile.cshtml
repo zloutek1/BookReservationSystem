@@ -1,0 +1,96 @@
+﻿@model BookReservationSystem.Domain.UserDto
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1>Your Profile</h1>
+@Html.ActionLink("Edit profile", "EditProfile", "User", new { }, new { @class = "btn btn-primary" })
+
+<div class="mt-5">
+    <h3>Your personal information</h3>
+    <table class="table">
+        <tbody>
+        <tr>
+            <td>Name</td>
+            <td>@Model.FirstName @Model.LastName</td>
+        </tr>
+        <tr>
+            <td>Email address</td>
+            <td>@Model.Email</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-5">
+    <h2>Reservations</h2>
+    @if (!Model.Reservations.Any())
+    {
+        <h5>No reservations yet.</h5>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Library</th>
+                    <th>Reservation date</th>
+                    <th>Due date</th>
+                    <th>Pickup date</th>
+                    <th>Return date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reservation in Model.Reservations)
+                {
+                    <tr>
+                        <td>@reservation.Book.Name</td>
+                        <td>@reservation.Library.Name</td>
+                        <td>@reservation.ReturnDate</td>
+                        <td>@reservation.ReservationDate</td>
+                        <td>@reservation.DueDate</td>
+                        <td>@reservation.PickupDate</td>
+                        <td>@reservation.ReturnDate</td>
+                        <!--add action link to pickup and return reservation-->
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<div class="mt-5">
+    <h3>Your book reviews</h3>
+    @if (!Model.Reviews.Any())
+    {
+        <h5>No reviews yet.</h5>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Book</th>
+                <th>Description</th>
+                <th>Rating</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var review in Model.Reviews)
+            {
+                <tr>
+                    <td>@review.Book.Name</td>
+                    <td>@review.Content</td>
+                    <td>@review.Rating /10</td>
+                    <td>@review.Date</td>
+                    <td>@Html.ActionLink("Delete Review", "DeleteReview", "Review", new { reviewId = review.Id }, new { @class = "btn btn-primary" })</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>
