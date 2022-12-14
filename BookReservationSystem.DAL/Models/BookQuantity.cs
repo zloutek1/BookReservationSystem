@@ -19,7 +19,4 @@ public class BookQuantity: BaseEntity
     
     [Required]
     public int Count { get; set; }
-
-    [Required]
-    public int Available { get; set; }
 }

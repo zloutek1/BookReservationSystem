@@ -42,6 +42,8 @@ public class BookService : IBookService
         var book = _mapper.Map<Book>(bookDto);
         using var uow = _unitOfWorkFactory();
         _bookRepository.Insert(book);
+        //TODO: delete after uow is fixed x.x
+        _bookRepository.Commit();
         uow.Commit();
     }
 
@@ -58,6 +60,8 @@ public class BookService : IBookService
     {
         using var uow = _unitOfWorkFactory();
         _bookRepository.Delete(id);
+        //TODO: delete after uow is fixed x.x
+        _bookRepository.Commit();
         uow.Commit();
     }
     #endregion

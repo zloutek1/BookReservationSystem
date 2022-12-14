@@ -29,7 +29,7 @@ public class BookReservationSystemDbContext: IdentityDbContext<User, IdentityRol
         if (optionsBuilder.IsConfigured) return;
         
         var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-        var connectionString = config.GetConnectionString("Default");
+        var connectionString = config.GetConnectionString("Default")!;
             
         optionsBuilder
             .UseSqlServer(connectionString)
@@ -46,7 +46,7 @@ public class BookReservationSystemDbContext: IdentityDbContext<User, IdentityRol
         modelBuilder.Entity<Book>()
             .HasMany(s => s.Genres)
             .WithMany(c => c.Books)
-            .UsingEntity(j => j.ToTable("BookGenres"));;
+            .UsingEntity(j => j.ToTable("BookGenres"));
 
         modelBuilder.Entity<Author>()
            .HasMany(s => s.Books)

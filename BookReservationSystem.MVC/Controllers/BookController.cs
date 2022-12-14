@@ -47,4 +47,33 @@ public class BookController : Controller
         var books = _bookService.FilterBooks(filter);
         return View("Index", books);
     }
+
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public IActionResult Add()
+    {
+        return View("../Admin/AddBook");
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public IActionResult Add(BookDto createDto)
+    {
+        /*
+        if (!ModelState.IsValid)
+        {
+            return View("../Admin/AddBook", createDto);
+        }
+        */
+        _bookService.Insert(createDto);
+        return RedirectToAction("Index", "Book");
+    }
+    
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public IActionResult Delete(Guid id)
+    {
+        _bookService.Delete(id);
+        return RedirectToAction("Index", "Book");
+    }
 }
