@@ -52,7 +52,7 @@ public static class DependencyInjectionConfig
     private static void AddUnitOfWork(IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, GenericUnitOfWork>();
-        services.AddSingleton(provider => new Func<IUnitOfWork>(() => provider.GetService<IUnitOfWork>()!));
+        services.AddScoped(provider => new Func<IUnitOfWork>(() => provider.GetService<IUnitOfWork>()!));
     }
 
     private static void AddServices(IServiceCollection services)

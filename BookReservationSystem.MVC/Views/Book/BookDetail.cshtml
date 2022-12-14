@@ -1,20 +1,24 @@
-﻿@model BookReservationSystem.Domain.BookProfileDto
+﻿@using Castle.Core.Internal
+@model BookReservationSystem.Domain.BookDto
 @{
-    ViewData["Title"] = "Book Profile";
+    ViewData["Title"] = @Model.Name;
 }
 
 <h1>@Model.Name</h1>
-<img src="@Url.Content(book.CoverArtPath ?? "~/Resources/empty.jpg")" alt="cover art" class="h-200" />
+
+<div style="height: 15em">
+    <img src="@Url.Content(Model.CoverArtPath.IsNullOrEmpty() ? "~/Resources/empty.jpg": Model.CoverArtPath)" alt="cover art" class="h-100" />
+</div>
 
 <table class="table">
     <tbody>
         <tr>
-            <td>Author</td>
-            <td>@Model.Author.Name</td>
+            <td>Authors</td>
+            <td>@string.Join(",", Model.Authors.Select(a => a.Name)))</td>
         </tr>
         <tr>
             <td>Publisher</td>
-            <td>@Model.Publisher.Name</td>
+            <td>@string.Join(",", Model.Publishers.Select(a => a.Name)))</td>
         </tr>
         <tr>
             <td>ISBN</td>
@@ -27,15 +31,24 @@
     </tbody>
 </table>
 
-<td>@Html.ActionLink("Create Reservation", "CreateReservation", "Reservation", new { }, new { @class = "btn btn-primary" })</td>
+@Html.ActionLink(
+    "Reserve", 
+    "Index", 
+    "Reservation", 
+    new { bookId = Model.Id }, 
+    new { @class = "btn btn-primary" })
 
-<p>
+<div class="mt-5">
     <h2>Reviews</h2>
-</p>
-@if (Model.Reviews.Any())
-{
-    <table class="table">
-        <thead>
+
+    @if (!Model.Reviews.Any())
+    {
+        <h5>No reviews yet.</h5>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
             <tr>
                 <th>Author</th>
                 <th>Content</th>
@@ -43,8 +56,8 @@
                 <th>Date</th>
                 <th></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             @foreach (var review in Model.Reviews)
             {
                 <tr>
@@ -54,16 +67,7 @@
                     <td>@review.Date</td>
                 </tr>
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <h5>No reviews yet.</h5>
-}
-
-<td>@Html.ActionLink("Write Review", "WriteReview", "Review", new { }, new { @class = "btn btn-primary" })</td>
-
-<p>
-    <a href='javascript:history.go(-1)'>Go back</a>
-</p>
+            </tbody>
+        </table>
+    }
+</div>

@@ -1,1 +1,36 @@
-﻿
+﻿@model BookReservationSystem.Domain.BookDto
+@{
+    ViewData["Title"] = "Create Book";
+}
+
+@using (Html.BeginForm("AddBook", "Book"))
+{
+    <p class="text-red">@Html.ValidationSummary(true, "")</p>
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">Title:</div>
+        <div class="input-field col s12 l8">
+            @Html.TextBoxFor(model => model.Name, new { placeholder = "Title" })
+        </div>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">ISBN:</div>
+        <div class="input-field col s12 l8">
+            @Html.TextBoxFor(model => model.Isbn, new { placeholder = "Isbn" })
+        </div>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">Abstract:</div>
+        <div class="input-field col s12 l8">
+            @Html.TextAreaFor(model => model.Abstract, new { placeholder = "Abstract" })
+        </div>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">Cover image:</div>
+        <div class="input-field col s12 l8">
+            <input type="file" name="CoverArtUrl" />
+        </div>
+    </div>
+    <div class="form-group mt-1">
+        <input type="submit" value="Search" class="btn btn-primary"/>
+    </div>
+}    

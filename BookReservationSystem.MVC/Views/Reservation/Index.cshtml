@@ -1,0 +1,43 @@
+﻿@using BookReservationSystem.BL.IServices
+@inject IBookService BookService
+@model BookReservationSystem.Domain.ReservationCreateDto
+@{
+    ViewData["Title"] = "Reserve Book";
+}
+
+@using (Html.BeginForm("Index", "Reservation"))
+{
+    <p class="text-red">@Html.ValidationSummary(true, "")</p>
+    @Html.HiddenFor(x => x.BookId)
+    @Html.HiddenFor(x => x.CustomerName)
+    
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">From date:</div>
+        <div class="input-field col s12 l8">
+            <input type="date" name="ReservationDate" />
+        </div>
+    </div>
+    
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">To date:</div>
+        <div class="input-field col s12 l8">
+            <input type="date" name="DueDate" />
+        </div>
+    </div>
+
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">Library:</div>
+        <div class="input-field col s12 l8">
+            <select name="LibraryId">
+                @foreach (var quantity in BookService.FindById(Model.BookId)!.BookQuantities)
+                {
+                    <option value="@quantity.Library.Id">@(quantity.Count)x - @quantity.Library.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group mt-1">
+        <input type="submit" value="Submit" class="btn btn-primary"/>
+    </div>
+} 
