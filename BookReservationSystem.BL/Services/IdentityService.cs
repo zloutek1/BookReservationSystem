@@ -30,7 +30,7 @@ public class IdentityService : IIdentityService
 
         var createResult = await _userManager.CreateAsync(newUser, passwordHash).ConfigureAwait(false);
         if (!createResult.Succeeded) return;
-        
+
         var user = await _userManager.FindByNameAsync(model.UserName).ConfigureAwait(false);
         await _userManager.AddToRoleAsync(user, "User").ConfigureAwait(false);
         if (model.IsAdmin)
@@ -40,16 +40,17 @@ public class IdentityService : IIdentityService
         await _signInManager.SignInAsync(user, true).ConfigureAwait(false);
     }
 
-    public async Task Login(LoginDto model)
+    public async Task<SignInResult> Login(LoginDto model)
     {
         var user = await _userManager.FindByNameAsync(model.UserName).ConfigureAwait(false);
-        if (user is null) return;
+        if (user is null) return SignInResult.Failed;
         
         var passwordHash = _securityHelper.HashPassword(model.Password, user.PasswordSalt);
-        if (!await _userManager.CheckPasswordAsync(user, passwordHash).ConfigureAwait(false)) return;
+        if (!await _userManager.CheckPasswordAsync(user, passwordHash).ConfigureAwait(false)) 
+            return SignInResult.Failed;
 
         await _signInManager.SignOutAsync().ConfigureAwait(false);
-        var loggedIn = await _signInManager
+        return await _signInManager
             .PasswordSignInAsync(model.UserName, passwordHash, true, false)
             .ConfigureAwait(false);
     }

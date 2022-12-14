@@ -10,7 +10,7 @@ namespace BookReservationSystem.BL.IServices
 {
     public interface IUserService : ICrudService<UserProfileDto>
     {
-        UserDto GetUserWithEmail(string email);
+        UserDto? FindByUsername(string username);
         void RegisterUser(UserCreateDto userCreateDto);
     }
 }

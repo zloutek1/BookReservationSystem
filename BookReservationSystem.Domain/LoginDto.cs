@@ -12,4 +12,6 @@ public class LoginDto
     [DataType(DataType.Password)]
     [Display(Name = "Password")]
     public string Password { get; set; }
+    
+    public string? ReturnUrl { get; set; }
 }
