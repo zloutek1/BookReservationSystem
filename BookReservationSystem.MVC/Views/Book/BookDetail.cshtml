@@ -14,11 +14,11 @@
     <tbody>
         <tr>
             <td>Authors</td>
-            <td>@string.Join(",", Model.Authors.Select(a => a.Name)))</td>
+            <td>@string.Join(",", Model.Authors.Select(a => a.Name))</td>
         </tr>
         <tr>
             <td>Publisher</td>
-            <td>@string.Join(",", Model.Publishers.Select(a => a.Name)))</td>
+            <td>@string.Join(",", Model.Publishers.Select(a => a.Name))</td>
         </tr>
         <tr>
             <td>ISBN</td>
@@ -31,12 +31,21 @@
     </tbody>
 </table>
 
+<div>
 @Html.ActionLink(
     "Reserve", 
     "Index", 
     "Reservation", 
     new { bookId = Model.Id }, 
     new { @class = "btn btn-primary" })
+
+@if (User.IsInRole("Admin"))
+{
+    <form method="post" class="form-inline" asp-controller="Book" asp-action="Delete" asp-route-id="@Model.Id">
+        <button  type="submit" class="btn btn-danger">Delete</button>
+    </form>
+}
+</div>
 
 <div class="mt-5">
     <h2>Reviews</h2>

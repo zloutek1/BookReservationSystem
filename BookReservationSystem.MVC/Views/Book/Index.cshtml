@@ -5,16 +5,26 @@
     ViewData["Title"] = "Book";
 }
 
+@if (User.IsInRole("Admin"))
+{
+    @Html.ActionLink(
+        "Add new book",
+        "add",
+        "Book",
+        new { },
+        new { @class = "btn btn-primary mb-3" })
+}
+
 @await Html.PartialAsync("_SearchBooks.cshtml", new BookFilterDto())
 
-<div class="d-flex mt-5">
+<div class="d-flex flex-wrap mt-5">
     @if (!Model.Any())
     {
         <h5>No books found.</h5>
     }
     @foreach (var book in Model)
     {
-        <div class="card">
+        <div class="card m-1" style="width: 11em">
             <div class="card-header text-center" style="max-height: 10em;">
                 <img src="@Url.Content(book.CoverArtPath.IsNullOrEmpty() ? "~/Resources/empty.jpg": book.CoverArtPath)" alt="cover art" class="h-100"/>
             </div>
