@@ -6,69 +6,43 @@ using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Http;
 
 namespace BookReservationSystem.BL.Services;
 
-public class BookService : IBookService
+public class BookService : CrudService<Book, BookDto>, IBookService
 {
-    private readonly IMapper _mapper;
-    private readonly Func<IUnitOfWork> _unitOfWorkFactory;
-    private readonly IRepository<Book> _bookRepository;
-    private readonly IQuery<Book> _bookQuery;
-
-    public BookService(IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<Book> bookRepository, IQuery<Book> bookQuery)
+    public BookService(IQuery<Book> query, IRepository<Book> repository, IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory) : base(query, repository, mapper, unitOfWorkFactory)
     {
-        _mapper = mapper;
-        _unitOfWorkFactory = unitOfWorkFactory;
-        _bookRepository = bookRepository;
-        _bookQuery = bookQuery;
+        
     }
 
-    #region crud
-    public IEnumerable<BookDto> FindAll()
+    public async Task<IEnumerable<BookDto>> FilterBooks(BookFilterDto filter)
     {
-        var foundBooks = _bookRepository.FindAll();
-        return _mapper.Map<IEnumerable<BookDto>>(foundBooks);
+        var bookQuery = new FilterBookQuery(Mapper, Query);
+        return await bookQuery.Execute(filter);
+    }
+    
+    public async Task Insert(BookCreateDto createDto)
+    {
+        var book = Mapper.Map<Book>(createDto);
+        await using var uow = UnitOfWorkFactory();
+
+        if (createDto.CoverArt != null)
+        {
+            book.CoverArtPath = await SaveImage(createDto.CoverArt);
+        }
+        await Repository.Insert(book);
+        
+        await uow.Commit();
     }
 
-    public BookDto? FindById(Guid id)
+    private static async Task<string> SaveImage(IFormFile image)
     {
-        var foundBook = _bookRepository.FindById(id);
-        return _mapper.Map<BookDto?>(foundBook);
-    }
-
-    public void Insert(BookDto bookDto)
-    {
-        var book = _mapper.Map<Book>(bookDto);
-        using var uow = _unitOfWorkFactory();
-        _bookRepository.Insert(book);
-        //TODO: delete after uow is fixed x.x
-        _bookRepository.Commit();
-        uow.Commit();
-    }
-
-    public void Update(BookDto bookDto)
-    {
-        var book = _mapper.Map<Book>(bookDto);
-        using var uow = _unitOfWorkFactory();
-        _bookRepository.Update(book);
-        uow.Commit();
-    }
-
-    //TODO: delete all reviews and reservations for this book
-    public void Delete(Guid id)
-    {
-        using var uow = _unitOfWorkFactory();
-        _bookRepository.Delete(id);
-        //TODO: delete after uow is fixed x.x
-        _bookRepository.Commit();
-        uow.Commit();
-    }
-    #endregion
-
-    public IEnumerable<BookDto> FilterBooks(BookFilterDto filter)
-    {
-        var bookQuery = new FilterBookQuery(_mapper, _bookQuery);
-        return bookQuery.Execute(filter);
+        var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "..\\BookReservationSystem.MVC\\wwwroot\\book_covers", fileName);
+        var stream = new FileStream(uploadPath, FileMode.Create);
+        await image.CopyToAsync(stream);
+        return "~/book_covers/"+fileName;
     }
 }

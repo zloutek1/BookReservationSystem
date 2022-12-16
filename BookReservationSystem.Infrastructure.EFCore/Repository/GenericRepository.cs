@@ -15,30 +15,26 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
         _table = _context.Set<TEntity>();
     }
 
-    public IEnumerable<TEntity> FindAll()
+    public async Task<TEntity?> FindById(Guid id)
     {
-        return _table.ToList();
+        return await _table.FindAsync(id);
     }
 
-    public TEntity? FindById(Guid id)
+    public async Task Insert(TEntity obj)
     {
-        return _table.Find(id);
+        await _table.AddAsync(obj);
     }
 
-    public void Insert(TEntity obj)
-    {
-        _table.Add(obj);
-    }
-
-    public void Update(TEntity obj)
+    public Task Update(TEntity obj)
     {
         _table.Attach(obj);
         _context.Entry(obj).State = EntityState.Modified;
+        return Task.CompletedTask;
     }
 
-    public void Delete(Guid id)
+    public async Task Delete(Guid id)
     {
-        var existing = _table.Find(id);
+        var existing = await _table.FindAsync(id);
         if (existing == null)
         {
             throw new ArgumentException("Could not find Item with Id: " + id);
@@ -46,17 +42,18 @@ public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : c
         _table.Remove(existing);
     }
 
-    public void Delete(TEntity obj)
+    public Task Delete(TEntity obj)
     {
         if (_context.Entry(obj).State == EntityState.Detached)
         {
             _table.Attach(obj);
         }
         _table.Remove(obj);
+        return Task.CompletedTask;
     }
 
-    public void Commit()
+    public async Task Commit()
     {
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }

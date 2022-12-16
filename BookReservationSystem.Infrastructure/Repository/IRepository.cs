@@ -2,11 +2,10 @@
 
 public interface IRepository<TEntity> where TEntity : class
 {
-    IEnumerable<TEntity> FindAll();
-    TEntity? FindById(Guid id);
-    void Insert(TEntity obj);
-    void Update(TEntity obj);
-    void Delete(Guid id);
-    void Delete(TEntity obj);
-    void Commit();
+    Task<TEntity?> FindById(Guid id);
+    Task Insert(TEntity obj);
+    Task Update(TEntity obj);
+    Task Delete(Guid id);
+    Task Delete(TEntity obj);
+    Task Commit();
 }

@@ -5,16 +5,16 @@ namespace BookReservationSystem.MVC.Controllers
 {
     public class ReviewController : Controller
     {
-        private IReviewService _reviewService;
+        private readonly IReviewService _reviewService;
 
         public ReviewController(IReviewService reviewService)
         {
             _reviewService = reviewService;
         }
 
-        public IActionResult DeleteReview(Guid reviewId)
+        public async Task<IActionResult> DeleteReview(Guid reviewId)
         {
-            _reviewService.Delete(reviewId);
+            await _reviewService.Delete(reviewId);
             return RedirectToAction("Profile", "User");
         }
     }

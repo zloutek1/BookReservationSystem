@@ -1,4 +1,5 @@
-﻿using BookReservationSystem.BL.IServices;
+﻿using BookReservationSystem.BL.Exceptions;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,37 +16,29 @@ public class BookController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index(Guid? bookId)
+    public async Task<IActionResult> Index()
     {
-        if (!bookId.HasValue)
-        {
-            var books = _bookService.FindAll();
-            return View(books);
-        }
-        else
-        {
-            return BookDetail(bookId.Value);
-        }
+        var books = await _bookService.FindAll();
+        return View(books);
     }
-
-    private IActionResult BookDetail(Guid bookId)
-    {
-        var book = _bookService.FindById(bookId);
-        return book == null ? View("Error") : View(nameof(BookDetail), book);
-    }
-        
+    
     [HttpPost]
-    public IActionResult Search(BookFilterDto filter)
+    public async Task<IActionResult> Index(BookFilterDto filter)
     {
-        /*
         if (!ModelState.IsValid)
         {
-            return View("Index");
+            return View("Error");
         }
-        */
         
-        var books = _bookService.FilterBooks(filter);
-        return View("Index", books);
+        var books = await _bookService.FilterBooks(filter);
+        return View(books);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Detail(Guid id)
+    {
+        var book = await _bookService.FindById(id);
+        return book == null ? View("Error") : View("BookDetail", book);
     }
 
     [HttpGet]
@@ -57,43 +50,24 @@ public class BookController : Controller
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public IActionResult Add(BookCreateDto createDto)
+    public async Task<IActionResult> Add(BookCreateDto createDto)
     {
-        /*
         if (!ModelState.IsValid)
         {
             return View("../Admin/AddBook", createDto);
         }
-        */
 
-        var coverArtPath = SaveImage(createDto.CoverArt);
-        var book = new BookDto
-        {
-            Name = createDto.Name,
-            Isbn = createDto.Isbn,
-            Abstract = createDto.Abstract,
-            CoverArtPath = coverArtPath
-        };
-
-        _bookService.Insert(book);
+        await _bookService.Insert(createDto);
         return RedirectToAction("Index", "Book");
     }
 
-    private static string SaveImage(IFormFile image)
-    {
-        var fileName =image.FileName;
-        fileName = Guid.NewGuid() + Path.GetExtension(fileName);
-        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Resources", fileName);
-        var stream = new FileStream(uploadPath, FileMode.Create);
-        image.CopyToAsync(stream);
-        return "~/Resources/"+fileName;
-    }
+    
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public IActionResult Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id)
     {
-        _bookService.Delete(id);
+        await _bookService.Delete(id);
         return RedirectToAction("Index", "Book");
     }
 }

@@ -1,5 +1,5 @@
 ﻿using BookReservationSystem.BL.IServices;
-using BookReservationSystem.MVC.Models;
+using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +17,7 @@ public class UserController : Controller
 
     [HttpGet]
     [Authorize]
-    public IActionResult Profile()
+    public async Task<IActionResult> Profile()
     {
         var username = User.Identity?.Name;
         if (username == null)
@@ -25,25 +25,13 @@ public class UserController : Controller
             return View("Error");
         }
             
-        var profile = _userService.FindByUsername(username);
+        var profile = await _userService.FindByUsername(username);
         return profile == null ? View("Error") : View("Profile", profile);
     }
 
-    //[HttpGet("EditProfile")]
-    //public IActionResult EditProfile(Guid userId)
-    //{
-    //if (!User.Identity.IsAuthenticated)
-    // {
-    //    return RedirectToAction("Login", "User");
-    //}
-    //  var profile = _userService.FindById(userId);
-    //var editProfileModel = new EditProfileModel(profile);
-    //return View(editProfileModel);
-    //}
-
     [HttpPost("EditProfile")]
     [ValidateAntiForgeryToken]
-    public IActionResult EditProfile(EditProfileModel user)
+    public async Task<IActionResult> EditProfile(UserEditDto user)
     {
         if (!ModelState.IsValid)
         {
@@ -52,7 +40,7 @@ public class UserController : Controller
 
         try
         {
-            _userService.Update(user.ConvertToProfileDto());
+            await _userService.Update(user);
             return RedirectToAction("Profile", "User");
         }
         catch (Exception)
