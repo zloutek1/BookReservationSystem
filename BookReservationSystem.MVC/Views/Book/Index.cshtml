@@ -32,7 +32,12 @@
                 @book.Name
             </div>
             <div class="card-footer">
-                <a class="btn btn-primary" asp-area="" asp-controller="Book" asp-action="Index" asp-route-bookId="@book.Id">View</a>
+                @Html.ActionLink(
+                    "View", 
+                    "Detail", 
+                    "Book", 
+                    new { id = book.Id }, 
+                    new { @class = "btn btn-primary" })
             </div>
         </div>
     }

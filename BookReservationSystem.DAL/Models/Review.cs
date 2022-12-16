@@ -5,14 +5,15 @@ namespace BookReservationSystem.DAL.Models;
 
 public class Review : BaseEntity
 {
-    [MaxLength(500)]
-    public string? Content { get; set; }
-
+    
     [Required]
     public DateTime Date { get; set; }
 
     [Required]
     public int Rating { get; set; }
+    
+    [MaxLength(500)]
+    public string Content { get; set; } = null!;
 
     [Required]
     public Guid BookId { get; set; }

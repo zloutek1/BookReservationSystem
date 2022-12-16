@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BookReservationSystem.Domain;
 
-public class UserDto
+public class UserShortDto
 {
     public Guid Id { get; set; }
     
@@ -25,10 +25,4 @@ public class UserDto
     [EmailAddress]
     [Display(Name = "E-mail")]
     public string Email { get; set; } = null!;
-    
-    [Required]
-    public virtual IEnumerable<ReviewDto> Reviews { get; set; } = null!;
-    
-    [Required]
-    public virtual IEnumerable<ReservationDto> Reservations { get; set; } = null!;
 }

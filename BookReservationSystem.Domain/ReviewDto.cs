@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using BookReservationSystem.DAL.Models;
 
 namespace BookReservationSystem.Domain;
@@ -11,7 +12,9 @@ public class ReviewDto
     
     public int Rating { get; set; }
     
-    public BookDto Book { get; set; }
+    [Required]
+    public BookShortDto Book { get; set; } = null!;
     
-    public AuthorDto Author { get; set; }
+    [Required]
+    public AuthorDto Author { get; set; } = null!;
 }

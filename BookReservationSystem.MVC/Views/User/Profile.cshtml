@@ -36,10 +36,10 @@
                     <th>Book</th>
                     <th>Library</th>
                     <th>Reservation date</th>
-                    <th>Due date</th>
                     <th>Pickup date</th>
+                    <th>Due date</th>
                     <th>Return date</th>
-                    <th></th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,10 +48,9 @@
                     <tr>
                         <td>@reservation.Book.Name</td>
                         <td>@reservation.Library.Name</td>
-                        <td>@reservation.ReturnDate</td>
                         <td>@reservation.ReservationDate</td>
-                        <td>@reservation.DueDate</td>
                         <td>@reservation.PickupDate</td>
+                        <td>@reservation.DueDate</td>
                         <td>@reservation.ReturnDate</td>
                         <!--add action link to pickup and return reservation-->
                     </tr>

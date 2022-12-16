@@ -6,15 +6,15 @@ public class Address : BaseEntity
 {
     [Required]
     [MaxLength(64)]
-    public string Country { get; set; }
+    public string Country { get; set; } = null!;
 
     [Required]
     [MaxLength(64)]
-    public string City { get; set; }
+    public string City { get; set; } = null!;
 
     [Required]
     [MaxLength(16)]
-    public string PostalCode { get; set; }
+    public string PostalCode { get; set; } = null!;
 
     [MaxLength(64)]
     public string? Street { get; set; }

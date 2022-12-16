@@ -41,8 +41,8 @@
 
 @if (User.IsInRole("Admin"))
 {
-    <form method="post" class="form-inline" asp-controller="Book" asp-action="Delete" asp-route-id="@Model.Id">
-        <button  type="submit" class="btn btn-danger">Delete</button>
+    <form method="post" class="d-inline-block" asp-controller="Book" asp-action="Delete" asp-route-id="@Model.Id">
+        <button type="submit" class="btn btn-danger">Delete</button>
     </form>
 }
 </div>

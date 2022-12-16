@@ -6,7 +6,7 @@ public class Publisher : BaseEntity
 {
     [Required]
     [MaxLength(64)]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public virtual List<Book> Books { get; set; } = new List<Book>();
+    public virtual List<Book> Books { get; set; } = new();
 }
