@@ -44,13 +44,15 @@ namespace BookReservationSystem.BL.Services
         
         public IEnumerable<ReviewDto> FindAllFromUser(string email)
         {
-            var reviewQuery = new FilterReviewsQuery(_mapper, _reviewQuery);
-            return reviewQuery.Execute(new ReviewUserFilterDto() { Email = email, SortAscending = true });
+            // TODO: fix this as well
+            //var reviewQuery = new FilterReviewsQuery(Mapper, Query);
+            //return reviewQuery.Execute(new ReviewUserFilterDto { Email = email, SortAscending = true });
+            return new List<ReviewDto>();
         }
 
         public IEnumerable<ReviewDto> FindAllForBook(Guid bookId)
         {
-            var reviewQuery = new GetBookReviews(Mapper, Query);
+            var reviewQuery = new GetBookReviewsQuery(Mapper, Query);
             return reviewQuery.Execute(new BookDto { Id = bookId });
         }
     }

@@ -28,8 +28,8 @@ public class UserService: IUserService
     #region crud
     public async Task<IEnumerable<UserDto>> FindAll()
     {
-        var foundUsers = _userRepository.FindAll();
-        return _mapper.Map<IEnumerable<UserProfileDto>>(foundUsers);
+        var foundUsers = await _userQuery.Page(1).Execute();
+        return _mapper.Map<IEnumerable<UserDto>>(foundUsers);
     }
 
     public async Task<UserDto?> FindById(Guid id)
@@ -57,25 +57,7 @@ public class UserService: IUserService
     public async Task<UserDto?> FindByUsername(string username)
     {
         var userQuery = new FilterUserQuery(_mapper, _userQuery);
-        return userQuery.Execute(new UserFilterDto { UserName = username, SortAscending = true });
-    }
-
-    public void RegisterUser(UserCreateDto userCreateDto)
-    {
-        var passwordSalt = _securityHelper.GenerateSalt();
-        var passwordHash = _securityHelper.HashPassword(userCreateDto.Password, passwordSalt);
-
-        var user = new User
-        {
-            Email = userCreateDto.Email,
-            FirstName = userCreateDto.FirstName,
-            LastName = userCreateDto.LastName,
-            PasswordSalt = passwordSalt,
-            PasswordHash = passwordHash
-        };
-
-        using var uow = _unitOfWorkFactory();
-        _userRepository.Insert(user);
-        uow.Commit();
+        var user = await userQuery.Execute(new UserFilterDto { UserName = username, SortAscending = true });
+        return user;
     }
 }
