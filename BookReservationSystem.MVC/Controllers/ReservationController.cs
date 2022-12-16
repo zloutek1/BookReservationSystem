@@ -40,7 +40,44 @@ public class ReservationController: Controller
         return RedirectToAction("Profile", "User");
     }
 
-        _reservationService.Insert(reservation);
+    
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Pickup(Guid id)
+    {
+        try
+        {
+            await _reservationService.PickupBook(id);
+            return RedirectToAction("Profile", "User");
+        }
+        catch (ServiceException ex)
+        {
+            // TODO: handle exception
+            return View("Error");
+        }
+    }
+    
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Return(Guid id)
+    {
+        try
+        {
+            await _reservationService.ReturnBook(id);
+            return RedirectToAction("Profile", "User");
+        }
+        catch (ServiceException ex)
+        {
+            // TODO: handle exception
+            return View("Error");
+        }
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _reservationService.Delete(id);
         return RedirectToAction("Profile", "User");
     }
 }

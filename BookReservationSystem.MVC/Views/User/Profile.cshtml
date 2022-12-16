@@ -52,7 +52,22 @@
                         <td>@reservation.PickupDate</td>
                         <td>@reservation.DueDate</td>
                         <td>@reservation.ReturnDate</td>
-                        <!--add action link to pickup and return reservation-->
+                        <td>
+                            @if (reservation.PickupDate == null && reservation.ReturnDate == null)
+                            {
+                                <form method="post" class="d-inline-block" asp-controller="Reservation" asp-action="Pickup" asp-route-id="@reservation.Id">
+                                    <button type="submit" class="btn btn-primary">Pickup book</button>
+                                </form>
+                                <form method="post" class="d-inline-block" asp-controller="Reservation" asp-action="Delete" asp-route-id="@reservation.Id">
+                                    <button type="submit" class="btn btn-danger">Delete reservation</button>
+                                </form>
+                            } else if (reservation.ReturnDate == null)
+                            {
+                                <form method="post" class="d-inline-block" asp-controller="Reservation" asp-action="Return" asp-route-id="@reservation.Id">
+                                    <button type="submit" class="btn btn-primary">Return book</button>
+                                </form>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>

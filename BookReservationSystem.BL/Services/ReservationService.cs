@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookReservationSystem.BL.Exceptions;
 using BookReservationSystem.BL.IServices;
 using BookReservationSystem.BL.Query;
 using BookReservationSystem.DAL.Models;
@@ -33,59 +34,68 @@ public class ReservationService : CrudService<Reservation, ReservationDto>, IRes
         await uow.Commit();
     }
 
-    #region crud
-    public IEnumerable<ReservationDto> FindAll()
+    public async Task PickupBook(Guid reservationId)
     {
-        var foundReservations = _reservationRepository.FindAll();
-        return _mapper.Map<IEnumerable<ReservationDto>>(foundReservations);
-    }
-
-    public ReservationDto? FindById(Guid id)
-    {
-        var foundReservation = _reservationRepository.FindById(id);
-        return _mapper.Map<ReservationDto?>(foundReservation);
-    }
-
-    public void Insert(ReservationDto reservationDto)
-    {
-        var reservation = _mapper.Map<Reservation>(reservationDto);
-        using var uow = _unitOfWorkFactory();
-        _reservationRepository.Insert(reservation);
-        uow.Commit();
-    }
-
-    public void Update(ReservationDto reservationDto)
-    {
-        var reservation = _mapper.Map<Reservation>(reservationDto);
-        using var uow = _unitOfWorkFactory();
-        _reservationRepository.Update(reservation);
-        uow.Commit();
-    }
-
-    public void Delete(Guid id)
-    {
-        using var uow = _unitOfWorkFactory();
-        _reservationRepository.Delete(id);
-        uow.Commit();
-    }
-    #endregion
-
-    public void Insert(ReservationCreateDto createDto)
-    {
-        var reservation = _mapper.Map<Reservation>(createDto);
+        var reservation = await Repository.FindById(reservationId);
+        if (reservation == null)
+        {
+            throw new NotFoundException($"Reservation with id {reservationId} not found");
+        }
         
-        var user = _userQuery.Where<string>(n => n == createDto.CustomerName, "UserName").Execute().FirstOrDefault();
-        reservation.CustomerId = user!.Id; // TODO: handle error
+        var bookQuantity = FindBookQuantity(reservation);
+        if (bookQuantity == null)
+        {
+            throw new NotFoundException($"Book quantity for reservation {reservationId} not found");
+        }
+        
+        if (bookQuantity.Count <= 0)
+        {
+            throw new ServiceException($"Book {reservation.Book.Name} is not available at {reservation.Library.Name} at the moment");
+        }
 
-        using var uow = _unitOfWorkFactory();
-        _reservationRepository.Insert(reservation);
-        _reservationRepository.Commit();
-        uow.Commit();
+        reservation.PickupDate = DateTime.Now;
+        bookQuantity.Count -= 1;
+
+        var uow = UnitOfWorkFactory();
+        await Repository.Update(reservation);
+        await _bookQuantityRepository.Update(bookQuantity);
+        await uow.Commit();
     }
 
+    private static BookQuantity? FindBookQuantity(Reservation reservation)
+    {
+        return reservation.Book.BookQuantities
+            .FirstOrDefault(q => 
+                q.BookId == reservation.BookId 
+                && q.LibraryId == reservation.LibraryId);
+    }
+    
+    public async Task ReturnBook(Guid reservationId)
+    {
+        var reservation = await Repository.FindById(reservationId);
+        if (reservation == null)
+        {
+            throw new NotFoundException($"Reservation with id {reservationId} not found");
+        }
+        
+        var bookQuantity = FindBookQuantity(reservation);
+        if (bookQuantity == null)
+        {
+            throw new NotFoundException($"Book quantity for reservation {reservationId} not found");
+        }
+        
+        reservation.ReturnDate = DateTime.Now;
+        bookQuantity.Count += 1;
+
+        var uow = UnitOfWorkFactory();
+        await Repository.Update(reservation);
+        await _bookQuantityRepository.Update(bookQuantity);
+        await uow.Commit();
+    }
+    
     public IEnumerable<ReservationDto> FindAllForUser(string email)
     {
-        var reviewQuery = new GetReservationHistoryQuery(_mapper, _reservationQuery);
-        return reviewQuery.Execute(new ReservationUserFilterDto() { Email = email });
+        var reviewQuery = new GetReservationHistoryQuery(Mapper, Query);
+        return reviewQuery.Execute(new ReservationUserFilterDto { Email = email });
     }
 }
