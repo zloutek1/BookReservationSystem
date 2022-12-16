@@ -18,7 +18,7 @@ public class GetReviewAuthorQuery
 
     public BookDto Execute(ReviewDto reviewDto)
     {
-        _query.Where<Guid>(bookId => bookId == reviewDto.Book.Id, "Id");
+        _query.Where(review => review.BookId == reviewDto.Book.Id);
         return _mapper.Map<BookDto>(_query.Execute());
     }
 }

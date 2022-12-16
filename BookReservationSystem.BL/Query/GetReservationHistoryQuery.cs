@@ -23,8 +23,9 @@ namespace BookReservationSystem.BL.Query
 
         public IEnumerable<ReservationDto> Execute(ReservationUserFilterDto reservationUserFilterDto)
         {
-            _query.Where<string>(email => email == reservationUserFilterDto.Email, "Email")
-                .OrderBy<string>("ReservationDate", true);
+            _query
+                .Where(reservation => reservation.Customer != null && reservation.Customer.Email == reservationUserFilterDto.Email)
+                .OrderBy(reservation => reservation.ReservationDate);
 
             if (reservationUserFilterDto.RequestedPageNumber.HasValue)
             {

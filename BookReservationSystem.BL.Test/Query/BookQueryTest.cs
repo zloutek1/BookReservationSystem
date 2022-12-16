@@ -19,7 +19,7 @@ public class BookQueryTest
     }
     
     [Fact]
-    public void Where_GivenBooksWithName_ReturnsOne()
+    public async Task Where_GivenBooksWithName_ReturnsOne()
     {
         var filteredBooks = new List<Book>
         {
@@ -27,16 +27,16 @@ public class BookQueryTest
         };
 
         _bookQueryMock
-            .Setup(x => x.Execute())
+            .Setup(x => x.Execute().Result)
             .Returns(filteredBooks);
         
         var query = new FilterBookQuery(_mapper, _bookQueryMock.Object);
         var filters = new BookFilterDto { Name = "Hacker" };
         
-        var result = query.Execute(filters).ToList();
+        var result = (await query.Execute(filters)).ToList();
         
         Assert.Single(result);
         Assert.Equal("Hacker", result.First().Name);
     }
-    
+
 }
