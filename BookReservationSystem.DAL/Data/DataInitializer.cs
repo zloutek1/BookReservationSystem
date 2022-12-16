@@ -82,11 +82,12 @@ public static class DataInitializer
         {
             b.HasData(hape, kepler, stoker, king, tolkien);
             b.HasMany(p => p.Books).WithMany(p => p.Authors)
-                .UsingEntity(j => j.HasData(new { AuthorsId = hape.Id, BooksId = kockyBook.Id },
-                new {AuthorsId = kepler.Id, BooksId = pavoukBook.Id},
-                new {AuthorsId = stoker.Id, BooksId = draculaBook.Id}, 
-                new {AuthorsId = king.Id, BooksId = shiningBook.Id},
-                new {AuthorsId = tolkien.Id, BooksId = hobbitBook.Id}));
+                .UsingEntity(j => j.HasData(
+                    new { AuthorsId = hape.Id, BooksId = kockyBook.Id },
+                    new {AuthorsId = kepler.Id, BooksId = pavoukBook.Id},
+                    new {AuthorsId = stoker.Id, BooksId = draculaBook.Id}, 
+                    new {AuthorsId = king.Id, BooksId = shiningBook.Id},
+                    new {AuthorsId = tolkien.Id, BooksId = hobbitBook.Id}));
         });
         #endregion
 
@@ -137,24 +138,38 @@ public static class DataInitializer
         #endregion
 
         #region roles
-        var user = new Role 
+        var userRole = new Role 
         {
             Id = Guid.NewGuid(),
             Name = "User",
             NormalizedName = "USER"
         };
-        modelBuilder.Entity<Role>().HasData(user);
         
-        var admin = new Role 
+        var adminRole = new Role 
         {
             Id = Guid.NewGuid(),
             Name = "Admin",
             NormalizedName = "ADMIN"
         };
-        modelBuilder.Entity<Role>().HasData(admin);
+        
+        modelBuilder.Entity<Role>().HasData(userRole, adminRole);
         #endregion
 
         #region users
+
+        var demoUser = new User
+        {
+            Id = Guid.NewGuid(),
+            UserName = "demo",
+            NormalizedUserName = "DEMO",
+            FirstName = "demo",
+            LastName = "demo",
+            Email = "demo@gmail.com",
+            NormalizedEmail = "DEMO@GMAIL.COM",
+            SecurityStamp = Guid.NewGuid().ToString("D"),
+            PasswordHash = "AQAAAAEAACcQAAAAEI56EuIXWNrKlnYOdNxWJx+bnMJ0WWTjpo3Mn3P7HPBGV78AQjb9BJomuebALvEIqQ=="
+        };
+        
         var monkman = new User
         {
             Id = Guid.NewGuid(),
@@ -162,12 +177,10 @@ public static class DataInitializer
             FirstName = "Westbrook",
             LastName = "Monkman",
             Email = "wmonkman0@zdnet.com",
-            PasswordHash = "RLreUYnARxnE",
-            PasswordSalt = ""
+            PasswordHash = "RLreUYnARxnE"
         };
-        modelBuilder.Entity<User>().HasData(monkman);
-
-        var maxworthy = new User
+        
+        var maxWorthy = new User
         {
             Id = Guid.NewGuid(),
             UserName = "maxworthy",
@@ -175,9 +188,12 @@ public static class DataInitializer
             LastName = "Maxworthy",
             Email = "mmaxworthy1@ning.com",
             PasswordHash = "bo09BbrTa",
-            PasswordSalt = ""
         };
-        modelBuilder.Entity<User>().HasData(maxworthy);
+
+        modelBuilder.Entity<User>(b =>
+        {
+            b.HasData(demoUser, monkman, maxWorthy);
+        });
         #endregion
 
         #region reservations
@@ -186,7 +202,7 @@ public static class DataInitializer
             Id = Guid.NewGuid(),
             LibraryId = dobrovsky.Id,
             BookId = kockyBook.Id,
-            CustomerId = maxworthy.Id,
+            CustomerId = maxWorthy.Id,
             ReservationDate = new DateTime(2022, 10, 1, 18, 40, 01),
             DueDate = new DateTime(2022, 12, 31, 23, 59, 59)
         };
