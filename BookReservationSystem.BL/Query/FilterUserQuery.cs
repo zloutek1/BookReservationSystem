@@ -16,20 +16,18 @@ public class FilterUserQuery
         _query = query;
     }
 
-    public UserDto? Execute(UserFilterDto userFilterDto)
+    public async Task<UserDto?> Execute(UserFilterDto userFilterDto)
     {
-        _query.Where<string>(email => email == userFilterDto.UserName, "UserName");
-
-        if (!string.IsNullOrWhiteSpace(userFilterDto.SortCriteria))
-        {
-            _query.OrderBy<string>(userFilterDto.SortCriteria, userFilterDto.SortAscending);
-        }
-
+        _query.Where(user => user.UserName == userFilterDto.UserName);
+        
+        // TODO: add sorting?
+        
         if (userFilterDto.RequestedPageNumber.HasValue)
         {
             _query.Page(userFilterDto.RequestedPageNumber.Value, userFilterDto.PageSize);
         }
 
-        return _mapper.Map<UserDto?>(_query.Execute().FirstOrDefault());
+        var queryResult = await _query.Execute();
+        return _mapper.Map<UserDto?>(queryResult.FirstOrDefault());
     }
 }
