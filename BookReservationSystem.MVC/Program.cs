@@ -2,13 +2,15 @@ using BookReservationSystem.BL.Configs;
 using BookReservationSystem.DAL.Data;
 using BookReservationSystem.DAL.Models;
 using Microsoft.AspNetCore.Identity;
+using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddRazorPages(); 
+builder.Services.AddMvc().AddNToastNotifyToastr();
+
 DependencyInjectionConfig.ConfigureServices(builder.Services);
 ConfigureIdentityServices(builder.Services);
 
@@ -30,6 +32,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseNToastNotify();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

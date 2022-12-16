@@ -3,16 +3,19 @@ using BookReservationSystem.BL.IServices;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace BookReservationSystem.MVC.Controllers;
 
 public class ReservationController: Controller
 {
     private readonly IReservationService _reservationService;
+    private readonly IToastNotification _toastNotification;
 
-    public ReservationController(IReservationService reservationService)
+    public ReservationController(IReservationService reservationService, IToastNotification toastNotification)
     {
         _reservationService = reservationService;
+        _toastNotification = toastNotification;
     }
 
     [HttpGet]
@@ -52,8 +55,8 @@ public class ReservationController: Controller
         }
         catch (ServiceException ex)
         {
-            // TODO: handle exception
-            return View("Error");
+            _toastNotification.AddErrorToastMessage(ex.Message);
+            return RedirectToAction("Profile", "User");
         }
     }
     
@@ -68,8 +71,8 @@ public class ReservationController: Controller
         }
         catch (ServiceException ex)
         {
-            // TODO: handle exception
-            return View("Error");
+            _toastNotification.AddErrorToastMessage(ex.Message);
+            return RedirectToAction("Profile", "User");
         }
     }
 
