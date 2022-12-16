@@ -2,9 +2,9 @@
 
 public interface ICrudService<TDto>
 {
-    IEnumerable<TDto> FindAll();
-    TDto? FindById(Guid id);
-    void Insert(TDto dto);
-    void Update(TDto dto);
-    void Delete(Guid id);
+    Task<IEnumerable<TDto>> FindAll();
+    Task<TDto?> FindById(Guid id);
+    Task Insert(TDto createDto);
+    Task Update(TDto updateDto);
+    Task Delete(Guid id);
 }

@@ -6,29 +6,31 @@ using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookReservationSystem.BL.Services;
 
-public class ReservationService : IReservationService
+public class ReservationService : CrudService<Reservation, ReservationDto>, IReservationService
 {
-    private readonly IMapper _mapper;
-    private readonly Func<IUnitOfWork> _unitOfWorkFactory;
-    private readonly IRepository<Reservation> _reservationRepository;
-    private readonly IQuery<Reservation> _reservationQuery;
+    private readonly UserManager<User> _userManager;
+    private readonly IRepository<BookQuantity> _bookQuantityRepository;
 
-    private readonly IRepository<Book> _bookRepository;
-    private readonly IQuery<User> _userQuery;
-    private readonly IRepository<Library> _libraryRepository;
-    
-    public ReservationService(IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<Reservation> reservationRepository, IQuery<Reservation> reservationQuery, IRepository<Book> bookRepository, IRepository<Library> libraryRepository, IQuery<User> userQuery)
+    public ReservationService(IQuery<Reservation> query, IRepository<Reservation> repository, IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, UserManager<User> userManager, IRepository<BookQuantity> bookQuantityRepository) : base(query, repository, mapper, unitOfWorkFactory)
     {
-        _mapper = mapper;
-        _unitOfWorkFactory = unitOfWorkFactory;
-        _reservationRepository = reservationRepository;
-        _reservationQuery = reservationQuery;
-        _bookRepository = bookRepository;
-        _libraryRepository = libraryRepository;
-        _userQuery = userQuery;
+        _userManager = userManager;
+        _bookQuantityRepository = bookQuantityRepository;
+    }
+
+    public async Task Insert(ReservationCreateDto createDto)
+    {
+        var reservation = Mapper.Map<Reservation>(createDto);
+        
+        var user = await _userManager.FindByNameAsync(createDto.UserName);
+        reservation.CustomerId = user.Id;
+
+        await using var uow = UnitOfWorkFactory();
+        await Repository.Insert(reservation);
+        await uow.Commit();
     }
 
     #region crud

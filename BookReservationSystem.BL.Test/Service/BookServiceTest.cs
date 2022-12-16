@@ -25,7 +25,7 @@ public class BookServiceTest
     }
 
     [Fact]
-    public void Insert_InsertsGiven()
+    public async Task Insert_InsertsGiven()
     {
         var bookDto = new BookDto
         {
@@ -35,9 +35,9 @@ public class BookServiceTest
             Isbn = 0001
         };
 
-        var bookService = new BookService(_mapper, ()=> _uowMock.Object, _bookRepositoryMock.Object, _bookQueryMock.Object);
+        var bookService = new BookService(_bookQueryMock.Object,  _bookRepositoryMock.Object, _mapper, ()=> _uowMock.Object);
 
-        bookService.Insert(bookDto);
+        await bookService.Insert(bookDto);
         
         _bookRepositoryMock.Verify(mock => 
             mock.Insert(

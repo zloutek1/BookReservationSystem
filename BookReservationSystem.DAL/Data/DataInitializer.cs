@@ -23,7 +23,7 @@ public static class DataInitializer
             Id = Guid.NewGuid(),
             Name = "Moje kočky, cizí kočky a já",
             Abstract = "Co kočky cítí? Znají humor? Na co myslí? Jak mám svou kočku rozmazlovat a komunikovat s ní? A jsou naši pokojoví tygři jasnovidci? Těmto a mnoha dalším zajímavým otázkám se obšírně věnuje laskavá, vtipná i poučná kniha od milovníka koček, který se svými kočičími mazlíčky prožil třináct let a za tu dobu se jim naučil hodně rozumět. Nabízí čtenářům pár užitečných výchovných rad, ale jak sám poznamenává, nakonec budou stejně k ničemu, protože kočky si vždycky změní páníčka k obrazu svému, nikoli naopak.",
-            CoverArtPath = "~/Resources/kockybookcover.jpg",
+            CoverArtPath = "~/book_covers/kockybookcover.jpg",
             Isbn = 9788024282442
         };
         var pavoukBook = new Book
@@ -31,7 +31,7 @@ public static class DataInitializer
             Id = Guid.NewGuid(),
             Name = "Pavouk",
             Abstract = "Joona Linna se znovu ocitá v ohrožení života a zachránit ho může jedině Saga Bauerová.",
-            CoverArtPath = "~/Resources/pavouk.jpg",
+            CoverArtPath = "~/book_covers/pavouk.jpg",
             Isbn = 9788027513765
         };
         var draculaBook = new Book
@@ -39,6 +39,7 @@ public static class DataInitializer
             Id = Guid.NewGuid(),
             Name = "Dracula",
             Abstract = "",
+            CoverArtPath = "~/book_covers/dracula.jpg",
             Isbn = 9780141199337
         };
         var shiningBook = new Book
@@ -46,13 +47,15 @@ public static class DataInitializer
             Id = Guid.NewGuid(),
             Name = "Shining",
             Abstract = "peepo",
+            CoverArtPath = "~/book_covers/the-shining.jpg",
             Isbn = 9788055138343
         };
         var hobbitBook = new Book
         {
             Id = Guid.NewGuid(),
             Name = "Hobbit",
-            Abstract = "hehe",
+            Abstract = "Toto je příběh o tom, kterak se Pytlík vydal za dobrodružstvím a shledal, že náhle dělá a říká naprosto neočekávané věci… Bilbo Pytlík je hobit, který se těší z pohodlnéh a skromného života a jen zřídkakdy putuje dále než do své spižírny ve Dně pytle. Jeho spokojené bytí je však narušeno, když se jednoho dne u jeho prahu objeví čaroděj Gandalf v doprovodu třinácti trpaslíků a vezmou ho s sebou na cestu \"tam a zase zpátky\". Mají v úmyslu uloupit poklad mocného Šmaka, velikého a velmi nebezpečného draka... ",
+            CoverArtPath = "~/book_covers/hobbit.jpg",
             Isbn = 9788025707418
         };
 

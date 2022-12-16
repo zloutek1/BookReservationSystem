@@ -2,7 +2,6 @@ using AutoMapper;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.UnitOfWork;
-using BookReservationSystem.BL.Helpers;
 using BookReservationSystem.BL.Query;
 using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
@@ -15,58 +14,47 @@ public class UserService: IUserService
     private readonly IMapper _mapper;
     private readonly Func<IUnitOfWork> _unitOfWorkFactory;
     private readonly IRepository<User> _userRepository;
-    private readonly ISecurityHelper _securityHelper;
     private readonly IQuery<User> _userQuery;
 
-    public UserService(IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<User> userRepository, ISecurityHelper securityHelper, IQuery<User> userQuery)
+    public UserService(IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<User> userRepository, IQuery<User> userQuery)
     {
         _mapper = mapper;
         _unitOfWorkFactory = unitOfWorkFactory;
         _userRepository = userRepository;
-        _securityHelper = securityHelper;
         _userQuery = userQuery;
     }
 
     //make crud class for user profile dto, revert back to crud on userdto
     #region crud
-    public IEnumerable<UserProfileDto> FindAll()
+    public async Task<IEnumerable<UserDto>> FindAll()
     {
         var foundUsers = _userRepository.FindAll();
         return _mapper.Map<IEnumerable<UserProfileDto>>(foundUsers);
     }
 
-    public UserProfileDto? FindById(Guid id)
+    public async Task<UserDto?> FindById(Guid id)
     {
-        var foundUser = _userRepository.FindById(id);
-        return _mapper.Map<UserProfileDto?>(foundUser);
+        var foundUser = await _userRepository.FindById(id);
+        return _mapper.Map<UserDto?>(foundUser);
     }
 
-    public void Insert(UserProfileDto userDto)
+    public async Task Update(UserEditDto userDto)
     {
         var user = _mapper.Map<User>(userDto);
-        using var uow = _unitOfWorkFactory();
-        _userRepository.Insert(user);
-        uow.Commit();
+        await using var uow = _unitOfWorkFactory();
+        await _userRepository.Update(user);
+        await uow.Commit();
     }
 
-    public void Update(UserProfileDto userDto)
+    public async Task Delete(Guid id)
     {
-        var user = _mapper.Map<User>(userDto);
-        using var uow = _unitOfWorkFactory();
-        _userRepository.Update(user);
-        uow.Commit();
-    }
-
-    //delete all reservations and reviews for this user
-    public void Delete(Guid id)
-    {
-        using var uow = _unitOfWorkFactory();
-        _userRepository.Delete(id);
-        uow.Commit();
+        await using var uow = _unitOfWorkFactory();
+        await _userRepository.Delete(id);
+        await uow.Commit();
     }
     #endregion
 
-    public UserDto? FindByUsername(string username)
+    public async Task<UserDto?> FindByUsername(string username)
     {
         var userQuery = new FilterUserQuery(_mapper, _userQuery);
         return userQuery.Execute(new UserFilterDto { UserName = username, SortAscending = true });

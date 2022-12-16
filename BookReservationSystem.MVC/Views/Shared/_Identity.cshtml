@@ -1,5 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Identity
 
+@{
+    var routeUrl = Url.RouteUrl(ViewContext.RouteData.Values);
+    var qsPath = ViewContext.HttpContext.Request.QueryString.Value;
+    var returnUrl = $"{routeUrl}{qsPath}";
+}
+
 <ul class="navbar-nav">
     @if (User.Identity is {IsAuthenticated: true })
     {
@@ -7,7 +13,7 @@
             <a  class="nav-link text-dark" asp-controller="User" asp-action="Profile">Hello @User.Identity.Name!</a>
         </li>
         <li class="nav-item">
-            <form  class="form-inline" asp-controller="Identity" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <form  class="form-inline" asp-controller="Identity" asp-action="Logout" asp-route-returnUrl="~">
                 <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
             </form>
         </li>
@@ -15,10 +21,10 @@
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Identity" asp-action="Register">Register</a>
+            <a class="nav-link text-dark" asp-controller="Identity" asp-action="Register" asp-route-returnUrl="@returnUrl">Register</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Identity" asp-action="Login">Login</a>
+            <a class="nav-link text-dark" asp-controller="Identity" asp-action="Login" asp-route-returnUrl="@returnUrl">Login</a>
         </li>
     }
 </ul>

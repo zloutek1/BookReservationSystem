@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BookReservationSystem.BL.Helpers;
 using BookReservationSystem.BL.IServices;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
@@ -11,24 +10,19 @@ public class IdentityService : IIdentityService
 {
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
-    private readonly ISecurityHelper _securityHelper;
     private readonly IMapper _mapper;
     
-    public IdentityService(SignInManager<User> signInManager, UserManager<User> userManager, IMapper mapper, ISecurityHelper securityHelper)
+    public IdentityService(SignInManager<User> signInManager, UserManager<User> userManager, IMapper mapper)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _mapper = mapper;
-        _securityHelper = securityHelper;
     }
 
     public async Task Register(UserCreateDto model)
     {
         var newUser = _mapper.Map<User>(model);
-        newUser.PasswordSalt = _securityHelper.GenerateSalt();
-        var passwordHash = _securityHelper.HashPassword(model.Password, newUser.PasswordSalt);
-
-        var createResult = await _userManager.CreateAsync(newUser, passwordHash).ConfigureAwait(false);
+        var createResult = await _userManager.CreateAsync(newUser, model.Password).ConfigureAwait(false);
         if (!createResult.Succeeded) return;
 
         var user = await _userManager.FindByNameAsync(model.UserName).ConfigureAwait(false);
@@ -45,13 +39,12 @@ public class IdentityService : IIdentityService
         var user = await _userManager.FindByNameAsync(model.UserName).ConfigureAwait(false);
         if (user is null) return SignInResult.Failed;
         
-        var passwordHash = _securityHelper.HashPassword(model.Password, user.PasswordSalt);
-        if (!await _userManager.CheckPasswordAsync(user, passwordHash).ConfigureAwait(false)) 
+        if (!await _userManager.CheckPasswordAsync(user, model.Password).ConfigureAwait(false)) 
             return SignInResult.Failed;
 
         await _signInManager.SignOutAsync().ConfigureAwait(false);
         return await _signInManager
-            .PasswordSignInAsync(model.UserName, passwordHash, true, false)
+            .PasswordSignInAsync(model.UserName, model.Password, true, false)
             .ConfigureAwait(false);
     }
 

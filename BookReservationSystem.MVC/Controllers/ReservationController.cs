@@ -1,4 +1,5 @@
-﻿using BookReservationSystem.BL.IServices;
+﻿using BookReservationSystem.BL.Exceptions;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,24 +17,28 @@ public class ReservationController: Controller
 
     [HttpGet]
     [Authorize]
-    public IActionResult Index(Guid bookId)
+    public IActionResult Index(Guid id)
     {
         var reservation = new ReservationCreateDto
         {
-            BookId = bookId,
-            CustomerName = User.Identity?.Name!
+            BookId = id,
+            UserName = User.Identity?.Name!
         };
         return View(reservation);
     }
 
     [HttpPost]
     [Authorize]
-    public IActionResult Index(ReservationCreateDto reservation)
+    public async Task<IActionResult> Index(ReservationCreateDto createDto)
     {
         if (!ModelState.IsValid)
         {
-            return View(reservation);
+            return View(createDto);
         }
+
+        await _reservationService.Insert(createDto);
+        return RedirectToAction("Profile", "User");
+    }
 
         _reservationService.Insert(reservation);
         return RedirectToAction("Profile", "User");

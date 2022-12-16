@@ -15,75 +15,33 @@ using System.Threading.Tasks;
 
 namespace BookReservationSystem.BL.Services
 {
-    public class ReviewService : IReviewService
+    public class ReviewService : CrudService<Review, ReviewDto>, IReviewService
     {
-        private readonly IMapper _mapper;
-        private readonly Func<IUnitOfWork> _unitOfWorkFactory;
-        private readonly IRepository<Review> _reviewRepository;
-        private readonly IQuery<Review> _reviewQuery;
         private readonly IRepository<Book> _bookRepository;
 
-        public ReviewService(IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<Review> reviewRepository, IRepository<Book> bookRepository, IQuery<Review> reviewQuery)
+        public ReviewService(IQuery<Review> query, IRepository<Review> repository, IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<Book> bookRepository) : base(query, repository, mapper, unitOfWorkFactory)
         {
-            _mapper = mapper;
-            _unitOfWorkFactory = unitOfWorkFactory;
-            _reviewRepository = reviewRepository;
             _bookRepository = bookRepository;
-            _reviewQuery = reviewQuery;
         }
 
-        #region crud
-        public IEnumerable<ReviewDto> FindAll()
+        public new async Task Insert(ReviewDto reviewDto)
         {
-            var foundReviews = _reviewRepository.FindAll();
-            return _mapper.Map<IEnumerable<ReviewDto>>(foundReviews);
-        }
+            var review = Mapper.Map<Review>(reviewDto);
 
-        public ReviewDto? FindById(Guid id)
-        {
-            var foundReview = _reviewRepository.FindById(id);
-            return _mapper.Map<ReviewDto?>(foundReview);
-        }
+            var reviewQuery = new GetReviewAuthorQuery(Mapper, Query);
+            var book = Mapper.Map<Book>(reviewQuery.Execute(reviewDto));
 
-        public void Insert(ReviewDto reviewDto)
-        {
-            var review = _mapper.Map<Review>(reviewDto);
-
-            var reviewQuery = new GetReviewAuthorQuery(_mapper, _reviewQuery);
-            var book = _mapper.Map<Book>(reviewQuery.Execute(reviewDto));
-
-            float temp = 0;
-            foreach (Review r in book.Reviews)
-            {
-                temp += r.Rating;
-            }
+            var temp = book.Reviews.Aggregate<Review, float>(0, (current, r) => current + r.Rating);
             temp += review.Rating;
             temp /= book.Reviews.Count + 1;
-
             book.AverageRating = temp;
 
-            using var uow = _unitOfWorkFactory();
-            _bookRepository.Update(book);
-            _reviewRepository.Insert(review);
-            uow.Commit();
+            await using var uow = UnitOfWorkFactory();
+            await _bookRepository.Update(book);
+            await Repository.Insert(review);
+            await uow.Commit();
         }
-
-        public void Update(ReviewDto reviewDto)
-        {
-            var review = _mapper.Map<Review>(reviewDto);
-            using var uow = _unitOfWorkFactory();
-            _reviewRepository.Update(review);
-            uow.Commit();
-        }
-
-        public void Delete(Guid id)
-        {
-            using var uow = _unitOfWorkFactory();
-            _reviewRepository.Delete(id);
-            uow.Commit();
-        }
-        #endregion
-
+        
         public IEnumerable<ReviewDto> FindAllFromUser(string email)
         {
             var reviewQuery = new FilterReviewsQuery(_mapper, _reviewQuery);
@@ -92,8 +50,8 @@ namespace BookReservationSystem.BL.Services
 
         public IEnumerable<ReviewDto> FindAllForBook(Guid bookId)
         {
-            var reviewQuery = new GetBookReviews(_mapper, _reviewQuery);
-            return reviewQuery.Execute(new BookDto() { Id = bookId });
+            var reviewQuery = new GetBookReviews(Mapper, Query);
+            return reviewQuery.Execute(new BookDto { Id = bookId });
         }
     }
 }

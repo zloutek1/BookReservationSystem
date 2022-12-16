@@ -30,7 +30,7 @@ public class EFUnitOfWorkTests : IDisposable
                 };
                 
                 var bookRepo = new GenericRepository<Book>(context);
-                bookRepo.Insert(book);
+                await bookRepo.Insert(book);
 
                 var address = new Address
                 {
@@ -43,7 +43,7 @@ public class EFUnitOfWorkTests : IDisposable
                 };
                 
                 var addressRepo = new GenericRepository<Address>(context);
-                addressRepo.Insert(address); 
+                await addressRepo.Insert(address); 
                 
                 var library = new Library
                 {
@@ -54,7 +54,7 @@ public class EFUnitOfWorkTests : IDisposable
                 };
                 
                 var libraryRepo = new GenericRepository<Library>(context);
-                libraryRepo.Insert(library);
+                await libraryRepo.Insert(library);
                 
                 await uow.Commit();
             }
@@ -64,7 +64,7 @@ public class EFUnitOfWorkTests : IDisposable
         await using (var context = _databaseFixture.CreateContext())
         {
             var libraryRepo = new GenericRepository<Library>(context);
-            foundLibrary = libraryRepo.FindById(libraryId);
+            foundLibrary = await libraryRepo.FindById(libraryId);
             
             Assert.NotNull(foundLibrary);
             await context.Entry(foundLibrary!).Collection("Books").LoadAsync();
@@ -80,8 +80,8 @@ public class EFUnitOfWorkTests : IDisposable
         await using var unitOfWork = new GenericUnitOfWork(context);
 
         var genreRepo = new GenericRepository<Genre>(context);
-        genreRepo.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
-        genreRepo.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
+        await genreRepo.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
+        await genreRepo.Insert(new Genre { Id = Guid.NewGuid(), Name = "Horror" });
             
         await Assert.ThrowsAsync<DbUpdateException>(async () => await unitOfWork.Commit());
     }

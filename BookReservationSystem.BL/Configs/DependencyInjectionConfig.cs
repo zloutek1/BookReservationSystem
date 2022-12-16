@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BookReservationSystem.BL.Helpers;
 using BookReservationSystem.BL.IServices;
 using BookReservationSystem.BL.Services;
 using BookReservationSystem.DAL.Data;
@@ -31,7 +30,6 @@ public static class DependencyInjectionConfig
     private static void AddUtilities(IServiceCollection services)
     {
         services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(AutoMapperConfig.ConfigureMapping)));
-        services.AddSingleton<ISecurityHelper, SecurityHelper>();
     }
 
     private static void AddIdentity(IServiceCollection services)
