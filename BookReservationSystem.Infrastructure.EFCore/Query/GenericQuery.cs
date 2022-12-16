@@ -1,125 +1,62 @@
-using System.Linq.Expressions;
 using BookReservationSystem.DAL.Data;
-using BookReservationSystem.Infrastructure.EFCore.Query.Helpers;
 using BookReservationSystem.Infrastructure.Query;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookReservationSystem.Infrastructure.EFCore.Query;
 
 public class GenericQuery<TEntity> : Query<TEntity> where TEntity : class, new()
 {
-    protected BookReservationSystemDbContext Context { get; set; }
+    private BookReservationSystemDbContext Context { get; }
 
     public GenericQuery(BookReservationSystemDbContext context)
     {
         Context = context;
     }
 
-    public override IEnumerable<TEntity> Execute()
+    public override async Task<IEnumerable<TEntity>> Execute()
     {
-        IQueryable<TEntity> query = Context.Set<TEntity>();
+        var query = Context.Set<TEntity>().AsQueryable();
 
-        if (WherePredicate.Capacity != 0)
+        if (WherePredicates.Count != 0)
         {
             query = ApplyWhere(query);
         }
 
-        if (OrderByContainer != null)
+        if (OrderByProviders.Count != 0)
         {
-            query = OrderBy(query);
+            query = ApplyOrderBy(query);
         }
 
-        if (PaginationContainer.HasValue)
+        if (Pagination.HasValue)
         {
-            query = Pagination(query);
+            query = ApplyPagination(query);
         }
 
-        return query.ToList();
+        return await query.ToListAsync();
 
     }
 
     private IQueryable<TEntity> ApplyWhere(IQueryable<TEntity> query)
     {
-        foreach (var expr in WherePredicate)
-        {
-            var p = Expression.Parameter(typeof(TEntity), "p");
-            
-            var columnNameFromObject = typeof(TEntity)
-                .GetProperty(expr.columnName)
-                ?.Name;
-
-            if (columnNameFromObject == null)
-            {
-                throw new ArgumentException("Invalid column");
-            }
-
-            var exprProp = Expression.Property(p, columnNameFromObject);
-            
-            var expression = expr.expression;
-
-            var parameters = (IReadOnlyCollection<ParameterExpression>?)expression
-                .GetType()
-                .GetProperty("Parameters")
-                ?.GetValue(expression);
-
-            var body = (Expression?)expression
-                .GetType()
-                .GetProperty("Body")
-                ?.GetValue(expression);
-
-            if (parameters == null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
-
-            var visitor = new ReplaceParamVisitor(parameters.First(), exprProp);
-            var exprNewBody = visitor.Visit(body);
-            
-            if (exprNewBody == null)
-            {
-                throw new ArgumentNullException(nameof(exprNewBody));
-            }
-            
-            var lambda = Expression.Lambda<Func<TEntity, bool>>(exprNewBody, p);
-
-            query = query.Where(lambda);
-        }
-
-        return query;
+        return WherePredicates.Aggregate(
+            query, 
+            (current, predicate) => current.Where(predicate));
     }
 
-    private IQueryable<TEntity> OrderBy(IQueryable<TEntity> query)
+    private IQueryable<TEntity> ApplyOrderBy(IQueryable<TEntity> query)
     {
-        var orderByColumn = OrderByContainer!.Value.tableName;
-        var isAscending = OrderByContainer!.Value.isAscending;
-        var argumentType = OrderByContainer!.Value.argumentType;
-
-        var p = Expression.Parameter(typeof(TEntity), "p");
-
-        var columnNameFromObject = typeof(TEntity)
-            .GetProperty(orderByColumn)
-            ?.Name;
-        
-        if (columnNameFromObject == null)
-        {
-            throw new ArgumentException("Invalid column");
-        }
-
-        var exprProp = Expression.Property(p, columnNameFromObject);
-        var lambda = Expression.Lambda(exprProp, p);
-
-        var orderByMethod = typeof(Queryable)
-            .GetMethods()
-            .First(a => a.Name == (isAscending ? "OrderBy" : "OrderByDescending") && a.GetParameters().Length == 2);
-
-        var orderByClosedMethod = orderByMethod.MakeGenericMethod(typeof(TEntity), argumentType);
-
-        return (IQueryable<TEntity>)orderByClosedMethod.Invoke(null, new object[] { query, lambda })!;
+        return OrderByProviders.Aggregate(
+            query, 
+            (current, value) => 
+                value.isAscending 
+                    ? current.OrderBy(value.Item1) 
+                    : current.OrderByDescending(value.Item1));
     }
 
-    private IQueryable<TEntity> Pagination(IQueryable<TEntity> query)
+    private IQueryable<TEntity> ApplyPagination(IQueryable<TEntity> query)
     {
-        var page = PaginationContainer!.Value.PageToFetch;
-        var pageSize = PaginationContainer!.Value.PageSize;
+        var page = Pagination!.Value.PageToFetch;
+        var pageSize = Pagination!.Value.PageSize;
 
         return query
             .Skip((page - 1) * pageSize)
