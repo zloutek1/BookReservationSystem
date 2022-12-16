@@ -1,15 +1,19 @@
 using System.ComponentModel.DataAnnotations;
+using BookReservationSystem.Domain.Validators;
 
 namespace BookReservationSystem.Domain;
 
 public class ReservationCreateDto
 {
     [Required]
-    [DataType(DataType.Date)]
+    [DataType(DataType.DateTime)]
+    [FutureOrPresent]
     public DateTime ReservationDate { get; set; }
 
     [Required]
-    [DataType(DataType.Date)]
+    [FutureOrPresent]
+    [DataType(DataType.DateTime)]
+    [After(nameof(ReservationDate))]
     public DateTime DueDate { get; set; }
 
     [Required]
