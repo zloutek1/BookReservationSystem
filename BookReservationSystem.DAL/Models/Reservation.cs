@@ -15,18 +15,18 @@ public class Reservation : BaseEntity
     [Required]
     public Guid LibraryId { get; set; }
 
-    [ForeignKey(nameof(LibraryId))]
-    public virtual Library? Library { get; set; }
+    [ForeignKey(nameof(LibraryId))] 
+    public virtual Library Library { get; set; } = null!;
 
     [Required]
     public Guid BookId { get; set; }
 
-    [ForeignKey(nameof(BookId))]
-    public virtual Book? Book { get; set; }
+    [ForeignKey(nameof(BookId))] 
+    public virtual Book Book { get; set; } = null!;
 
     [Required]
     public Guid CustomerId { get; set; }
 
-    [ForeignKey(nameof(CustomerId))]
-    public virtual User? Customer { get; set; }
+    [ForeignKey(nameof(CustomerId))] 
+    public virtual User Customer { get; set; } = null!;
 }

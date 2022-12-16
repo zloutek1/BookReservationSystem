@@ -12,7 +12,13 @@ public class ReservationCreateDto
     [DataType(DataType.Date)]
     public DateTime DueDate { get; set; }
 
+    [Required]
+    [Display(Name="Library")]
     public Guid LibraryId { get; set; }
+    
+    [Required]
     public Guid BookId { get; set; }
-    public string CustomerName { get; set; }
+    
+    [Required]
+    public string UserName { get; set; } = null!;
 }

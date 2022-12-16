@@ -35,7 +35,7 @@ public class AutoMapperConfig
         
         config.CreateMap<User, UserDto>().ReverseMap();
         config.CreateMap<User, UserCreateDto>().ReverseMap();
-        config.CreateMap<User, UserProfileDto>().ReverseMap();
+        config.CreateMap<User, UserEditDto>().ReverseMap();
         config.CreateMap<User, UserFilterDto>().ReverseMap();
     }
 }

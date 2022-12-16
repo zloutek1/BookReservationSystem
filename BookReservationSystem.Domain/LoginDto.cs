@@ -6,12 +6,12 @@ public class LoginDto
 {
     [Required]
     [Display(Name = "Username")]
-    public string UserName { get; set; }
+    public string UserName { get; set; } = null!;
 
     [Required]
     [DataType(DataType.Password)]
     [Display(Name = "Password")]
-    public string Password { get; set; }
+    public string Password { get; set; } = null!;
     
     public string? ReturnUrl { get; set; }
 }
