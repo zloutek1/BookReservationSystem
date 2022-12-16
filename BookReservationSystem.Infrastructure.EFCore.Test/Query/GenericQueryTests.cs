@@ -26,62 +26,62 @@ public class GenericQueryTests: IDisposable
     }
     
     [Fact]
-    public void Where_GivenBooksWithName_ReturnsOne()
+    public async Task Where_GivenBooksWithName_ReturnsOne()
     {
         var query = new GenericQuery<Book>(_context);
-        query.Where<string>(a => a == "Hacker", "Name");
-        var result = query.Execute().ToList();
+        query.Where(b => b.Name == "Hacker");
+        var result = (await query.Execute()).ToList();
 
         Assert.True(result.Count == 1);
         Assert.True(result.First().Name == "Hacker");
     }
     
     [Fact]
-    public void Where_GivenBooksNameStartsWith_ReturnsTwo()
+    public async Task Where_GivenBooksNameStartsWith_ReturnsTwo()
     {
         var query = new GenericQuery<Book>(_context);
-        query.Where<string>(a => a.StartsWith("Ha"), "Name");
-        var result = query.Execute().ToList();
+        query.Where(b => b.Name.StartsWith("Ha"));
+        var result = (await query.Execute()).ToList();
 
         Assert.True(result.Count == 2);
     }
     
     [Fact]
-    public void Where_GivenGenresNameStartsWith_ReturnsTwo()
+    public async Task Where_GivenGenresNameStartsWith_ReturnsTwo()
     {
         var query = new GenericQuery<Genre>(_context);
-        query.Where<string>(a => a.StartsWith("E"), "Name");
-        var result = query.Execute().ToList();
+        query.Where(g => g.Name.StartsWith("E"));
+        var result = (await query.Execute()).ToList();
 
         Assert.True(result.Count == 2);
     }
     
     [Fact]
-    public void Where_PredicateAlwaysTrue_ReturnsAll()
+    public async Task Where_PredicateAlwaysTrue_ReturnsAll()
     {
         var query = new GenericQuery<Book>(_context);
-        query.Where<string>(a => true, "Name");
-        var result = query.Execute();
+        query.Where(b => true);
+        var result = await query.Execute();
 
         Assert.Equal(3, result.Count());
     }
     
     [Fact]
-    public void Where_PredicateAlwaysFalse_ReturnsNone()
+    public async Task Where_PredicateAlwaysFalse_ReturnsNone()
     {
         var query = new GenericQuery<Book>(_context);
-        query.Where<string>(a => false, "Name");
-        var result = query.Execute();
+        query.Where(b => false);
+        var result = await query.Execute();
 
         Assert.Empty(result);
     }
     
     [Fact]
-    public void OrderByAscending_GivenBooksWithName_ReturnsOrdered()
+    public async Task OrderByAscending_GivenBooksWithName_ReturnsOrdered()
     {
         var query = new GenericQuery<Book>(_context);
-        query.OrderBy<string>("Name");
-        var result = query.Execute()
+        query.OrderBy(b => b.Name);
+        var result = (await query.Execute())
             .Select(a => a.Name)
             .ToList();
 
@@ -94,12 +94,12 @@ public class GenericQueryTests: IDisposable
     }
     
     [Fact]
-    public void WhereOrderByAscending_GivenGenreWithName_ReturnsOrdered()
+    public async Task WhereOrderByAscending_GivenGenreWithName_ReturnsOrdered()
     {
         var query = new GenericQuery<Genre>(_context);
-        query.Where<string>(a => a.StartsWith("E"), "Name");
-        query.OrderBy<string>("Name");
-        var result = query.Execute()
+        query.Where(g => g.Name.StartsWith("E"));
+        query.OrderBy(g => g.Name);
+        var result = (await query.Execute())
             .Select(a => a.Name)
             .ToList();
 
@@ -109,11 +109,11 @@ public class GenericQueryTests: IDisposable
     }
     
     [Fact]
-    public void OrderByDescending_GivenBooksWithName_ReturnsOrdered()
+    public async Task OrderByDescending_GivenBooksWithName_ReturnsOrdered()
     {
         var query = new GenericQuery<Book>(_context);
-        query.OrderBy<string>("Name", false);
-        var result = query.Execute()
+        query.OrderBy(b => b.Name, false);
+        var result = (await query.Execute())
             .Select(a => a.Name)
             .ToList();
 
@@ -126,12 +126,12 @@ public class GenericQueryTests: IDisposable
     }
     
     [Fact]
-    public void Page_GivenFirstPage_ReturnsOne()
+    public async Task Page_GivenFirstPage_ReturnsOne()
     {
         var query = new GenericQuery<Book>(_context);
         query.Page(1, 1);
         
-        var result = query.Execute()
+        var result = (await query.Execute())
             .Select(a => a.Name)
             .ToList();
 
@@ -144,12 +144,12 @@ public class GenericQueryTests: IDisposable
     }
     
     [Fact]
-    public void Page_GivenSecondPage_ReturnsOne()
+    public async Task Page_GivenSecondPage_ReturnsOne()
     {
         var query = new GenericQuery<Book>(_context);
         query.Page(2, 2);
         
-        var result = query.Execute()
+        var result = (await query.Execute())
             .Select(a => a.Name)
             .ToList();
 

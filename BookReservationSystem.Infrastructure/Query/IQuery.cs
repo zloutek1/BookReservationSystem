@@ -7,12 +7,12 @@ public interface IQuery<TEntity> where TEntity : class, new()
     /// <summary>
     /// Adds a possibility to filter the result
     /// </summary>
-    IQuery<TEntity> Where<T>(Expression<Func<T, bool>> rootPredicate, string columnName);
+    IQuery<TEntity> Where(Expression<Func<TEntity, bool>> predicate);
 
     /// <summary>
     /// Adds a specified sort criteria to the query.
     /// </summary>
-    IQuery<TEntity> OrderBy<T>(string columnName, bool ascendingOrder = true) where T : IComparable<T>;
+    IQuery<TEntity> OrderBy(Expression<Func<TEntity, object>> selector, bool ascendingOrder = true);
 
     /// <summary>
     /// Adds a possibility to paginate the result
@@ -22,5 +22,5 @@ public interface IQuery<TEntity> where TEntity : class, new()
     /// <summary>
     /// Executes the query and returns the results.
     /// </summary>
-    IEnumerable<TEntity> Execute();
+    Task<IEnumerable<TEntity>> Execute();
 }
