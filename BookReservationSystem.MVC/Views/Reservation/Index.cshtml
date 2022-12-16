@@ -7,33 +7,38 @@
 
 @using (Html.BeginForm("Index", "Reservation"))
 {
-    <p class="text-red">@Html.ValidationSummary(true, "")</p>
     @Html.HiddenFor(x => x.BookId)
-    @Html.HiddenFor(x => x.CustomerName)
+    @Html.HiddenFor(x => x.UserName)
+    @Html.ValidationSummary(string.Empty, new { @class = "text-danger" })
     
     <div class="row valign-wrapper">
-        <div class="col s12 l4">From date:</div>
-        <div class="input-field col s12 l8">
-            <input type="date" name="ReservationDate" />
+        <div class="col s12 l4">@Html.LabelFor(x => x.ReservationDate)</div>
+        <div class="form-group col s12 l8">
+            @Html.TextBoxFor(m => m.ReservationDate, new{ type = "datetime-local", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.ReservationDate, null, new { @class = "text-danger" })
         </div>
     </div>
     
     <div class="row valign-wrapper">
-        <div class="col s12 l4">To date:</div>
-        <div class="input-field col s12 l8">
-            <input type="date" name="DueDate" />
+        <div class="col s12 l4">@Html.LabelFor(x => x.DueDate)</div>
+        <div class="form-group col s12 l8">
+            @Html.TextBoxFor(m => m.DueDate, new{ type = "datetime-local", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.DueDate, null, new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="row valign-wrapper">
-        <div class="col s12 l4">Library:</div>
-        <div class="input-field col s12 l8">
-            <select name="LibraryId">
-                @foreach (var quantity in BookService.FindById(Model.BookId)!.BookQuantities)
+        <div class="col s12 l4">@Html.LabelFor(x => x.LibraryId)</div>
+        <div class="form-group col s12 l8">
+            <select name="LibraryId" class="form-control">
+                <option value="">-- select library --</option>
+                @{ var book = await BookService.FindById(Model.BookId); }
+                @foreach (var quantity in book!.BookQuantities)
                 {
                     <option value="@quantity.Library.Id">@(quantity.Count)x - @quantity.Library.Name</option>
                 }
             </select>
+            @Html.ValidationMessageFor(x => x.LibraryId, null, new { @class = "text-danger" })
         </div>
     </div>
 

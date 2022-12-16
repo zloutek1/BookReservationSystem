@@ -9,7 +9,9 @@ namespace BookReservationSystem.BL.IServices
 {
     public interface IReservationService : ICrudService<ReservationDto>
     {
-        void Insert(ReservationCreateDto createDto);
+        Task Insert(ReservationCreateDto createDto);
+        Task PickupBook(Guid reservationId);
+        Task ReturnBook(Guid reservationId);
         IEnumerable<ReservationDto> FindAllForUser(string email);
     }
 }
