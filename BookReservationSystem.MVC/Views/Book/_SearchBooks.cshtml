@@ -10,7 +10,7 @@
     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="filterHeading" data-bs-parent="#filterAccordion">
       <div class="accordion-body">
         
-        @using (Html.BeginForm("Search", "Book"))
+        @using (Html.BeginForm("Index", "Book"))
         {
             <p class="text-red">@Html.ValidationSummary(true, "")</p>
             <div class="row valign-wrapper">
