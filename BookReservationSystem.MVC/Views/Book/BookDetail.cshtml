@@ -77,7 +77,7 @@
                 <th>Author</th>
                 <th>Content</th>
                 <th>Rating</th>
-                <th>Date</th>
+                    <th>Date and time</th>
                 <th></th>
             </tr>
             </thead>
@@ -87,9 +87,17 @@
                 <tr>
                     <td>@review.Author.UserName</td>
                     <td>@review.Content</td>
-                    <td>@review.Rating /10</td>
+                    <td>@review.Rating/10</td>
                     <td>@review.Date</td>
-                </tr>
+                        @if (User.IsInRole("Admin") || review.Author.UserName == User.Identity.Name)
+                        {
+                            <td>
+                                <form method="post" class="d-inline-block" asp-controller="Review" asp-action="DeleteFromBookDetail" asp-route-id="@review">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        }
+                    </tr>
             }
             </tbody>
         </table>

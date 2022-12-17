@@ -19,14 +19,25 @@ namespace BookReservationSystem.MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
+        [Authorize]
+        public async Task<IActionResult> DeleteFromBookDetail(ReviewDto reviewDto)
+        {
+            var book = reviewDto.Book;
+
+            await _reviewService.Delete(reviewDto.Id);
+            return book == null ? View("Error") : View("../Book/BookDetail", book);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DeleteFromProfile(Guid id)
         {
             await _reviewService.Delete(id);
             return RedirectToAction("Profile", "User");
         }
 
-        [HttpGet]
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> IndexForBook(Guid bookId)
         {
             if (!ModelState.IsValid)

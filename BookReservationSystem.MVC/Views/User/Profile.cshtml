@@ -8,7 +8,7 @@
 @if (User.Identity.Name == Model.UserName)
 {
     <form method="post" class="d-inline-block" asp-controller="User" asp-action="Edit" asp-route-id="@Model.Id">
-        <button type="submit" class="btn btn-danger">Edit</button>
+        <button type="submit" class="btn btn-primary">Edit</button>
     </form>
 }
 
@@ -102,7 +102,7 @@
                 <th>Book</th>
                 <th>Description</th>
                 <th>Rating</th>
-                <th>Date</th>
+                    <th>Date and time</th>
                 <th></th>
             </tr>
             </thead>
@@ -112,9 +112,13 @@
                 <tr>
                     <td>@review.Book.Name</td>
                     <td>@review.Content</td>
-                    <td>@review.Rating /10</td>
+                    <td>@review.Rating/10</td>
                     <td>@review.Date</td>
-                    <td>@Html.ActionLink("Delete Review", "DeleteReview", "Review", new { reviewId = review.Id }, new { @class = "btn btn-primary" })</td>
+                    <td>
+                       <form method="post" class="d-inline-block" asp-controller="Review" asp-action="DeleteFromProfile" asp-route-id="@review.Id">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                    </td>
                 </tr>
             }
             </tbody>
