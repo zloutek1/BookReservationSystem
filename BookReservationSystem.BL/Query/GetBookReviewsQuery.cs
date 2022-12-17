@@ -13,7 +13,7 @@ namespace BookReservationSystem.BL.Query;
 public class GetBookReviewsQuery
 {
     private readonly IMapper _mapper;
-    private readonly IQuery<Review> _query;
+    private IQuery<Review> _query;
 
     public GetBookReviewsQuery(IMapper mapper, IQuery<Review> query)
     {
@@ -21,9 +21,10 @@ public class GetBookReviewsQuery
         _query = query;
     }
 
-    public IEnumerable<ReviewDto> Execute(BookDto bookDto)
+    public async Task<IEnumerable<ReviewDto>> Execute(BookDto bookDto)
     {
-        _query.Where(review => review.BookId == bookDto.Id);
+        _query = _query.Where(review => review.BookId == bookDto.Id);
+        var queryResult = await _query.Execute();
         return _mapper.Map<IEnumerable<ReviewDto>>(_query.Execute());
     }
 }

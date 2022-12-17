@@ -1,0 +1,43 @@
+﻿@using BookReservationSystem.Domain
+@using Castle.Core.Internal
+@model IEnumerable<BookReservationSystem.Domain.UserDto>
+@{
+    ViewData["Title"] = "User";
+}
+
+@await Html.PartialAsync("_SearchUsers.cshtml", new UserFilterDto())
+
+<div class="d-flex flex-wrap mt-5">
+    @if (!Model.Any())
+    {
+        <h5>No users found.</h5>
+    }
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>User Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.FirstName @user.LastName</td>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                    <td>
+                        @Html.ActionLink(
+                    "Show Profile",
+                    "Profile",
+                    "User",
+                    new { username = user.UserName },
+                    new { @class = "btn btn-primary" })
+                    </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+</div>

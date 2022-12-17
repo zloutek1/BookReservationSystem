@@ -29,7 +29,8 @@
                 <img src="@Url.Content(book.CoverArtPath.IsNullOrEmpty() ? "~/Resources/empty.jpg": book.CoverArtPath)" alt="cover art" class="h-100"/>
             </div>
             <div class="card-body">
-                @book.Name
+                @book.Name <br>
+                @book.Rating/10
             </div>
             <div class="card-footer">
                 @Html.ActionLink(

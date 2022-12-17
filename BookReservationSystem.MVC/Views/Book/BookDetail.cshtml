@@ -28,6 +28,10 @@
             <td>Abstract</td>
             <td>@Model.Abstract</td>
         </tr>
+        <tr>
+            <td>Average Rating</td>
+            <td>@Model.Rating</td>
+        </tr>
     </tbody>
 </table>
 
@@ -39,10 +43,21 @@
     new { id = Model.Id }, 
     new { @class = "btn btn-primary" })
 
+    @Html.ActionLink(
+    "Write review",
+    "Index",
+    "Review",
+    new { id = Model.Id },
+    new { @class = "btn btn-primary" })
+
 @if (User.IsInRole("Admin"))
 {
     <form method="post" class="d-inline-block" asp-controller="Book" asp-action="Delete" asp-route-id="@Model.Id">
         <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+
+    <form method="post" class="d-inline-block" asp-controller="Book" asp-action="Edit" asp-route-id="@Model.Id">
+        <button type="submit" class="btn btn-danger">Edit</button>
     </form>
 }
 </div>
@@ -70,7 +85,7 @@
             @foreach (var review in Model.Reviews)
             {
                 <tr>
-                    <td>@review.Author.Name</td>
+                    <td>@review.Author.UserName</td>
                     <td>@review.Content</td>
                     <td>@review.Rating /10</td>
                     <td>@review.Date</td>

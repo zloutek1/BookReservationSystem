@@ -24,7 +24,6 @@ public class UserService: IUserService
         _userQuery = userQuery;
     }
 
-    //make crud class for user profile dto, revert back to crud on userdto
     #region crud
     public async Task<IEnumerable<UserDto>> FindAll()
     {
@@ -54,10 +53,9 @@ public class UserService: IUserService
     }
     #endregion
 
-    public async Task<UserDto?> FindByUsername(string username)
+    public async Task<IEnumerable<UserDto>> FilterUsers(UserFilterDto filter)
     {
         var userQuery = new FilterUserQuery(_mapper, _userQuery);
-        var user = await userQuery.Execute(new UserFilterDto { UserName = username, SortAscending = true });
-        return user;
+        return await userQuery.Execute(filter);
     }
 }

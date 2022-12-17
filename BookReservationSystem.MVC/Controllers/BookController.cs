@@ -61,8 +61,6 @@ public class BookController : Controller
         return RedirectToAction("Index", "Book");
     }
 
-    
-
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id)

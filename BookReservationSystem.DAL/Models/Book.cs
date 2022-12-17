@@ -27,6 +27,6 @@ public class Book : BaseEntity
     public virtual List<Review> Reviews { get; set; } = new();
 
     public virtual List<BookQuantity> BookQuantities { get; set; } = new();
-    
-    public float AverageRating { get; set; }
+
+    public float Rating { get; set; } = 0;
 }

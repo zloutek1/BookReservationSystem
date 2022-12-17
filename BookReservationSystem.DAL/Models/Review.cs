@@ -1,3 +1,4 @@
+using Castle.Core.Resource;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,11 +20,11 @@ public class Review : BaseEntity
     public Guid BookId { get; set; }
 
     [ForeignKey(nameof(BookId))]
-    public virtual Book? Book { get; set; }
+    public virtual Book Book { get; set; } = null!;
 
     [Required]
     public Guid UserId { get; set; }
 
     [ForeignKey(nameof(UserId))]
-    public virtual User? Author { get; set; }
+    public virtual User Author { get; set; } = null!;
 }

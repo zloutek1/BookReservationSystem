@@ -50,7 +50,7 @@ public class FilterBookQuery
 
         if (bookFilterDto.SortByRating)
         {
-            _query.OrderBy(book => book.Reviews.Average(r => r.Rating), bookFilterDto.SortAscending);
+            _query.OrderBy(book => book.Rating, bookFilterDto.SortAscending);
         }
 
         if (bookFilterDto.RequestedPageNumber.HasValue)
