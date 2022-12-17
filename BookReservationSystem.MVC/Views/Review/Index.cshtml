@@ -1,0 +1,50 @@
+﻿@using BookReservationSystem.BL.IServices
+@model BookReservationSystem.Domain.ReviewCreateDto
+@{
+    ViewData["Title"] = "Write Review";
+}
+
+@using (Html.BeginForm("Index", "Review"))
+{
+    @Html.HiddenFor(x => x.BookId)
+    @Html.HiddenFor(x => x.UserName)
+    @Html.ValidationSummary(string.Empty, new { @class = "text-danger" })
+
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">@Html.LabelFor(x => x.Date)</div>
+        <div class="form-group col s12 l8">
+            <div class="date-time">@{@Html.Label(string.Format("{0:F}",System.DateTime.Now))}</div>
+        </div>
+    </div>
+
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">@Html.LabelFor(x => x.Content)</div>
+        <div class="form-group col s12 l8">
+            @Html.TextAreaFor(m => m.Content, 4, 50, new { placeholder = "Your review here", style = "width:20em;height:10em" })
+            @Html.ValidationMessageFor(x => x.Content, null, new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">@Html.LabelFor(x => x.Rating)</div>
+        <div class="form-group col s12 l8">
+            <select name="Rating">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+            @Html.ValidationMessageFor(x => x.Rating, null, new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mt-1">
+        <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
+}

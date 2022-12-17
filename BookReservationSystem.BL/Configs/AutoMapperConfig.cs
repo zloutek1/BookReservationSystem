@@ -30,12 +30,14 @@ public class AutoMapperConfig
         
         config.CreateMap<Review, ReviewDto>().ReverseMap();
         config.CreateMap<Review, ReviewUserFilterDto>().ReverseMap();
-        
+        config.CreateMap<Review, ReviewCreateDto>().ReverseMap();
+
         config.CreateMap<Role, RoleDto>().ReverseMap();
         
         config.CreateMap<User, UserDto>().ReverseMap();
         config.CreateMap<User, UserCreateDto>().ReverseMap();
         config.CreateMap<User, UserEditDto>().ReverseMap();
         config.CreateMap<User, UserFilterDto>().ReverseMap();
+        config.CreateMap<User, UserShortDto>().ReverseMap();
     }
 }

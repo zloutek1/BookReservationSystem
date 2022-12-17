@@ -15,6 +15,8 @@ public class BookDto
     public string? CoverArtPath { get; set; }
     
     public long Isbn { get; set; }
+
+    public float Rating { get; set; }
     
     
     public IEnumerable<GenreDto> Genres { get; set; } = null!;

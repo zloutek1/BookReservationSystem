@@ -9,6 +9,8 @@ namespace BookReservationSystem.BL.IServices
 {
     public interface IReviewService : ICrudService<ReviewDto>
     {
-        IEnumerable<ReviewDto> FindAllFromUser(string email);
+        Task Insert(ReviewCreateDto reviewCreateDto);
+        Task<IEnumerable<ReviewDto>> FindAllFromUser(Guid userId);
+        Task<IEnumerable<ReviewDto>> FindAllForBook(Guid bookId);
     }
 }

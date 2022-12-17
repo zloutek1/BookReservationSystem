@@ -6,10 +6,12 @@ using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,42 +20,43 @@ namespace BookReservationSystem.BL.Services
     public class ReviewService : CrudService<Review, ReviewDto>, IReviewService
     {
         private readonly IRepository<Book> _bookRepository;
+        private readonly UserManager<User> _userManager;
 
-        public ReviewService(IQuery<Review> query, IRepository<Review> repository, IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<Book> bookRepository) : base(query, repository, mapper, unitOfWorkFactory)
+        public ReviewService(IQuery<Review> query, IRepository<Review> repository, IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, IRepository<Book> bookRepository, UserManager<User> userManager) : base(query, repository, mapper, unitOfWorkFactory)
         {
             _bookRepository = bookRepository;
+            _userManager = userManager;
         }
 
-        public new async Task Insert(ReviewDto reviewDto)
+        public async Task Insert(ReviewCreateDto reviewCreateDto)
         {
-            var review = Mapper.Map<Review>(reviewDto);
+            var review = Mapper.Map<Review>(reviewCreateDto);
 
-            var reviewQuery = new GetReviewAuthorQuery(Mapper, Query);
-            var book = Mapper.Map<Book>(reviewQuery.Execute(reviewDto));
+            var book = await _bookRepository.FindById(reviewCreateDto.BookId);
 
             var temp = book.Reviews.Aggregate<Review, float>(0, (current, r) => current + r.Rating);
-            temp += review.Rating;
             temp /= book.Reviews.Count + 1;
-            book.AverageRating = temp;
+            book.Rating = temp;
+
+            var user = await _userManager.FindByNameAsync(reviewCreateDto.UserName);
+            review.UserId = user.Id;
 
             await using var uow = UnitOfWorkFactory();
-            await _bookRepository.Update(book);
             await Repository.Insert(review);
+            await _bookRepository.Update(book);
             await uow.Commit();
         }
         
-        public IEnumerable<ReviewDto> FindAllFromUser(string email)
+        public async Task<IEnumerable<ReviewDto>> FindAllFromUser(Guid userId)
         {
-            // TODO: fix this as well
-            //var reviewQuery = new FilterReviewsQuery(Mapper, Query);
-            //return reviewQuery.Execute(new ReviewUserFilterDto { Email = email, SortAscending = true });
-            return new List<ReviewDto>();
+            var reviewQuery = new GetUserReviewsQuery(Mapper, Query);
+            return await reviewQuery.Execute(new UserDto { Id = userId });
         }
 
-        public IEnumerable<ReviewDto> FindAllForBook(Guid bookId)
+        public async Task<IEnumerable<ReviewDto>> FindAllForBook(Guid bookId)
         {
             var reviewQuery = new GetBookReviewsQuery(Mapper, Query);
-            return reviewQuery.Execute(new BookDto { Id = bookId });
+            return await reviewQuery.Execute(new BookDto { Id = bookId });
         }
     }
 }

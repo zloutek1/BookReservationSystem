@@ -6,7 +6,7 @@ public interface IUserService
 {
     Task<IEnumerable<UserDto>> FindAll();
     Task<UserDto?> FindById(Guid id);
-    Task<UserDto?> FindByUsername(string username);
+    Task<IEnumerable<UserDto>> FilterUsers(UserFilterDto filter);
     
     Task Update(UserEditDto updateDto);
     Task Delete(Guid id);

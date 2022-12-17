@@ -1,0 +1,40 @@
+﻿@model BookReservationSystem.Domain.UserFilterDto
+
+<div class="accordion" id="filterAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="filterHeading">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Filters
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="filterHeading" data-bs-parent="#filterAccordion">
+            <div class="accordion-body">
+                @using (Html.BeginForm("Index", "User"))
+                {
+                    <p class="text-red">@Html.ValidationSummary(true, "")</p>
+                    <div class="row valign-wrapper">
+                        <div class="col s12 l4">Name:</div>
+                        <div class="input-field col s12 l8">
+                            @Html.TextBoxFor(model => model.Name, new { placeholder = "Name" })
+                        </div>
+                    </div>
+                    <div class="row valign-wrapper">
+                        <div class="col s12 l4">UserName:</div>
+                        <div class="input-field col s12 l8">
+                            @Html.TextBoxFor(model => model.UserName, new { placeholder = "Username" })
+                        </div>
+                    </div>
+                    <div class="row valign-wrapper">
+                        <div class="col s12 l4">Email:</div>
+                        <div class="input-field col s12 l8">
+                            @Html.TextBoxFor(model => model.Email, new { placeholder = "Email" })
+                        </div>
+                    </div>
+                    <div class="form-group mt-1">
+                        <input type="submit" value="Search" class="btn btn-primary" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

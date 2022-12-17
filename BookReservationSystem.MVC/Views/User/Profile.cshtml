@@ -3,11 +3,24 @@
     ViewData["Title"] = "Profile";
 }
 
-<h1>Your Profile</h1>
-@Html.ActionLink("Edit profile", "EditProfile", "User", new { }, new { @class = "btn btn-primary" })
+<h1>User Profile</h1>
+
+@if (User.Identity.Name == Model.UserName)
+{
+    <form method="post" class="d-inline-block" asp-controller="User" asp-action="Edit" asp-route-id="@Model.Id">
+        <button type="submit" class="btn btn-danger">Edit</button>
+    </form>
+}
+
+@if (User.IsInRole("Admin") && User.Identity.Name != Model.UserName)
+{
+    <form method="post" class="d-inline-block" asp-controller="User" asp-action="Delete" asp-route-id="@Model.Id">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+}
 
 <div class="mt-5">
-    <h3>Your personal information</h3>
+    <h3>Personal information</h3>
     <table class="table">
         <tbody>
         <tr>
@@ -76,7 +89,7 @@
 </div>
 
 <div class="mt-5">
-    <h3>Your book reviews</h3>
+    <h3>Book reviews</h3>
     @if (!Model.Reviews.Any())
     {
         <h5>No reviews yet.</h5>

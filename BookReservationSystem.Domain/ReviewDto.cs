@@ -16,5 +16,5 @@ public class ReviewDto
     public BookShortDto Book { get; set; } = null!;
     
     [Required]
-    public AuthorDto Author { get; set; } = null!;
+    public UserShortDto Author { get; set; } = null!;
 }
