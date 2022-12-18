@@ -1,5 +1,4 @@
-﻿@using BookReservationSystem.BL.IServices
-@model BookReservationSystem.Domain.ReviewCreateDto
+﻿@model BookReservationSystem.Domain.ReviewCreateDto
 @{
     ViewData["Title"] = "Write Review";
 }
@@ -13,7 +12,7 @@
     <div class="row valign-wrapper">
         <div class="col s12 l4">@Html.LabelFor(x => x.Date)</div>
         <div class="form-group col s12 l8">
-            <div class="date-time">@{@Html.Label(string.Format("{0:F}",System.DateTime.Now))}</div>
+            <div class="date-time">@Html.Label($"{DateTime.Now:F}")</div>
         </div>
     </div>
 

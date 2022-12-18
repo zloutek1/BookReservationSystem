@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-
-@{
+﻿@{
     var routeUrl = Url.RouteUrl(ViewContext.RouteData.Values);
     var qsPath = ViewContext.HttpContext.Request.QueryString.Value;
     var returnUrl = $"{routeUrl}{qsPath}";

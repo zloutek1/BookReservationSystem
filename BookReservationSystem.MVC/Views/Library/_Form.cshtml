@@ -1,0 +1,50 @@
+﻿@model BookReservationSystem.Domain.LibraryDto
+
+@Html.ValidationSummary(string.Empty, new { @class = "text-danger" })
+    
+<p class="text-red">@Html.ValidationSummary(true, "")</p>
+<div class="row valign-wrapper">
+    <div class="col s12 l4">Name:</div>
+    <div class="input-field col s12 l8">
+        @Html.TextBoxFor(model => model.Name, new { placeholder = "Name" })
+        @Html.ValidationMessageFor(x => x.Name, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="row valign-wrapper">
+    <div class="col s12 l4">Street:</div>
+    <div class="input-field col s12 l8">
+        @Html.TextBoxFor(model => model.Address.Street, new { placeholder = "Street" })
+        @Html.ValidationMessageFor(x => x.Address.Street, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="row valign-wrapper">
+    <div class="col s12 l4">Number:</div>
+    <div class="input-field col s12 l8">
+        @Html.TextBoxFor(model => model.Address.StreetNumber, new { placeholder = "Number", type = "number" })
+        @Html.ValidationMessageFor(x => x.Address.StreetNumber, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="row valign-wrapper">
+    <div class="col s12 l4">City:</div>
+    <div class="input-field col s12 l8">
+        @Html.TextBoxFor(model => model.Address.City, new { placeholder = "City" })
+        @Html.ValidationMessageFor(x => x.Address.City, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="row valign-wrapper">
+    <div class="col s12 l4">Country:</div>
+    <div class="input-field col s12 l8">
+        @Html.TextBoxFor(model => model.Address.Country, new { placeholder = "Country" })
+        @Html.ValidationMessageFor(x => x.Address.Country, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="row valign-wrapper">
+    <div class="col s12 l4">Postal code:</div>
+    <div class="input-field col s12 l8">
+        @Html.TextBoxFor(model => model.Address.PostalCode, new { placeholder = "Postal code" })
+        @Html.ValidationMessageFor(x => x.Address.PostalCode, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group mt-1">
+    <input type="submit" value="Submit" class="btn btn-primary"/>
+</div>

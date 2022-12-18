@@ -20,7 +20,9 @@ public class AutoMapperConfig
         
         config.CreateMap<Genre, GenreDto>().ReverseMap();
         
+        config.CreateMap<Library, LibraryShortDto>().ReverseMap();
         config.CreateMap<Library, LibraryDto>().ReverseMap();
+        config.CreateMap<LibraryDto, LibraryShortDto>().ReverseMap();
         
         config.CreateMap<Publisher, PublisherDto>().ReverseMap();
         

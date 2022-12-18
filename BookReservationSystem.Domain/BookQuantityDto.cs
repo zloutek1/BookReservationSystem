@@ -8,7 +8,7 @@ public class BookQuantityDto
     public BookShortDto Book { get; set; } = null!;
     
     [Required]
-    public LibraryDto Library { get; set; } = null!;
+    public LibraryShortDto Library { get; set; } = null!;
     
     public int Count { get; set; }
 }

@@ -1,0 +1,52 @@
+﻿@model BookReservationSystem.Domain.LibraryDto
+@{
+    ViewData["Title"] = @Model.Name;
+}
+
+<table class="table">
+    <tbody>
+    <tr>
+        <td>Name: </td>
+        <td>@Model.Name</td>
+    </tr>
+    <tr>
+        @if (Model.Address.Street != null)
+        {
+            <td>Street: </td>
+            <td>@Model.Address.Street</td>
+        }
+    </tr>
+    <tr>
+        <td>Number: </td>
+        <td>@Model.Address.StreetNumber</td>
+    </tr>
+    <tr>
+        <td>City: </td>
+        <td>@Model.Address.City</td>
+    </tr>
+    <tr>
+        <td>Country: </td>
+        <td>@Model.Address.Country</td>
+    </tr>
+    <tr>
+        <td>Postal code:</td>
+        <td>@Model.Address.PostalCode</td>
+    </tr>
+    </tbody>
+</table>
+
+<div>
+    @Html.ActionLink(
+        "Edit",
+        "Edit",
+        "library",
+        new { id = Model.Id },
+        new { @class = "btn btn-primary" })
+    <form method="post" class="d-inline-block" asp-controller="Library" asp-action="Delete" asp-route-id="@Model.Id">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+</div>
+
+
+
+

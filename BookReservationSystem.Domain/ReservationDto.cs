@@ -20,7 +20,7 @@ public class ReservationDto
     public DateTime? ReturnDate { get; set; }
 
     [Required]
-    public LibraryDto Library { get; set; } = null!;
+    public LibraryShortDto Library { get; set; } = null!;
     
     [Required]
     public BookShortDto Book { get; set; } = null!;

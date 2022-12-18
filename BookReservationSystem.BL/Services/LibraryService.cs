@@ -8,7 +8,7 @@ using BookReservationSystem.Infrastructure.UnitOfWork;
 
 namespace BookReservationSystem.BL.Services;
 
-public class LibraryService: CrudService<Library, LibraryDto>
+public class LibraryService: CrudService<Library, LibraryDto>, ILibraryService
 {
     public LibraryService(IQuery<Library> query, IRepository<Library> repository, IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory) : base(query, repository, mapper, unitOfWorkFactory)
     {
