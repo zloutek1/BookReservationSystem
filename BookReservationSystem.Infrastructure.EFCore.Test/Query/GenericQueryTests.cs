@@ -18,9 +18,9 @@ public class GenericQueryTests: IDisposable
         SaveGenre("European");
         SaveGenre("Educational");
 
-        SaveBook("Green");
-        SaveBook("Hacker");
-        SaveBook("Hammer");
+        SaveBook("Green", 1);
+        SaveBook("Hacker", 2);
+        SaveBook("Hammer", 3);
 
         _context.SaveChanges();
     }
@@ -162,14 +162,14 @@ public class GenericQueryTests: IDisposable
         Assert.Equal(expectedResult, result);
     }
     
-    private void SaveBook(string name) 
+    private void SaveBook(string name, long isbn) 
     { 
         _context.Book.Add(new Book
         {
             Id = Guid.NewGuid(), 
             Name = name, 
             Abstract = "Definitely not null",
-            Isbn = 0
+            Isbn = isbn
         });
     }
     
