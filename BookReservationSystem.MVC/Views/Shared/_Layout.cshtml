@@ -30,6 +30,10 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Library" asp-action="Index">Libraries</a>
+                            </li>
+                            
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
                             </li>
                         }
@@ -38,8 +42,7 @@
                         </li>
                     </ul>
                 </div>
-                    
-                </div>
+                
                 @await Html.PartialAsync("_Identity")
             </div>
         </nav>

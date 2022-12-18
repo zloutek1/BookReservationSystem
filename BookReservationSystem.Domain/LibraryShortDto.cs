@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookReservationSystem.Domain;
 
-public class LibraryDto
+public class LibraryShortDto
 {
     public Guid Id { get; set; }
     
@@ -11,6 +11,4 @@ public class LibraryDto
     
     [Required]
     public AddressDto Address { get; set; } = null!;
-
-    public IEnumerable<BookQuantityDto> Books { get; set; } = new List<BookQuantityDto>();
 }

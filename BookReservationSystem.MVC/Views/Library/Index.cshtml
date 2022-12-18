@@ -1,0 +1,56 @@
+﻿@model IEnumerable<BookReservationSystem.Domain.LibraryDto>
+@{
+    ViewData["Title"] = "Library";
+}
+
+@Html.ActionLink(
+    "Add new library",
+    "Add",
+    "library",
+    new { },
+    new { @class = "btn btn-primary mb-3" })
+
+
+@if (!Model.Any())
+{
+    <h5>No libraries yet.</h5>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var library in Model)
+        {
+            <tr>
+                <td>@library.Name</td>
+                <td>@library.Address.Street @library.Address.StreetNumber, @library.Address.City</td>
+                <td>
+                    @Html.ActionLink(
+                        "View",
+                        "Detail",
+                        "library",
+                        new { id = library.Id },
+                        new { @class = "btn btn-primary" })
+                    @Html.ActionLink(
+                        "Edit",
+                        "Edit",
+                        "library",
+                        new { id = library.Id },
+                        new { @class = "btn btn-primary" })
+                    <form method="post" class="d-inline-block" asp-controller="Library" asp-action="Delete" asp-route-id="@library.Id">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+                
+            </tr>
+        }
+        </tbody>
+    </table>
+}

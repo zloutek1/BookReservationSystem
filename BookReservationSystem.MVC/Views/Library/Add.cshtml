@@ -1,0 +1,9 @@
+﻿@model BookReservationSystem.Domain.LibraryDto
+@{
+    ViewData["Title"] = "Create Library";
+}
+
+@using (Html.BeginForm("Add", "Library", FormMethod.Post,new{ @enctype="multipart/form-data"}))
+{
+    @await Html.PartialAsync("_Form")
+}    

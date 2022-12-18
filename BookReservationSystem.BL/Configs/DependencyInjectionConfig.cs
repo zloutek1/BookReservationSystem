@@ -60,5 +60,6 @@ public static class DependencyInjectionConfig
         services.AddScoped<IReviewService, ReviewService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<ILibraryService, LibraryService>();
     }
 }

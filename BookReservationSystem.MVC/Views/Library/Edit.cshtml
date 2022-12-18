@@ -1,0 +1,10 @@
+﻿@model BookReservationSystem.Domain.LibraryDto
+@{
+    ViewData["Title"] = "Edit Library";
+}
+
+@using (Html.BeginForm("Edit", "Library", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(x => x.Id)
+    @await Html.PartialAsync("_Form")
+}
