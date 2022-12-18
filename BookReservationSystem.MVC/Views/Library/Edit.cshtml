@@ -3,7 +3,7 @@
     ViewData["Title"] = "Edit Library";
 }
 
-@using (Html.BeginForm("Edit", "Library", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Edit", "Library", FormMethod.Post))
 {
     @Html.HiddenFor(x => x.Id)
     @await Html.PartialAsync("_Form")

@@ -3,7 +3,7 @@
     ViewData["Title"] = "Create Library";
 }
 
-@using (Html.BeginForm("Add", "Library", FormMethod.Post,new{ @enctype="multipart/form-data"}))
+@using (Html.BeginForm("Add", "Library", FormMethod.Post))
 {
     @await Html.PartialAsync("_Form")
 }    

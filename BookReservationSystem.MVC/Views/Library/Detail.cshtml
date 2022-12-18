@@ -47,6 +47,52 @@
     </form>
 </div>
 
+<div class="mt-5">
+    <h3>Books</h3>
+    @Html.ActionLink(
+            "Add book",
+            "AddBook",
+            "bookQuantity",
+            new { id = Model.Id },
+            new { @class = "btn btn-primary" })
+    
+    @if (!Model.Books.Any())
+    {
+        <h5>No Books yet.</h5>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Count</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var book in Model.Books)
+            {
+                <tr>
+                    <td>@book.Book.Name</td>
+                    <td>@book.Count</td>
+                    <td>
+                        @Html.ActionLink(
+                            "Edit count",
+                            "EditCount",
+                            "bookQuantity",
+                            new { libraryId = Model.Id, bookId = book.Book.Id },
+                            new { @class = "btn btn-primary" })
+                        <form method="post" class="d-inline-block" asp-controller="bookQuantity" asp-action="RemoveBook" asp-route-libraryId="@Model.Id" asp-route-bookId="@book.Book.Id">
+                            <button type="submit" class="btn btn-danger">Remove book</button>
+                        </form>
+                    </td>
 
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>
 
 

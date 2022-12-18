@@ -1,0 +1,23 @@
+﻿@using BookReservationSystem.BL.IServices
+@inject IBookService BookService
+@model BookReservationSystem.Domain.BookQuantityCreateDto
+@{
+    ViewData["Title"] = "Edit count";
+}
+@Html.ValidationSummary(string.Empty, new { @class = "text-danger" })
+@using (Html.BeginForm("EditCount", "BookQuantity", FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.LibraryId)
+    @Html.HiddenFor(x => x.BookId)
+    
+    <h5>@((await BookService.FindById(Model.BookId))?.Name)</h5>
+    <div class="col s12 l4">Amount:</div>
+    <div class="input-field col s12 l8">
+        @Html.TextBoxFor(model => model.Count, new { placeholder = "Count", type = "number" })
+        @Html.ValidationMessageFor(x => x.Count, null, new { @class = "text-danger" })
+    </div>
+    
+    <div class="form-group mt-1">
+        <input type="submit" value="Submit" class="btn btn-primary"/>
+    </div>
+}

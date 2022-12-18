@@ -52,7 +52,7 @@ static void ConfigureIdentityServices(IServiceCollection services)
     })
         .AddRoles<Role>()
         .AddEntityFrameworkStores<BookReservationSystemDbContext>()
-        .AddDefaultTokenProviders(); ;
+        .AddDefaultTokenProviders();
 
     services.ConfigureApplicationCookie(options =>
     {
