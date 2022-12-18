@@ -7,7 +7,6 @@ using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.BL.IServices;
 using Microsoft.AspNetCore.Identity;
-using BookReservationSystem.BL.Exceptions;
 
 namespace BookReservationSystem.BL.Services;
 
@@ -26,7 +25,7 @@ public class UserService: CrudService<User, UserDto>, IUserService
         return await userQuery.Execute(filter);
     }
 
-    public async new Task Update(UserDto updateDto)
+    public new async Task Update(UserDto updateDto)
     {
         var userTemp = Mapper.Map<User>(updateDto);
         userTemp.SecurityStamp = Guid.NewGuid().ToString();

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BookReservationSystem.BL.Exceptions;
 using BookReservationSystem.BL.IServices;
-using BookReservationSystem.BL.Query;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.Query;
@@ -99,11 +98,5 @@ public class ReservationService : CrudService<Reservation, ReservationDto>, IRes
         await Repository.Update(reservation);
         await _bookQuantityRepository.Update(bookQuantity);
         await uow.Commit();
-    }
-    
-    public IEnumerable<ReservationDto> FindAllForUser(string email)
-    {
-        var reviewQuery = new GetReservationHistoryQuery(Mapper, Query);
-        return reviewQuery.Execute(new ReservationUserFilterDto { Email = email });
     }
 }
