@@ -8,18 +8,31 @@ using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.BL.IServices;
 using Castle.Core.Internal;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookReservationSystem.BL.Services;
 
 public class UserService: CrudService<User, UserDto>, IUserService
 {
-    public UserService(IQuery<User> query, IRepository<User> repository, IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory) : base(query, repository, mapper, unitOfWorkFactory)
+    private readonly UserManager<User> _userManager;
+
+    public UserService(IQuery<User> query, IRepository<User> repository, IMapper mapper, Func<IUnitOfWork> unitOfWorkFactory, UserManager<User> userManager) : base(query, repository, mapper, unitOfWorkFactory)
     {
+        _userManager = userManager;
     }
 
     public async Task<IEnumerable<UserDto>> FilterUsers(UserFilterDto filter)
     {
         var userQuery = new FilterUserQuery(Mapper, Query);
         return await userQuery.Execute(filter);
+    }
+
+    public async new Task Update(UserDto updateDto)
+    {
+        var user = Mapper.Map<User>(updateDto);
+        await using var uow = UnitOfWorkFactory();
+        await Repository.Update(user);
+        await _userManager.UpdateAsync(user);
+        await uow.Commit();
     }
 }
