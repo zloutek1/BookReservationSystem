@@ -1,4 +1,6 @@
-﻿@model BookReservationSystem.Domain.BookFilterDto
+﻿@using BookReservationSystem.BL.IServices
+@inject IGenreService GenreService
+@model BookReservationSystem.Domain.BookFilterDto
 
 <div class="accordion" id="filterAccordion">
   <div class="accordion-item">
@@ -38,21 +40,28 @@
                 </div>
             </div>
             <div class="row valign-wrapper">
-                <div class="col s12 l4">Genre:</div>
-                <div class="input-field col s12 l8">
-                    @Html.TextBoxFor(model => model.Genre, new { placeholder = "Genre" })
+                    <div class="col s12 l4">@Html.LabelFor(model => model.Genre)</div>
+                    <div class="form-group col s12 l8">
+                        <select name="Genre">
+                            <option value="">-- select genre --</option>
+                            @foreach (var genre in await GenreService.FindAll())
+                            {
+                                <option value="@genre.Name">@genre.Name</option>
+                            }
+                        </select>
+                        @Html.ValidationMessageFor(model => model.Genre, null, new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
             <div class="row valign-wrapper">
                 <div class="col s12 l4">Sort by best rating:</div>
                 <div class="input-field col s12 l8">
-                    <input type="checkbox" id="SortByRating"/>
+                    @Html.CheckBoxFor(model => model.SortByRating)
                 </div>
             </div>
             <div class="row valign-wrapper">
                 <div class="col s12 l4">Show only available books:</div>
                 <div class="input-field col s12 l8">
-                    <input type="checkbox" id="ShowAvailable"/>
+                    @Html.CheckBoxFor(model => model.OnlyAvailable)
                 </div>
             </div>
             <div class="form-group mt-1">

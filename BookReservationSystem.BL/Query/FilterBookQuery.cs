@@ -30,12 +30,12 @@ public class FilterBookQuery
 
         if (bookFilterDto.Author != null)
         {
-            _query = _query.Where(book => book.Authors.Select(a => a.Name).Contains(bookFilterDto.Author));
+            _query = _query.Where(book => book.Authors.Any(a => a.Name.Contains(bookFilterDto.Author)));
         }
 
         if (bookFilterDto.Publisher != null)
         {
-            _query = _query.Where(book => book.Publishers.Select(p => p.Name).Contains(bookFilterDto.Publisher));
+            _query = _query.Where(book => book.Publishers.Any(p => p.Name.Contains(bookFilterDto.Publisher)));
         }
 
         if (bookFilterDto.Genre != null)
@@ -45,7 +45,7 @@ public class FilterBookQuery
 
         if (bookFilterDto.OnlyAvailable)
         {
-            _query.Where(book => book.BookQuantities.Count > 0);
+            _query.Where(book => book.BookQuantities.Any(q => q.Count > 0));
         }
 
         if (bookFilterDto.SortByRating)
