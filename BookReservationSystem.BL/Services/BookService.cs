@@ -37,6 +37,12 @@ public class BookService : CrudService<Book, BookDto>, IBookService
         await uow.Commit();
     }
 
+    public async Task<BookDto> FindByReview(Guid reviewId)
+    {
+        var bookQuery = new GetBookByReviewQuery(Mapper, Query);
+        return await bookQuery.Execute(reviewId);
+    }
+
     private static async Task<string> SaveImage(IFormFile image)
     {
         var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);

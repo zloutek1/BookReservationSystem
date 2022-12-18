@@ -25,6 +25,6 @@ public class GetBookReviewsQuery
     {
         _query = _query.Where(review => review.BookId == bookDto.Id);
         var queryResult = await _query.Execute();
-        return _mapper.Map<IEnumerable<ReviewDto>>(_query.Execute());
+        return _mapper.Map<IEnumerable<ReviewDto>>(queryResult);
     }
 }

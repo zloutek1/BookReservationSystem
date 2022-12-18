@@ -92,7 +92,7 @@
                         @if (User.IsInRole("Admin") || review.Author.UserName == User.Identity.Name)
                         {
                             <td>
-                                <form method="post" class="d-inline-block" asp-controller="Review" asp-action="DeleteFromBookDetail" asp-route-id="@review">
+                                <form method="post" class="d-inline-block" asp-controller="Review" asp-action="DeleteFromBookDetail" asp-route-id="@review.Id">
                                     <button type="submit" class="btn btn-danger">Delete</button>
                                 </form>
                             </td>

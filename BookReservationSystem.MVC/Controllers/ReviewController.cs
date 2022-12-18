@@ -4,6 +4,7 @@ using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace BookReservationSystem.MVC.Controllers
 {
@@ -18,14 +19,14 @@ namespace BookReservationSystem.MVC.Controllers
             _bookService = bookService;
         }
 
-        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> DeleteFromBookDetail(ReviewDto reviewDto)
+        [HttpPost]
+        public async Task<IActionResult> DeleteFromBookDetail(Guid id)
         {
-            var book = reviewDto.Book;
+            var book = await _bookService.FindByReview(id);
 
-            await _reviewService.Delete(reviewDto.Id);
-            return book == null ? View("Error") : View("../Book/BookDetail", book);
+            await _reviewService.Delete(id);
+            return book == null ? View("Error") : RedirectToAction("Detail", "Book", new { id = book.Id });
         }
 
         [Authorize]
