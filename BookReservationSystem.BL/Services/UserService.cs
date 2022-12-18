@@ -31,11 +31,14 @@ public class UserService: CrudService<User, UserDto>, IUserService
 
     public async new Task Update(UserDto updateDto)
     {
-        var user = Mapper.Map<User>(updateDto);
-        user.SecurityStamp = Guid.NewGuid().ToString();
-        await _userManager.UpdateAsync(user);
-        await using var uow = UnitOfWorkFactory();
-        await Repository.Update(user);
-        await uow.Commit();
+        var userTemp = Mapper.Map<User>(updateDto);
+        userTemp.SecurityStamp = Guid.NewGuid().ToString();
+        var user = await _userManager.FindByNameAsync(updateDto.UserName);
+        if (user != null)
+        {
+            user.FirstName = updateDto.FirstName;
+            user.LastName = updateDto.LastName;
+            await _userManager.UpdateAsync(user);
+        }
     }
 }
