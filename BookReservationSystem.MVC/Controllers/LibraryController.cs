@@ -8,12 +8,10 @@ namespace BookReservationSystem.MVC.Controllers;
 public class LibraryController : Controller
 {
     private readonly ILibraryService _libraryService;
-    private readonly IBookQuantityService _bookQuantityService;
 
-    public LibraryController(ILibraryService libraryService, IBookQuantityService bookQuantityService)
+    public LibraryController(ILibraryService libraryService)
     {
         _libraryService = libraryService;
-        _bookQuantityService = bookQuantityService;
     }
 
     [Authorize(Roles = "Admin")]

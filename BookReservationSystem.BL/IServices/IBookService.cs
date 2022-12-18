@@ -1,5 +1,6 @@
 ﻿using BookReservationSystem.Domain;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,7 @@ namespace BookReservationSystem.BL.IServices
         Task<IEnumerable<BookDto>> FilterBooks(BookFilterDto filter);
         Task<BookDto> FindByReview(Guid reviewId);
         Task Insert(BookCreateDto createDto);
+        Task Update(BookUpdateDto updateDto);
+        Task<IEnumerable<BookDto>> FindAllNotInLibrary(Guid libraryId);
     }
 }

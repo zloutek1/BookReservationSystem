@@ -15,7 +15,9 @@ public class AutoMapperConfig
         config.CreateMap<Book, BookDto>().ReverseMap();
         config.CreateMap<Book, BookFilterDto>().ReverseMap();
         config.CreateMap<Book, BookCreateDto>().ReverseMap();
+        config.CreateMap<Book, BookUpdateDto>().ReverseMap();
         config.CreateMap<Book, BookShortDto>().ReverseMap();
+        
         config.CreateMap<BookQuantity, BookQuantityDto>().ReverseMap();
         config.CreateMap<BookQuantity, BookQuantityCreateDto>().ReverseMap();
         

@@ -2,6 +2,8 @@
 using BookReservationSystem.BL.IServices;
 using BookReservationSystem.BL.Services;
 using BookReservationSystem.DAL.Data;
+using BookReservationSystem.DAL.Models;
+using BookReservationSystem.Domain;
 using BookReservationSystem.Infrastructure.EFCore.Query;
 using BookReservationSystem.Infrastructure.EFCore.Repository;
 using BookReservationSystem.Infrastructure.EFCore.UnitOfWork;
@@ -62,5 +64,8 @@ public static class DependencyInjectionConfig
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ILibraryService, LibraryService>();
         services.AddScoped<IBookQuantityService, BookQuantityService>();
+        services.AddScoped<IGenreService, GenreService>();
+        services.AddScoped<IAuthorService, AuthorService>();
+        services.AddScoped<IPublisherService, PublisherService>();
     }
 }

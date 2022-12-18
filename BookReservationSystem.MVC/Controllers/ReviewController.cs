@@ -1,10 +1,7 @@
 ﻿using BookReservationSystem.BL.IServices;
-using BookReservationSystem.BL.Services;
-using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace BookReservationSystem.MVC.Controllers
 {
@@ -35,32 +32,6 @@ namespace BookReservationSystem.MVC.Controllers
         {
             await _reviewService.Delete(id);
             return RedirectToAction("Profile", "User");
-        }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> IndexForBook(Guid bookId)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("Error");
-            }
-
-            var reviews = await _reviewService.FindAllForBook(bookId);
-            return View(reviews);
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> IndexForUser(Guid userId)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("Error");
-            }
-
-            var reviews = await _reviewService.FindAllFromUser(userId);
-            return View(reviews);
         }
 
         [HttpGet]
