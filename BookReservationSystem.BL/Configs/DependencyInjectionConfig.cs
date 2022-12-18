@@ -61,5 +61,6 @@ public static class DependencyInjectionConfig
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ILibraryService, LibraryService>();
+        services.AddScoped<IBookQuantityService, BookQuantityService>();
     }
 }

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
-using Microsoft.AspNetCore.Identity;
 
 namespace BookReservationSystem.BL.Configs;
 
@@ -15,8 +14,10 @@ public class AutoMapperConfig
         
         config.CreateMap<Book, BookDto>().ReverseMap();
         config.CreateMap<Book, BookFilterDto>().ReverseMap();
+        config.CreateMap<Book, BookCreateDto>().ReverseMap();
         config.CreateMap<Book, BookShortDto>().ReverseMap();
         config.CreateMap<BookQuantity, BookQuantityDto>().ReverseMap();
+        config.CreateMap<BookQuantity, BookQuantityCreateDto>().ReverseMap();
         
         config.CreateMap<Genre, GenreDto>().ReverseMap();
         

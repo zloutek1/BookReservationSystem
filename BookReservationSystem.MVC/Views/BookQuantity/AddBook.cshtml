@@ -1,0 +1,35 @@
+﻿@using BookReservationSystem.BL.IServices
+@inject IBookService BookService
+@model BookReservationSystem.Domain.BookQuantityCreateDto
+@{
+    ViewData["Title"] = "Add Book";
+}
+@Html.ValidationSummary(string.Empty, new { @class = "text-danger" })
+@using (Html.BeginForm("AddBook", "BookQuantity", FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.LibraryId)
+    
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">@Html.LabelFor(x => x.BookId)</div>
+        <div class="form-group col s12 l8">
+            <select name="BookId" class="form-control">
+                <option value="">-- select book --</option>
+                @foreach (var book in await BookService.FindAll())
+                {
+                    <option value="@book.Id">@book.Name</option>
+                }
+            </select>
+            @Html.ValidationMessageFor(x => x.BookId, null, new { @class = "text-danger" })
+        </div>
+    </div>
+    
+    <div class="col s12 l4">Amount:</div>
+    <div class="input-field col s12 l8">
+        @Html.TextBoxFor(model => model.Count, new { placeholder = "Count", type = "number" })
+        @Html.ValidationMessageFor(x => x.Count, null, new { @class = "text-danger" })
+    </div>
+    
+    <div class="form-group mt-1">
+        <input type="submit" value="Submit" class="btn btn-primary"/>
+    </div>
+}
