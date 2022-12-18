@@ -30,11 +30,10 @@ public class BookReservationSystemDbContext: IdentityDbContext<User, IdentityRol
         
         var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
         var connectionString = config.GetConnectionString("Default")!;
-            
+
         optionsBuilder
             .UseSqlServer(connectionString)
-            .UseLazyLoadingProxies()
-            .EnableSensitiveDataLogging();
+            .UseLazyLoadingProxies();
     }
         
     protected override void OnModelCreating(ModelBuilder modelBuilder)

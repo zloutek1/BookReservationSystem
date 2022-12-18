@@ -40,7 +40,7 @@ public class UserController : Controller
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> EditProfile(Guid id)
+    public async Task<IActionResult> Edit(Guid id)
     {
         var user = await _userService.FindById(id);
         return View(user);
@@ -48,7 +48,7 @@ public class UserController : Controller
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> EditProfile(UserDto updateDto)
+    public async Task<IActionResult> Edit(UserDto updateDto)
     {
         if (!ModelState.IsValid)
         {

@@ -1,4 +1,4 @@
-﻿@model BookReservationSystem.Domain.UserEditDto
+﻿@model BookReservationSystem.Domain.UserDto
 @{
     ViewData["Title"] = "Edit profile";
 }
@@ -22,13 +22,6 @@
                 <div class="input-field col s12 l8">
                 @Html.TextBoxFor(model => model.LastName, new { placeholder = "Last Name" })
                 @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="row valign-wrapper">
-                <div class="col s12 l4">Username:</div>
-                <div class="input-field col s12 l8">
-                    @Html.TextBoxFor(model => model.UserName, new { placeholder = "Username" })
-                    @Html.ValidationMessageFor(x => x.UserName, null, new { @class = "text-danger" })
                 </div>
             </div>
             <div class="row valign-wrapper">
