@@ -13,31 +13,32 @@
         <h5>No users found.</h5>
     }
 
-        <table class="table">
-            <thead>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
                 <tr>
-                    <th>Name</th>
-                    <th>User Name</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in Model)
-                {
-                    <tr>
-                        <td>@user.FirstName @user.LastName</td>
-                        <td>@user.UserName</td>
-                        <td>@user.Email</td>
+                    <td>@user.FirstName @user.LastName</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
                     <td>
                         @Html.ActionLink(
-                    "Show Profile",
-                    "Profile",
-                    "User",
-                    new { username = user.UserName },
-                    new { @class = "btn btn-primary" })
+                            "Show Profile",
+                            "Profile",
+                            "User",
+                            new { username = user.UserName },
+                            new { @class = "btn btn-primary" })
                     </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

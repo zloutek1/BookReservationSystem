@@ -66,7 +66,8 @@ public class BookController : Controller
         }
         catch (ServiceException ex)
         {
-            _toastNotification.AddErrorToastMessage(ex.Message);
+            ModelState.AddModelError("message", "could not add: " + ex.Message);
+            return View(createDto);
         }
         
         return RedirectToAction("Index", "Book");
@@ -108,7 +109,8 @@ public class BookController : Controller
         }
         catch (ServiceException ex)
         {
-            _toastNotification.AddErrorToastMessage(ex.Message);
+            ModelState.AddModelError("message", "could not update: " + ex.Message);
+            return View(updateDto);
         }
         
         return RedirectToAction("Detail", "Book", new { id = updateDto.Id });

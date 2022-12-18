@@ -3,7 +3,7 @@
     ViewData["Title"] = "Write Review";
 }
 
-@using (Html.BeginForm("Index", "Review"))
+@using (Html.BeginForm("Add", "Review"))
 {
     @Html.HiddenFor(x => x.BookId)
     @Html.HiddenFor(x => x.UserName)

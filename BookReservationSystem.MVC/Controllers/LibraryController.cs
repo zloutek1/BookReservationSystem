@@ -10,7 +10,7 @@ namespace BookReservationSystem.MVC.Controllers;
 public class LibraryController : Controller
 {
     private readonly ILibraryService _libraryService;
-    private IToastNotification _toastNotification;
+    private readonly IToastNotification _toastNotification;
 
     public LibraryController(ILibraryService libraryService, IToastNotification toastNotification)
     {
@@ -59,6 +59,12 @@ public class LibraryController : Controller
     public async Task<IActionResult> Edit(Guid id)
     {
         var library = await _libraryService.FindById(id);
+        if (library == null)
+        {
+            _toastNotification.AddErrorToastMessage($"Library with id {id} not found");
+            return RedirectToAction("Index", "Library");
+        }
+        
         return View(library);
     }
     
@@ -89,6 +95,11 @@ public class LibraryController : Controller
     public async Task<IActionResult> Detail(Guid id)
     {
         var library = await _libraryService.FindById(id);
+        if (library == null)
+        {
+            _toastNotification.AddErrorToastMessage($"Library with id {id} not found");
+            return RedirectToAction("Index", "Library");
+        }
         return View(library);
     }
     
