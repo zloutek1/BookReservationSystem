@@ -1,4 +1,5 @@
-﻿using BookReservationSystem.BL.IServices;
+﻿using BookReservationSystem.BL.Exceptions;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,11 +28,6 @@ public class BookController : Controller
     [HttpPost]
     public async Task<IActionResult> Index(BookFilterDto filter)
     {
-        if (!ModelState.IsValid)
-        {
-            return View("Error");
-        }
-        
         var books = await _bookService.FilterBooks(filter);
         return View(books);
     }
@@ -40,7 +36,12 @@ public class BookController : Controller
     public async Task<IActionResult> Detail(Guid id)
     {
         var book = await _bookService.FindById(id);
-        return book == null ? View("Error") : View("BookDetail", book);
+        if (book == null)
+        {
+            _toastNotification.AddErrorToastMessage($"Book with id {id} not found");
+            return RedirectToAction("Index", "Book");
+        }
+        return View("BookDetail", book);
     }
 
     [HttpGet]
@@ -59,7 +60,15 @@ public class BookController : Controller
             return View(createDto);
         }
 
-        await _bookService.Insert(createDto);
+        try
+        {
+            await _bookService.Insert(createDto);
+        }
+        catch (ServiceException ex)
+        {
+            _toastNotification.AddErrorToastMessage(ex.Message);
+        }
+        
         return RedirectToAction("Index", "Book");
     }
 
@@ -93,7 +102,15 @@ public class BookController : Controller
             return View(updateDto);
         }
 
-        await _bookService.Update(updateDto);
+        try
+        {
+            await _bookService.Update(updateDto);
+        }
+        catch (ServiceException ex)
+        {
+            _toastNotification.AddErrorToastMessage(ex.Message);
+        }
+        
         return RedirectToAction("Detail", "Book", new { id = updateDto.Id });
     }
     
@@ -101,7 +118,15 @@ public class BookController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await _bookService.Delete(id);
+        try
+        {
+            await _bookService.Delete(id);
+        }
+        catch (ServiceException ex)
+        {
+            _toastNotification.AddErrorToastMessage(ex.Message);
+        }
+
         return RedirectToAction("Index", "Book");
     }
 }

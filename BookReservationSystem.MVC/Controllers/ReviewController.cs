@@ -1,7 +1,9 @@
-﻿using BookReservationSystem.BL.IServices;
+﻿using BookReservationSystem.BL.Exceptions;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace BookReservationSystem.MVC.Controllers
 {
@@ -9,11 +11,13 @@ namespace BookReservationSystem.MVC.Controllers
     {
         private readonly IReviewService _reviewService;
         private readonly IBookService _bookService;
+        private IToastNotification _toastNotification;
 
-        public ReviewController(IReviewService reviewService, IBookService bookService)
+        public ReviewController(IReviewService reviewService, IBookService bookService, IToastNotification toastNotification)
         {
             _reviewService = reviewService;
             _bookService = bookService;
+            _toastNotification = toastNotification;
         }
 
         [Authorize]
@@ -21,16 +25,37 @@ namespace BookReservationSystem.MVC.Controllers
         public async Task<IActionResult> DeleteFromBookDetail(Guid id)
         {
             var book = await _bookService.FindByReview(id);
+            if (book == null)
+            {
+                _toastNotification.AddErrorToastMessage($"Review with id {id} not found");
+                return RedirectToAction("Index", "Book");
+            }
 
-            await _reviewService.Delete(id);
-            return book == null ? View("Error") : RedirectToAction("Detail", "Book", new { id = book.Id });
+            try
+            {
+                await _reviewService.Delete(id);
+            }
+            catch (ServiceException ex)
+            {
+                _toastNotification.AddErrorToastMessage(ex.Message);
+            }
+
+            return RedirectToAction("Detail", "Book", new { id = book.Id });
         }
 
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> DeleteFromProfile(Guid id)
         {
-            await _reviewService.Delete(id);
+            try
+            {
+                await _reviewService.Delete(id);
+            }
+            catch (ServiceException ex)
+            {
+                _toastNotification.AddErrorToastMessage(ex.Message);
+            }
+
             return RedirectToAction("Profile", "User");
         }
 
@@ -55,10 +80,16 @@ namespace BookReservationSystem.MVC.Controllers
                 return View(createDto);
             }
 
-            await _reviewService.Insert(createDto);
+            try
+            {
+                await _reviewService.Insert(createDto);
+            }
+            catch (ServiceException ex)
+            {
+                _toastNotification.AddErrorToastMessage(ex.Message);
+            }
 
-            var book = await _bookService.FindById(createDto.BookId);
-            return book == null ? View("Error") : View("../Book/BookDetail", book);
+            return RedirectToAction("Index", "Book", new { id = createDto.BookId });
         }
     }
 }

@@ -1,16 +1,20 @@
-﻿using BookReservationSystem.BL.IServices;
+﻿using BookReservationSystem.BL.Exceptions;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace BookReservationSystem.MVC.Controllers;
 
 public class IdentityController : Controller
 {
     private readonly IIdentityService _identityService;
+    private readonly IToastNotification _toastNotification;
 
-    public IdentityController(IIdentityService identityService)
+    public IdentityController(IIdentityService identityService, IToastNotification toastNotification)
     {
         _identityService = identityService;
+        _toastNotification = toastNotification;
     }
 
     [HttpGet]
@@ -37,13 +41,13 @@ public class IdentityController : Controller
         loginDto.ReturnUrl ??= Url.Content("~/");
         var loggedIn = await _identityService.Login(loginDto);
 
-        if (loggedIn.Succeeded)
+        if (!loggedIn.Succeeded)
         {
-            return Redirect(loginDto.ReturnUrl);
+            ModelState.TryAddModelError("message", "Invalid credentials");
+            return View();
         }
-        
-        ModelState.TryAddModelError("message", "Invalid credentials");
-        return View();
+
+        return Redirect(loginDto.ReturnUrl);
     }
     
     [HttpGet]
@@ -69,14 +73,32 @@ public class IdentityController : Controller
         }
 
         user.ReturnUrl ??= Url.Content("~/");
-        await _identityService.Register(user);
+
+        try
+        {
+            await _identityService.Register(user);
+        }
+        catch (ServiceException ex)
+        {
+            ModelState.TryAddModelError("message", "Could not register: " + ex.Message);
+            return View();
+        }
+
         return Redirect(user.ReturnUrl);
     }
 
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
-        await _identityService.Logout();
+        try
+        {
+            await _identityService.Logout();
+        }
+        catch (ServiceException ex)
+        {
+            _toastNotification.AddErrorToastMessage(ex.Message);
+        }
+
         return RedirectToAction("Index", "Home");
     }
 }

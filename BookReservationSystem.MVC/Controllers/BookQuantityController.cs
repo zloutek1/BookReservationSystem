@@ -1,4 +1,5 @@
-﻿using BookReservationSystem.BL.IServices;
+﻿using BookReservationSystem.BL.Exceptions;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,16 @@ public class BookQuantityController: Controller
             return View(createDto);
         }
 
-        await _bookQuantityService.Insert(createDto);
+        try
+        {
+            await _bookQuantityService.Insert(createDto);
+        }
+        catch (ServiceException ex)
+        {
+            ModelState.TryAddModelError("message", "Could not insert: " + ex.Message);
+            return View(createDto);
+        }
+
         return RedirectToAction("Detail", "Library", new { id = createDto.LibraryId });
     }
 
@@ -70,7 +80,16 @@ public class BookQuantityController: Controller
             return View(updateDto);
         }
 
-        await _bookQuantityService.Update(updateDto);
+        try
+        {
+            await _bookQuantityService.Update(updateDto);
+        }
+        catch (ServiceException ex)
+        {
+            ModelState.TryAddModelError("message", "Could not update: " + ex.Message);
+            return View(updateDto);
+        }
+
         return RedirectToAction("Detail", "Library", new { id = updateDto.LibraryId });
     }
 
@@ -78,7 +97,15 @@ public class BookQuantityController: Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> RemoveBook(Guid libraryId, Guid bookId)
     {
-        await _bookQuantityService.Delete(libraryId, bookId);
+        try
+        {
+            await _bookQuantityService.Delete(libraryId, bookId);
+        }
+        catch (ServiceException ex)
+        {
+            _toastNotification.AddErrorToastMessage(ex.Message);
+        }
+
         return RedirectToAction("Detail", "Library", new { id = libraryId });
     }
 }
