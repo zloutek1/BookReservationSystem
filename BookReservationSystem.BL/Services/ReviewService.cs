@@ -28,19 +28,23 @@ public class ReviewService : CrudService<Review, ReviewDto>, IReviewService
     {
         var review = Mapper.Map<Review>(reviewCreateDto);
 
+        var user = await _userManager.FindByNameAsync(reviewCreateDto.UserName);
+        if (user == null)
+        {
+            throw new NotFoundException($"User with name {reviewCreateDto.UserName} not found");
+        }
+        review.UserId = user.Id;
+
+        
         var book = await _bookRepository.FindById(reviewCreateDto.BookId);
         if (book == null)
         {
             throw new NotFoundException($"Book with id {reviewCreateDto.BookId} not found");
         }
-            
         var temp = book.Reviews.Aggregate<Review, float>(0, (current, r) => current + r.Rating);
         temp += review.Rating;
         temp /= book.Reviews.Count + 1;
         book.Rating = temp;
-
-        var user = await _userManager.FindByNameAsync(reviewCreateDto.UserName);
-        review.UserId = user.Id;
 
         await using var uow = UnitOfWorkFactory();
         try

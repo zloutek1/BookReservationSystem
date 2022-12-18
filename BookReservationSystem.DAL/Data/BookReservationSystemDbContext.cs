@@ -33,7 +33,8 @@ public class BookReservationSystemDbContext: IdentityDbContext<User, IdentityRol
             
         optionsBuilder
             .UseSqlServer(connectionString)
-            .UseLazyLoadingProxies();
+            .UseLazyLoadingProxies()
+            .EnableSensitiveDataLogging();
     }
         
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -35,7 +35,7 @@
                 @{ var book = await BookService.FindById(Model.BookId); }
                 @foreach (var quantity in book!.BookQuantities)
                 {
-                    <option value="@quantity.Library.Id">@(quantity.Count)x - @quantity.Library.Name</option>
+                    <option value="@quantity.Library.Id" selected="@(quantity.Library.Id == Model.LibraryId)">@(quantity.Count)x - @quantity.Library.Name</option>
                 }
             </select>
             @Html.ValidationMessageFor(x => x.LibraryId, null, new { @class = "text-danger" })
