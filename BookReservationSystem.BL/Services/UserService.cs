@@ -9,6 +9,8 @@ using BookReservationSystem.BL.IServices;
 using Castle.Core.Internal;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.AspNetCore.Identity;
+using System.Security;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookReservationSystem.BL.Services;
 
@@ -30,9 +32,10 @@ public class UserService: CrudService<User, UserDto>, IUserService
     public async new Task Update(UserDto updateDto)
     {
         var user = Mapper.Map<User>(updateDto);
+        user.SecurityStamp = Guid.NewGuid().ToString();
+        await _userManager.UpdateAsync(user);
         await using var uow = UnitOfWorkFactory();
         await Repository.Update(user);
-        await _userManager.UpdateAsync(user);
         await uow.Commit();
     }
 }

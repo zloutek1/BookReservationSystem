@@ -27,8 +27,8 @@ public class UserDto
     public string Email { get; set; } = null!;
     
     [Required]
-    public virtual IEnumerable<ReviewDto> Reviews { get; set; } = null!;
+    public virtual IEnumerable<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
     
     [Required]
-    public virtual IEnumerable<ReservationDto> Reservations { get; set; } = null!;
+    public virtual IEnumerable<ReservationDto> Reservations { get; set; } = new List<ReservationDto>();
 }
