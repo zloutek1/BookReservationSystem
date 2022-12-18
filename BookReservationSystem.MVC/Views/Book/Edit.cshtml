@@ -1,11 +1,13 @@
-﻿@model BookReservationSystem.Domain.BookCreateDto
+﻿@model BookReservationSystem.Domain.BookUpdateDto
 @{
-    ViewData["Title"] = "Create Book";
+    ViewData["Title"] = "Edit Book";
 }
 
-@using (Html.BeginForm("Add", "Book", FormMethod.Post,new{ @enctype="multipart/form-data"}))
+@using (Html.BeginForm("Edit", "Book", FormMethod.Post,new{ @enctype="multipart/form-data"}))
 {
+    @Html.HiddenFor(b => b.Id)
     <p class="text-red">@Html.ValidationSummary(true, "")</p>
+                                                         
     <div class="row valign-wrapper">
         <div class="col s12 l4">Title:</div>
         <div class="input-field col s12 l8">
@@ -34,4 +36,4 @@
     <div class="form-group mt-1">
         <input type="submit" value="Submit" class="btn btn-primary"/>
     </div>
-}    
+}

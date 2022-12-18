@@ -39,7 +39,16 @@ public class ReservationController: Controller
             return View(createDto);
         }
 
-        await _reservationService.Insert(createDto);
+        try
+        {
+            await _reservationService.Insert(createDto);
+        }
+        catch (ServiceException ex)
+        {
+            ModelState.TryAddModelError("message", "Could not add " + ex.Message);
+            return View(createDto);
+        }
+
         return RedirectToAction("Profile", "User");
     }
 

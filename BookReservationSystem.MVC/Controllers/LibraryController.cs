@@ -1,19 +1,21 @@
-﻿using BookReservationSystem.BL.IServices;
+﻿using BookReservationSystem.BL.Exceptions;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace BookReservationSystem.MVC.Controllers;
 
 public class LibraryController : Controller
 {
     private readonly ILibraryService _libraryService;
-    private readonly IBookQuantityService _bookQuantityService;
+    private readonly IToastNotification _toastNotification;
 
-    public LibraryController(ILibraryService libraryService, IBookQuantityService bookQuantityService)
+    public LibraryController(ILibraryService libraryService, IToastNotification toastNotification)
     {
         _libraryService = libraryService;
-        _bookQuantityService = bookQuantityService;
+        _toastNotification = toastNotification;
     }
 
     [Authorize(Roles = "Admin")]
@@ -38,8 +40,17 @@ public class LibraryController : Controller
         {
             return View(createDto);
         }
-        
-        await _libraryService.Insert(createDto);
+
+        try
+        {
+            await _libraryService.Insert(createDto);
+        }
+        catch (ServiceException ex)
+        {
+            ModelState.TryAddModelError("message", "Could not add " + ex.Message);
+            return View(createDto);
+        }
+
         return RedirectToAction("Index", "Library");
     }
     
@@ -48,6 +59,12 @@ public class LibraryController : Controller
     public async Task<IActionResult> Edit(Guid id)
     {
         var library = await _libraryService.FindById(id);
+        if (library == null)
+        {
+            _toastNotification.AddErrorToastMessage($"Library with id {id} not found");
+            return RedirectToAction("Index", "Library");
+        }
+        
         return View(library);
     }
     
@@ -59,8 +76,17 @@ public class LibraryController : Controller
         {
             return View(updateDto);
         }
-        
-        await _libraryService.Update(updateDto);
+
+        try
+        {
+            await _libraryService.Update(updateDto);
+        }
+        catch (ServiceException ex)
+        {
+            ModelState.TryAddModelError("message", "Could not update: " + ex.Message);
+            return View(updateDto);
+        }
+
         return RedirectToAction("Detail", "Library", new {id = updateDto.Id});
     }
     
@@ -69,6 +95,11 @@ public class LibraryController : Controller
     public async Task<IActionResult> Detail(Guid id)
     {
         var library = await _libraryService.FindById(id);
+        if (library == null)
+        {
+            _toastNotification.AddErrorToastMessage($"Library with id {id} not found");
+            return RedirectToAction("Index", "Library");
+        }
         return View(library);
     }
     
@@ -76,7 +107,15 @@ public class LibraryController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await _libraryService.Delete(id);
+        try
+        {
+            await _libraryService.Delete(id);
+        }
+        catch (ServiceException ex)
+        {
+            _toastNotification.AddErrorToastMessage(ex.Message);
+        }
+
         return RedirectToAction("Index", "Library");
     }
 }

@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookReservationSystem.DAL.Models;
 
+[Index(nameof(Isbn), IsUnique = true)]
 public class Book : BaseEntity
 {
     [Required]
@@ -28,5 +30,5 @@ public class Book : BaseEntity
 
     public virtual List<BookQuantity> BookQuantities { get; set; } = new();
 
-    public float Rating { get; set; } = 0;
+    public float Rating { get; set; }
 }

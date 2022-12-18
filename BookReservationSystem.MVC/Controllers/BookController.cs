@@ -3,16 +3,19 @@ using BookReservationSystem.BL.IServices;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace BookReservationSystem.MVC.Controllers;
 
 public class BookController : Controller
 {
     private readonly IBookService _bookService;
+    private readonly IToastNotification _toastNotification;
 
-    public BookController(IBookService bookService)
+    public BookController(IBookService bookService, IToastNotification toastNotification)
     {
         _bookService = bookService;
+        _toastNotification = toastNotification;
     }
 
     [HttpGet]
@@ -25,11 +28,6 @@ public class BookController : Controller
     [HttpPost]
     public async Task<IActionResult> Index(BookFilterDto filter)
     {
-        if (!ModelState.IsValid)
-        {
-            return View("Error");
-        }
-        
         var books = await _bookService.FilterBooks(filter);
         return View(books);
     }
@@ -38,14 +36,19 @@ public class BookController : Controller
     public async Task<IActionResult> Detail(Guid id)
     {
         var book = await _bookService.FindById(id);
-        return book == null ? View("Error") : View("BookDetail", book);
+        if (book == null)
+        {
+            _toastNotification.AddErrorToastMessage($"Book with id {id} not found");
+            return RedirectToAction("Index", "Book");
+        }
+        return View("BookDetail", book);
     }
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
     public IActionResult Add()
     {
-        return View("../Admin/AddBook");
+        return View();
     }
 
     [HttpPost]
@@ -54,18 +57,78 @@ public class BookController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View("../Admin/AddBook", createDto);
+            return View(createDto);
         }
 
-        await _bookService.Insert(createDto);
+        try
+        {
+            await _bookService.Insert(createDto);
+        }
+        catch (ServiceException ex)
+        {
+            ModelState.AddModelError("message", "could not add: " + ex.Message);
+            return View(createDto);
+        }
+        
         return RedirectToAction("Index", "Book");
     }
 
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Edit(Guid id)
+    {
+        var foundBook = await _bookService.FindById(id);
+        if (foundBook == null)
+        {
+            _toastNotification.AddErrorToastMessage($"Book with id {id} not found");
+            return RedirectToAction("Detail", "Book", new { id });
+        }
+
+        var updateDto = new BookUpdateDto
+        {
+            Id = foundBook.Id,
+            Name = foundBook.Name,
+            Abstract = foundBook.Abstract,
+            Isbn = foundBook.Isbn
+        };
+        return View(updateDto);
+    }
+    
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Edit(BookUpdateDto updateDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(updateDto);
+        }
+
+        try
+        {
+            await _bookService.Update(updateDto);
+        }
+        catch (ServiceException ex)
+        {
+            ModelState.AddModelError("message", "could not update: " + ex.Message);
+            return View(updateDto);
+        }
+        
+        return RedirectToAction("Detail", "Book", new { id = updateDto.Id });
+    }
+    
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await _bookService.Delete(id);
+        try
+        {
+            await _bookService.Delete(id);
+        }
+        catch (ServiceException ex)
+        {
+            _toastNotification.AddErrorToastMessage(ex.Message);
+        }
+
         return RedirectToAction("Index", "Book");
     }
 }

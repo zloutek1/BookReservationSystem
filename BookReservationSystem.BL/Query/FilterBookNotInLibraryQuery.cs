@@ -5,22 +5,22 @@ using BookReservationSystem.Infrastructure.Query;
 
 namespace BookReservationSystem.BL.Query;
 
-public class GetBookByReviewQuery
+public class FilterBookNotInLibraryQuery
 {
     private readonly IMapper _mapper;
     private IQuery<Book> _query;
 
-    public GetBookByReviewQuery(IMapper mapper, IQuery<Book> query)
+    public FilterBookNotInLibraryQuery(IMapper mapper, IQuery<Book> query)
     {
         _mapper = mapper;
         _query = query;
     }
 
-    public async Task<BookDto?> Execute(Guid reviewId)
+    public async Task<IEnumerable<BookDto>> Execute(Guid libraryId)
     {
-        _query = _query.Where(book => book.Reviews.Select(p => p.Id).Contains(reviewId));
+        _query = _query.Where(b => b.BookQuantities.All(q => q.LibraryId != libraryId));
+        
         var queryResult = await _query.Execute();
-
-        return _mapper.Map<IEnumerable<BookDto>>(queryResult).FirstOrDefault();
+        return _mapper.Map<IEnumerable<BookDto>>(queryResult);
     }
 }

@@ -38,22 +38,46 @@ public abstract class CrudService<TEntity, TDto>: ICrudService<TDto> where TEnti
     {
         var entity = Mapper.Map<TEntity>(createDto);
         await using var uow = UnitOfWorkFactory();
-        await Repository.Insert(entity);
-        await uow.Commit();
+        try
+        {
+            await Repository.Insert(entity);
+            await uow.Commit();
+        }
+        catch (Exception ex)
+        {
+            await uow.Rollback();
+            throw new ServiceException("Could not insert entity", ex);
+        }
     }
 
     public async Task Update(TDto updateDto)
     {
         var entity = Mapper.Map<TEntity>(updateDto);
         await using var uow = UnitOfWorkFactory();
-        await Repository.Update(entity);
-        await uow.Commit();
+        try
+        {
+            await Repository.Update(entity);
+            await uow.Commit();
+        }
+        catch (Exception ex)
+        {
+            await uow.Rollback();
+            throw new ServiceException("Could not update entity", ex);
+        }
     }
 
     public async Task Delete(Guid id)
     {
         await using var uow = UnitOfWorkFactory();
-        await Repository.Delete(id);
-        await uow.Commit();
+        try
+        {
+            await Repository.Delete(id);
+            await uow.Commit();
+        }
+        catch (Exception ex)
+        {
+            await uow.Rollback();
+            throw new ServiceException("Could not delete entity", ex);
+        }
     }
 }

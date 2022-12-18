@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace BookReservationSystem.Domain;
 
-public class BookCreateDto
+public class BookUpdateDto
 {
+    [Required]
+    public Guid Id { get; set; }
+    
     [Required]
     public string Name { get; set; } = null!;
     
@@ -15,13 +18,4 @@ public class BookCreateDto
     
     [Required]
     public long Isbn { get; set; }
-    
-    [Display(Name = "Genres")]
-    public List<Guid> GenreIds { get; set; } = new();
-    
-    [Display(Name = "Authors")]
-    public List<Guid> AuthorIds { get; set; } = new();
-    
-    [Display(Name = "Publishers")]
-    public List<Guid> PublisherIds { get; set; } = new();
 }

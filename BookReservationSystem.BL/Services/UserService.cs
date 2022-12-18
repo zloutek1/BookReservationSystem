@@ -6,11 +6,8 @@ using BookReservationSystem.BL.Query;
 using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.BL.IServices;
-using Castle.Core.Internal;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.AspNetCore.Identity;
-using System.Security;
-using Microsoft.EntityFrameworkCore;
+using BookReservationSystem.BL.Exceptions;
 
 namespace BookReservationSystem.BL.Services;
 

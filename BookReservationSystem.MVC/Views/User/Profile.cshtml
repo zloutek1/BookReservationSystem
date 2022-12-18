@@ -3,7 +3,7 @@
     ViewData["Title"] = "Profile";
 }
 
-<h1>@User.Identity.Name's Profile</h1>
+<h1>@User.Identity!.Name's Profile</h1>
 
 <div class="mt-5">
     <h3>Personal information</h3>
@@ -24,11 +24,11 @@
 @if (User.Identity.Name == Model.UserName)
 {
     @Html.ActionLink(
-                    "Edit Personal Information",
-                    "EditProfile",
-                    "User",
-                    new { id = Model.Id },
-                    new { @class = "btn btn-primary" })
+        "Edit Personal Information",
+        "Edit",
+        "User",
+        new { id = Model.Id },
+        new { @class = "btn btn-primary" })
 }
 
 @if (User.IsInRole("Admin") && User.Identity.Name != Model.UserName)

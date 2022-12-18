@@ -1,0 +1,83 @@
+﻿@using BookReservationSystem.BL.IServices
+@inject IGenreService GenreService
+@inject IAuthorService AuthorService
+@inject IPublisherService PublisherService
+@model BookReservationSystem.Domain.BookCreateDto
+@{
+    ViewData["Title"] = "Create Book";
+}
+
+@using (Html.BeginForm("Add", "Book", FormMethod.Post,new{ @enctype="multipart/form-data"}))
+{
+    <p class="text-warning">Warning: You will not be able to change Authors, Publishers and Genres after you add the book</p>
+    @Html.ValidationSummary(string.Empty, new { @class = "text-danger" })
+    
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">Title:</div>
+        <div class="input-field col s12 l8">
+            @Html.TextBoxFor(model => model.Name, new { placeholder = "Title" })
+            @Html.ValidationMessageFor(x => x.Name, null, new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">ISBN:</div>
+        <div class="input-field col s12 l8">
+            @Html.TextBoxFor(model => model.Isbn, new { placeholder = "Isbn" })
+            @Html.ValidationMessageFor(x => x.Isbn, null, new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">Abstract:</div>
+        <div class="input-field col s12 l8">
+            @Html.TextAreaFor(model => model.Abstract, new { placeholder = "Abstract" })
+            @Html.ValidationMessageFor(x => x.Abstract, null, new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">Cover image:</div>
+        <div class="input-field col s12 l8">
+            <input asp-for="CoverArt" type="file">
+            <span asp-validation-for="CoverArt"></span>
+        </div>
+        @Html.ValidationMessageFor(x => x.CoverArt, null, new { @class = "text-danger" })
+    </div>
+    <div class="row valign-wrapper mt-3">
+        <div class="col s12 l4">@Html.LabelFor(x => x.GenreIds)</div>
+        <div class="form-group col s12 l8">
+            <select name="GenreIds" multiple>
+                @foreach (var genre in await GenreService.FindAll())
+                {
+                    <option value="@genre.Id">@genre.Name</option>
+                }
+            </select>
+            @Html.ValidationMessageFor(x => x.GenreIds, null, new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">@Html.LabelFor(x => x.AuthorIds)</div>
+        <div class="form-group col s12 l8">
+            <select name="AuthorIds" multiple>
+                @foreach (var author in await AuthorService.FindAll())
+                {
+                    <option value="@author.Id">@author.Name</option>
+                }
+            </select>
+            @Html.ValidationMessageFor(x => x.AuthorIds, null, new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 l4">@Html.LabelFor(x => x.PublisherIds)</div>
+        <div class="form-group col s12 l8">
+            <select name="PublisherIds" multiple>
+                @foreach (var publisher in await PublisherService.FindAll())
+                {
+                    <option value="@publisher.Id">@publisher.Name</option>
+                }
+            </select>
+            @Html.ValidationMessageFor(x => x.PublisherIds, null, new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group mt-1">
+        <input type="submit" value="Submit" class="btn btn-primary"/>
+    </div>
+}    

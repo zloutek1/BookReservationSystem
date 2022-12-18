@@ -1,93 +1,94 @@
-﻿using BookReservationSystem.BL.IServices;
-using BookReservationSystem.BL.Services;
-using BookReservationSystem.DAL.Models;
+﻿using BookReservationSystem.BL.Exceptions;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using NToastNotify;
 
-namespace BookReservationSystem.MVC.Controllers
+namespace BookReservationSystem.MVC.Controllers;
+
+public class ReviewController : Controller
 {
-    public class ReviewController : Controller
+    private readonly IReviewService _reviewService;
+    private readonly IBookService _bookService;
+    private readonly IToastNotification _toastNotification;
+
+    public ReviewController(IReviewService reviewService, IBookService bookService, IToastNotification toastNotification)
     {
-        private readonly IReviewService _reviewService;
-        private readonly IBookService _bookService;
+        _reviewService = reviewService;
+        _bookService = bookService;
+        _toastNotification = toastNotification;
+    }
 
-        public ReviewController(IReviewService reviewService, IBookService bookService)
+    [HttpGet]
+    [Authorize]
+    public IActionResult Add(Guid id)
+    {
+        var review = new ReviewCreateDto
         {
-            _reviewService = reviewService;
-            _bookService = bookService;
+            BookId = id,
+            UserName = User.Identity?.Name!
+        };
+        return View(review);
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Add(ReviewCreateDto createDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(createDto);
         }
 
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> DeleteFromBookDetail(Guid id)
+        try
         {
-            var book = await _bookService.FindByReview(id);
-
-            await _reviewService.Delete(id);
-            return book == null ? View("Error") : RedirectToAction("Detail", "Book", new { id = book.Id });
-        }
-
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> DeleteFromProfile(Guid id)
-        {
-            await _reviewService.Delete(id);
-            return RedirectToAction("Profile", "User");
-        }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> IndexForBook(Guid bookId)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("Error");
-            }
-
-            var reviews = await _reviewService.FindAllForBook(bookId);
-            return View(reviews);
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> IndexForUser(Guid userId)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("Error");
-            }
-
-            var reviews = await _reviewService.FindAllFromUser(userId);
-            return View(reviews);
-        }
-
-        [HttpGet]
-        [Authorize]
-        public IActionResult Index(Guid id)
-        {
-            var review = new ReviewCreateDto
-            {
-                BookId = id,
-                UserName = User.Identity?.Name!
-            };
-            return View(review);
-        }
-
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Index(ReviewCreateDto createDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(createDto);
-            }
-
             await _reviewService.Insert(createDto);
-
-            var book = await _bookService.FindById(createDto.BookId);
-            return book == null ? View("Error") : View("../Book/BookDetail", book);
         }
+        catch (ServiceException ex)
+        {
+            _toastNotification.AddErrorToastMessage(ex.Message);
+        }
+
+        return RedirectToAction("Index", "Book", new { id = createDto.BookId });
+    }
+        
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> DeleteFromBookDetail(Guid id)
+    {
+        var book = await _bookService.FindByReview(id);
+        if (book == null)
+        {
+            _toastNotification.AddErrorToastMessage($"Review with id {id} not found");
+            return RedirectToAction("Index", "Book");
+        }
+
+        try
+        {
+            await _reviewService.Delete(id);
+        }
+        catch (ServiceException ex)
+        {
+            _toastNotification.AddErrorToastMessage(ex.Message);
+        }
+
+        return RedirectToAction("Detail", "Book", new { id = book.Id });
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> DeleteFromProfile(Guid id)
+    {
+        try
+        {
+            await _reviewService.Delete(id);
+        }
+        catch (ServiceException ex)
+        {
+            _toastNotification.AddErrorToastMessage(ex.Message);
+        }
+
+        return RedirectToAction("Profile", "User");
     }
 }

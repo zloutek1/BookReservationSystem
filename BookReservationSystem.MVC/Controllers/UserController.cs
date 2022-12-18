@@ -1,10 +1,12 @@
-﻿using BookReservationSystem.BL.IServices;
+﻿using BookReservationSystem.BL.Exceptions;
+using BookReservationSystem.BL.IServices;
 using BookReservationSystem.BL.Services;
 using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 
 namespace BookReservationSystem.MVC.Controllers;
@@ -12,25 +14,28 @@ namespace BookReservationSystem.MVC.Controllers;
 public class UserController : Controller
 {
     private readonly IUserService _userService;
+    private IToastNotification _toastNotification;
 
-    public UserController(IUserService userService)
+    public UserController(IUserService userService, IToastNotification toastNotification)
     {
         _userService = userService;
+        _toastNotification = toastNotification;
     }
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Profile(string ?username)
+    public async Task<IActionResult> Profile(string? username)
     {
         username ??= User.Identity?.Name;
+        var profile = (await _userService.FilterUsers(new UserFilterDto { UserName = username })).FirstOrDefault();
 
-        if (username == null)
+        if (profile == null)
         {
-            return View("Error");
+            _toastNotification.AddErrorToastMessage($"User with {username} not found");
+            return RedirectToAction("Index", "Home");
         }
-            
-        var profile = await _userService.FilterUsers(new UserFilterDto { UserName = username });
-        return profile.FirstOrDefault() == null ? View("Error") : View("Profile", profile.FirstOrDefault());
+        
+        return View("Profile", profile);
     }
 
     [HttpGet]
@@ -43,22 +48,39 @@ public class UserController : Controller
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> EditProfile(UserDto user)
+    public async Task<IActionResult> EditProfile(UserDto updateDto)
     {
         if (!ModelState.IsValid)
         {
-            return View(user);
+            return View(updateDto);
         }
 
-        await _userService.Update(user);
-        return RedirectToAction("Profile", "User", new { username = user.UserName });
+        try
+        {
+            await _userService.Update(updateDto);
+        }
+        catch (ServiceException ex)
+        {
+            ModelState.AddModelError("message", "Could not update: "+ ex.Message);
+            return View(updateDto);
+        }
+
+        return RedirectToAction("Profile", "User", new { username = updateDto.UserName });
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await _userService.Delete(id);
+        try
+        {
+            await _userService.Delete(id);
+        }
+        catch (ServiceException ex)
+        {
+            _toastNotification.AddErrorToastMessage(ex.Message);
+        }
+
         return RedirectToAction("Index", "User");
     }
 
@@ -72,11 +94,6 @@ public class UserController : Controller
     [HttpPost]
     public async Task<IActionResult> Index(UserFilterDto filter)
     {
-        if (!ModelState.IsValid)
-        {
-            return View("Error");
-        }
-
         var users = await _userService.FilterUsers(filter);
         return View(users);
     }
