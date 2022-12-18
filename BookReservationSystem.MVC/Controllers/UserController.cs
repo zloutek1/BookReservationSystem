@@ -1,5 +1,6 @@
 ﻿using BookReservationSystem.BL.IServices;
 using BookReservationSystem.BL.Services;
+using BookReservationSystem.DAL.Models;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,25 +32,25 @@ public class UserController : Controller
         return profile.FirstOrDefault() == null ? View("Error") : View("Profile", profile.FirstOrDefault());
     }
 
-    [HttpPost("EditProfile")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditProfile(UserEditDto user)
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> EditProfile(Guid id)
+    {
+        var user = await _userService.FindById(id);
+        return View("EditProfile", user);
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> EditProfile(UserDto user)
     {
         if (!ModelState.IsValid)
         {
             return View("EditProfile");
         }
 
-        try
-        {
-            await _userService.Update(user);
-            return RedirectToAction("Profile", "User");
-        }
-        catch (Exception)
-        {
-            ModelState.AddModelError("EmailAddress", "Account with that email address already exists!");
-            return View("EditProfile");
-        }
+        await _userService.Update(user);
+        return RedirectToAction("Profile", "User");
     }
 
     [HttpPost]
