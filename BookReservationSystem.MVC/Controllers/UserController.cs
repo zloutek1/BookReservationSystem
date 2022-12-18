@@ -37,7 +37,7 @@ public class UserController : Controller
     public async Task<IActionResult> EditProfile(Guid id)
     {
         var user = await _userService.FindById(id);
-        return View("EditProfile", user);
+        return View(user);
     }
 
     [HttpPost]
@@ -46,11 +46,11 @@ public class UserController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View("EditProfile");
+            return View(user);
         }
 
         await _userService.Update(user);
-        return RedirectToAction("Profile", "User");
+        return RedirectToAction("Profile", "User", new { username = user.UserName });
     }
 
     [HttpPost]

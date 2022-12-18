@@ -1,33 +1,34 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model BookReservationSystem.Domain.UserDto
+﻿@model BookReservationSystem.Domain.UserDto
 @{
     ViewData["Title"] = "Edit profile";
 }
 
 <div class="row">
     <div class="col s12">
-        @using (Html.BeginForm("EditProfile", "User"))
+        @using (Html.BeginForm("EditProfile", "User", FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
-            @Html.AntiForgeryToken()
             <p class="text-red">@Html.ValidationSummary(true, "")</p>
             @Html.HiddenFor(model => model.Id)
 
             <div class="row valign-wrapper">
                 <div class="col s12 l4">First name:</div>
                 <div class="input-field col s12 l8">
-                    @Html.TextBoxFor(model => model.FirstName)
+                @Html.TextBoxFor(model => model.FirstName, new { placeholder = "First Name" })
+                @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "text-danger" })
                 </div>
             </div>
             <div class="row valign-wrapper">
                 <div class="col s12 l4">Last name:</div>
                 <div class="input-field col s12 l8">
-                    @Html.TextBoxFor(model => model.LastName)
+                @Html.TextBoxFor(model => model.LastName, new { placeholder = "Last Name" })
+                @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "text-danger" })
                 </div>
             </div>
             <div class="row valign-wrapper">
                 <div class="col s12 l4">Email:</div>
                 <div class="input-field col s12 l8">
-                    @Html.TextBoxFor(model => model.Email)
+                @Html.TextBoxFor(model => model.Email, new { placeholder = "E-mail" })
+                @Html.ValidationMessageFor(x => x.Email, null, new { @class = "text-danger" })
                 </div>
             </div>
 
