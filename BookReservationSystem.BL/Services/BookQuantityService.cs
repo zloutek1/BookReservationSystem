@@ -38,16 +38,32 @@ public class BookQuantityService: IBookQuantityService
     {
         var entity = _mapper.Map<BookQuantity>(createDto);
         await using var uow = _unitOfWorkFactory();
-        await _repository.Insert(entity);
-        await uow.Commit();
+        try
+        {
+            await _repository.Insert(entity);
+            await uow.Commit();
+        } 
+        catch (Exception ex)
+        {
+            await uow.Rollback();
+            throw new ServiceException("Could not insert record", ex);
+        }
     }
     
     public async Task Update(BookQuantityCreateDto updateDto)
     {
         var entity = _mapper.Map<BookQuantity>(updateDto);
         await using var uow = _unitOfWorkFactory();
-        await _repository.Update(entity);
-        await uow.Commit();
+        try
+        {
+            await _repository.Update(entity);
+            await uow.Commit();
+        }
+        catch (Exception ex)
+        {
+            await uow.Rollback();
+            throw new ServiceException("Could not update record", ex);
+        }
     }
 
     public async Task Delete(Guid libraryId, Guid bookId)
@@ -63,7 +79,15 @@ public class BookQuantityService: IBookQuantityService
         }
         
         await using var uow = _unitOfWorkFactory();
-        await _repository.Delete(record!);
-        await uow.Commit();
+        try
+        {
+            await _repository.Delete(record!);
+            await uow.Commit();
+        }
+        catch (Exception ex)
+        {
+            await uow.Rollback();
+            throw new ServiceException("Could not delete record", ex);
+        }
     }
 }

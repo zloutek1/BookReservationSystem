@@ -6,11 +6,8 @@ using BookReservationSystem.BL.Query;
 using BookReservationSystem.Infrastructure.Query;
 using BookReservationSystem.Infrastructure.Repository;
 using BookReservationSystem.BL.IServices;
-using Castle.Core.Internal;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.AspNetCore.Identity;
-using System.Security;
-using Microsoft.EntityFrameworkCore;
+using BookReservationSystem.BL.Exceptions;
 
 namespace BookReservationSystem.BL.Services;
 
@@ -32,10 +29,19 @@ public class UserService: CrudService<User, UserDto>, IUserService
     public async new Task Update(UserDto updateDto)
     {
         var user = Mapper.Map<User>(updateDto);
-        user.SecurityStamp = Guid.NewGuid().ToString();
-        await _userManager.UpdateAsync(user);
         await using var uow = UnitOfWorkFactory();
-        await Repository.Update(user);
-        await uow.Commit();
+        try
+        {
+            user.SecurityStamp = Guid.NewGuid().ToString();
+            
+            await _userManager.UpdateAsync(user);
+            await Repository.Update(user);
+            await uow.Commit();
+        }
+        catch (Exception ex)
+        {
+            await uow.Rollback();
+            throw new ServiceException("Could not update user", ex);
+        }
     }
 }
