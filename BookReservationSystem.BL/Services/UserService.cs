@@ -34,6 +34,7 @@ public class UserService: CrudService<User, UserDto>, IUserService
         {
             user.FirstName = updateDto.FirstName;
             user.LastName = updateDto.LastName;
+            user.Email = updateDto.Email;
             await _userManager.UpdateAsync(user);
         }
     }
