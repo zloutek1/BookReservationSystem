@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookReservationSystem.BL.Exceptions;
 using BookReservationSystem.BL.IServices;
 using BookReservationSystem.BL.Query;
 using BookReservationSystem.DAL.Models;
@@ -29,7 +30,7 @@ public class BookService : CrudService<Book, BookDto>, IBookService
         return await bookQuery.Execute(filter);
     }
     
-    public async Task<BookDto> FindByReview(Guid reviewId)
+    public async Task<BookDto?> FindByReview(Guid reviewId)
     {
         var bookQuery = new GetBookByReviewQuery(Mapper, Query);
         return await bookQuery.Execute(reviewId);
@@ -39,16 +40,24 @@ public class BookService : CrudService<Book, BookDto>, IBookService
     {
         var book = Mapper.Map<Book>(createDto);
         await using var uow = UnitOfWorkFactory();
+        try
+        {
+            book.Id = Guid.NewGuid();
+            book.CoverArtPath = await GetCoverArtPath(book.Id, createDto.CoverArt);
+            book.Genres = (await _qenreQuery.Where(g => createDto.GenreIds.Contains(g.Id)).Execute()).ToList();
+            book.Authors = (await _authorQuery.Where(a => createDto.AuthorIds.Contains(a.Id)).Execute()).ToList();
+            book.Publishers =
+                (await _publisherQuery.Where(p => createDto.PublisherIds.Contains(p.Id)).Execute()).ToList();
 
-        book.Id = Guid.NewGuid();
-        book.CoverArtPath = await GetCoverArtPath(book.Id, createDto.CoverArt);
-        book.Genres = (await _qenreQuery.Where(g => createDto.GenreIds.Contains(g.Id)).Execute()).ToList();
-        book.Authors = (await _authorQuery.Where(a => createDto.AuthorIds.Contains(a.Id)).Execute()).ToList();
-        book.Publishers = (await _publisherQuery.Where(p => createDto.PublisherIds.Contains(p.Id)).Execute()).ToList();
+            await Repository.Insert(book);
 
-        await Repository.Insert(book);
-
-        await uow.Commit();
+            await uow.Commit();
+        }
+        catch (Exception ex)
+        {
+            await uow.Rollback();
+            throw new ServiceException("Could not insert entity", ex);
+        }
     }
 
     public async Task Update(BookUpdateDto updateDto)
@@ -56,10 +65,18 @@ public class BookService : CrudService<Book, BookDto>, IBookService
         var book = Mapper.Map<Book>(updateDto);
         await using var uow = UnitOfWorkFactory();
 
-        book.CoverArtPath = await GetCoverArtPath(updateDto.Id, updateDto.CoverArt);
-        await Repository.Update(book);
-        
-        await uow.Commit();
+        try
+        {
+            book.CoverArtPath = await GetCoverArtPath(updateDto.Id, updateDto.CoverArt);
+            await Repository.Update(book);
+
+            await uow.Commit();
+        } 
+        catch (Exception ex)
+        {
+            await uow.Rollback();
+            throw new ServiceException("Could not update entity", ex);
+        }
     }
 
     public async Task<IEnumerable<BookDto>> FindAllNotInLibrary(Guid libraryId)

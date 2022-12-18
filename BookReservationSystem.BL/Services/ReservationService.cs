@@ -30,8 +30,16 @@ public class ReservationService : CrudService<Reservation, ReservationDto>, IRes
         reservation.CustomerId = user.Id;
 
         await using var uow = UnitOfWorkFactory();
-        await Repository.Insert(reservation);
-        await uow.Commit();
+        try
+        {
+            await Repository.Insert(reservation);
+            await uow.Commit();
+        }
+        catch (Exception ex)
+        {
+            await uow.Rollback();
+            throw new ServiceException("Could not insert reservation", ex);
+        }
     }
 
     public async Task PickupBook(Guid reservationId)
