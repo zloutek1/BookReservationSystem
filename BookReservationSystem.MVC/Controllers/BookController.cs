@@ -1,18 +1,20 @@
-﻿using BookReservationSystem.BL.Exceptions;
-using BookReservationSystem.BL.IServices;
+﻿using BookReservationSystem.BL.IServices;
 using BookReservationSystem.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace BookReservationSystem.MVC.Controllers;
 
 public class BookController : Controller
 {
     private readonly IBookService _bookService;
+    private readonly IToastNotification _toastNotification;
 
-    public BookController(IBookService bookService)
+    public BookController(IBookService bookService, IToastNotification toastNotification)
     {
         _bookService = bookService;
+        _toastNotification = toastNotification;
     }
 
     [HttpGet]
@@ -45,7 +47,7 @@ public class BookController : Controller
     [Authorize(Roles = "Admin")]
     public IActionResult Add()
     {
-        return View("../Admin/AddBook");
+        return View();
     }
 
     [HttpPost]
@@ -54,13 +56,47 @@ public class BookController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View("../Admin/AddBook", createDto);
+            return View(createDto);
         }
 
         await _bookService.Insert(createDto);
         return RedirectToAction("Index", "Book");
     }
 
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Edit(Guid id)
+    {
+        var foundBook = await _bookService.FindById(id);
+        if (foundBook == null)
+        {
+            _toastNotification.AddErrorToastMessage($"Book with id {id} not found");
+            return RedirectToAction("Detail", "Book", new { id });
+        }
+
+        var updateDto = new BookUpdateDto
+        {
+            Id = foundBook.Id,
+            Name = foundBook.Name,
+            Abstract = foundBook.Abstract,
+            Isbn = foundBook.Isbn
+        };
+        return View(updateDto);
+    }
+    
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Edit(BookUpdateDto updateDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(updateDto);
+        }
+
+        await _bookService.Update(updateDto);
+        return RedirectToAction("Detail", "Book", new { id = updateDto.Id });
+    }
+    
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id)

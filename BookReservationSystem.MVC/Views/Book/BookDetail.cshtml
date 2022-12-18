@@ -12,26 +12,30 @@
 
 <table class="table">
     <tbody>
-        <tr>
-            <td>Authors</td>
-            <td>@string.Join(",", Model.Authors.Select(a => a.Name))</td>
-        </tr>
-        <tr>
-            <td>Publisher</td>
-            <td>@string.Join(",", Model.Publishers.Select(a => a.Name))</td>
-        </tr>
-        <tr>
-            <td>ISBN</td>
-            <td>@Model.Isbn</td>
-        </tr>
-        <tr>
-            <td>Abstract</td>
-            <td>@Model.Abstract</td>
-        </tr>
-        <tr>
-            <td>Average Rating</td>
-            <td>@Model.Rating</td>
-        </tr>
+    <tr>
+        <td>Genres</td>
+        <td>@string.Join(", ", Model.Genres.Select(a => a.Name))</td>
+    </tr>
+    <tr>
+        <td>Authors</td>
+        <td>@string.Join(", ", Model.Authors.Select(a => a.Name))</td>
+    </tr>
+    <tr>
+        <td>Publisher</td>
+        <td>@string.Join(", ", Model.Publishers.Select(a => a.Name))</td>
+    </tr>
+    <tr>
+        <td>ISBN</td>
+        <td>@Model.Isbn</td>
+    </tr>
+    <tr>
+        <td>Abstract</td>
+        <td>@Model.Abstract</td>
+    </tr>
+    <tr>
+        <td>Average Rating</td>
+        <td>@Model.Rating</td>
+    </tr>
     </tbody>
 </table>
 
@@ -43,27 +47,30 @@
     new { id = Model.Id }, 
     new { @class = "btn btn-primary" })
 
-    @Html.ActionLink(
-    "Write review",
-    "Index",
-    "Review",
-    new { id = Model.Id },
-    new { @class = "btn btn-primary" })
-
 @if (User.IsInRole("Admin"))
 {
+    @Html.ActionLink(
+        "Edit",
+        "Edit",
+        "Book",
+        new { id = Model.Id },
+        new { @class = "btn btn-primary" })
+    
     <form method="post" class="d-inline-block" asp-controller="Book" asp-action="Delete" asp-route-id="@Model.Id">
         <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
-
-    <form method="post" class="d-inline-block" asp-controller="Book" asp-action="Edit" asp-route-id="@Model.Id">
-        <button type="submit" class="btn btn-danger">Edit</button>
     </form>
 }
 </div>
 
 <div class="mt-5">
     <h2>Reviews</h2>
+    
+    @Html.ActionLink(
+        "Write review",
+        "Index",
+        "Review",
+        new { id = Model.Id },
+        new { @class = "btn btn-primary" })
 
     @if (!Model.Reviews.Any())
     {
@@ -89,7 +96,7 @@
                     <td>@review.Content</td>
                     <td>@review.Rating/10</td>
                     <td>@review.Date</td>
-                        @if (User.IsInRole("Admin") || review.Author.UserName == User.Identity.Name)
+                        @if (User.IsInRole("Admin") || review.Author.UserName == User.Identity?.Name)
                         {
                             <td>
                                 <form method="post" class="d-inline-block" asp-controller="Review" asp-action="DeleteFromBookDetail" asp-route-id="@review.Id">

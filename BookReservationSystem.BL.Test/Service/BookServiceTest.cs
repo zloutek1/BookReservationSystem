@@ -15,6 +15,9 @@ public class BookServiceTest
     private readonly Mock<IUnitOfWork> _uowMock;
     private readonly Mock<IRepository<Book>> _bookRepositoryMock;
     private readonly Mock<IQuery<Book>> _bookQueryMock;
+    private readonly Mock<IQuery<Genre>> _genreQueryMock;
+    private readonly Mock<IQuery<Author>> _authorQueryMock;
+    private readonly Mock<IQuery<Publisher>> _publisherQueryMock;
 
     public BookServiceTest(IMapper mapper)
     {
@@ -22,6 +25,9 @@ public class BookServiceTest
         _uowMock = new Mock<IUnitOfWork>();
         _bookRepositoryMock = new Mock<IRepository<Book>>();
         _bookQueryMock = new Mock<IQuery<Book>>();
+        _genreQueryMock = new Mock<IQuery<Genre>>();
+        _authorQueryMock = new Mock<IQuery<Author>>();
+        _publisherQueryMock = new Mock<IQuery<Publisher>>();
     }
 
     [Fact]
@@ -35,7 +41,7 @@ public class BookServiceTest
             Isbn = 0001
         };
 
-        var bookService = new BookService(_bookQueryMock.Object,  _bookRepositoryMock.Object, _mapper, ()=> _uowMock.Object);
+        var bookService = new BookService(_bookQueryMock.Object,  _bookRepositoryMock.Object, _mapper, ()=> _uowMock.Object, _genreQueryMock.Object, _authorQueryMock.Object, _publisherQueryMock.Object);
 
         await bookService.Insert(bookDto);
         

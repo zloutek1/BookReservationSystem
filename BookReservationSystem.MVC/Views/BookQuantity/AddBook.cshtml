@@ -14,7 +14,7 @@
         <div class="form-group col s12 l8">
             <select name="BookId" class="form-control">
                 <option value="">-- select book --</option>
-                @foreach (var book in await BookService.FindAll())
+                @foreach (var book in await BookService.FindAllNotInLibrary(Model.LibraryId))
                 {
                     <option value="@book.Id">@book.Name</option>
                 }
